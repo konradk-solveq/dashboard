@@ -1,0 +1,13 @@
+node_modules/
+*.env
+dist/
+db/
+docker-compose*.yml
+_helm/
+.gitsecret/
+infra/
+.vscode/
+build/
+*.test.ts
+*.spec.ts
+*.test.json
