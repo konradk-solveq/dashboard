@@ -18,7 +18,10 @@ export interface UserResponse {
 }
 
 export default NextAuth({
-    // Configure one or more authentication providers
+    session: {
+        maxAge: 14 * 24 * 60 * 60,
+    },
+    theme: 'dark',
     providers: [
         Providers.Credentials({
             name: 'ENP Login data',
@@ -26,6 +29,7 @@ export default NextAuth({
                 email: { label: 'ENP Email', type: 'text', placeholder: 'kredes@kross.pl' },
                 password: { label: 'Password', type: 'password' },
             },
+
             async authorize(credentials: UserPassword, req) {
                 // Add logic here to look up the user from the credentials supplied
                 const response = await fetch('http://app:3000/session/login', {
@@ -36,7 +40,7 @@ export default NextAuth({
                 if (response.status < 400) {
                     const { user, access_token } = (await response.json()) as UserResponse;
 
-                    return user;
+                    return { ...user, image: access_token };
                 } else {
                     throw new Error(response.statusText);
                 }
