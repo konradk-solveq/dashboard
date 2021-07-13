@@ -4,16 +4,15 @@ const heading = {
     lineHeight: 'heading',
 };
 
-export const deep = {
+export const dark = {
     colors: {
-        text: 'hsl(210, 50%, 96%)',
-        background: 'hsl(230, 25%, 18%)',
-        primary: 'hsl(260, 100%, 80%)',
-        secondary: 'hsl(290, 100%, 80%)',
-        highlight: 'hsl(260, 20%, 40%)',
-        purple: 'hsl(290, 100%, 80%)',
-        muted: 'hsla(230, 20%, 0%, 20%)',
-        gray: 'hsl(210, 50%, 60%)',
+        text: '#000',
+        background: '#E0E0E0',
+        primary: '#E5353A',
+        secondary: '#e37b1f',
+        muted: '#cf0f36',
+        gray: '#999',
+        purple: '#c0f',
     },
     fonts: {
         body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
@@ -75,9 +74,13 @@ export const deep = {
         },
         a: {
             color: 'primary',
+            textDecoration: 'none',
             '&:hover': {
                 color: 'secondary',
             },
+        },
+        button: {
+            cursor: 'pointer',
         },
         pre: {
             variant: 'prism',
@@ -152,4 +155,4 @@ export const deep = {
     },
 };
 
-export default deep;
+export default dark;
