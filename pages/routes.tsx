@@ -18,7 +18,7 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
     return (
-        <Grid bg={bg} m={1} columns={[2, '1fr ']}>
+        <Grid bg={bg} m={1} columns={[1, '3fr ']}>
             <Box p={1} sx={{ overflow: 'hidden' }}>
                 <NextLink href={`/routes/${route.id}`}>
                     <Heading as="h3" sx={{ textAlign: 'center' }}>
@@ -55,6 +55,7 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
         </Grid>
     );
 };
+import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 
 export default function Page({}) {
     const [name, setName] = useState('');
@@ -64,6 +65,7 @@ export default function Page({}) {
     const debouncedName = useDebounce(name, 333);
     const debouncedTotal = useDebounce(total, 125);
     const debouncedLimit = useDebounce(limit, 125);
+    const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
     useEffect(() => {
         setUrl(`/api/findByName?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
@@ -96,7 +98,7 @@ export default function Page({}) {
             })}
             {elements.length === 0 ? null : (
                 <>
-                    <Grid sx={{ margin: 1 }} gap={0} columns={[2, '1fr 1fr 1fr']}>
+                    <Grid sx={{ margin: 1 }} gap={0} columns={[1, layout]}>
                         {elements?.map((el, index) => {
                             const bg = index % 2 ? 'primary' : 'muted';
                             return <Route key={el.id} bg={bg} route={el}></Route>;

@@ -32,7 +32,7 @@ export default NextAuth({
 
             async authorize(credentials: UserPassword, req) {
                 // Add logic here to look up the user from the credentials supplied
-                const response = await fetch('http://app:3000/session/login', {
+                const response = await fetch(`${process.env.API_URL}/session/login`, {
                     method: 'POST',
                     body: JSON.stringify({ ...credentials, admin: true }),
                     headers: { 'content-type': 'application/json' },
@@ -42,6 +42,7 @@ export default NextAuth({
 
                     return { ...user, image: access_token };
                 } else {
+                    console.log(response.statusText);
                     throw new Error(response.statusText);
                 }
             },

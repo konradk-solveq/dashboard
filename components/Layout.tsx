@@ -7,8 +7,7 @@ import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 
 const Layout: React.FC<{}> = ({ children }) => {
     const layout = useResponsiveValue<'row' | 'column'>(['column', 'column', 'column', 'row']);
-    const index = useBreakpointIndex();
-    console.log(index);
+    const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
     return (
         <Flex sx={{ flexDirection: 'column', minHeight: 256, padding: 0, alignItems: 'stretch', maxHeight: '100wh' }}>
             <Header />
@@ -19,7 +18,7 @@ const Layout: React.FC<{}> = ({ children }) => {
                         maxWidth: '200px',
                         padding: 0,
                         outline: '1px solid black',
-                        position: 'sticky',
+                        position: menuPointer,
                         top: 20,
                     }}
                 >
