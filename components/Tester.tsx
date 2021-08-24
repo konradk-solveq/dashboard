@@ -1,4 +1,4 @@
-import { Flex, Container, Text, Grid, StylePropertyValue } from 'theme-ui';
+import { Flex, Container, Text, Grid, StylePropertyValue, Box } from 'theme-ui';
 import Header from './Header';
 import Arrangement from './arrangement/Arrangement';
 import Footer from './Footer';
@@ -22,18 +22,26 @@ const Tester: React.FC<{}> = ({ children }) => {
 
     return (
         <Flex sx={{
-            bg: ['green', 'yellow', 'purple', 'red'],
+            bg: ['#23A856', '#73A831', '#A89639', '#A86F31', '#A83428'],
             flexDirection: 'column',
-            alignItems: 'flex-start',
+            alignItems: 'center',
             position: 'fixed',
             left: [100, 100, 450, 450],
             top: 10,
             border: '1px solid green',
             opacity: .7,
-            minWidth: [100, 100, 250, 250],
+            minWidth: [100, 100, 150, 150],
             minHeight: 30,
+            borderRadius: 10,
+            fontSize: 20,
+            fontFamily: 'din-b',
+            color: '#fff',
         }}>
-            <div>{index}</div>
+            <Box
+                sx={{
+                    
+                }}
+            >{index}</Box>
         </Flex>
 
     );

@@ -1,6 +1,7 @@
 import { Flex, Container, Grid, Link } from 'theme-ui';
 import Header from './Header';
 import Footer from './Footer';
+import Menu from './Menu';
 import Tester from './Tester';
 import { signIn, useSession } from 'next-auth/client';
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -8,8 +9,8 @@ import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 import Routing from 'next/link';
 
 const Layout: React.FC<{}> = ({ children }) => {
-    const layout = useResponsiveValue<'row' | 'column'>(['column', 'column', 'column', 'row']);
-    const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
+
+    const index = useBreakpointIndex()
 
     const [contentH, setContentH] = useState(null);
 
@@ -36,29 +37,18 @@ const Layout: React.FC<{}> = ({ children }) => {
             <div ref={headerObj}>
                 <Header />
             </div>
-            <Flex sx={{ flexDirection: layout, alignItems: 'flex-start', position: 'relative' }}>
-                <Container
-                    sx={{
-                        overflow: 'auto',
-                        maxWidth: '200px',
-                        padding: 0,
-                        outline: '1px solid black',
-                        position: menuPointer,
-                        top: 20,
-                    }}
-                >
-                    Menu
-                    <Container>
-                        <Routing passHref href="/routes">
-                            <Link>Trasy</Link>
-                        </Routing>
-                    </Container>
-                </Container>
-
+            <Flex sx={{
+                flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                alignContent: 'flex-start',
+                bg: ['#fff', '#fff', '#666', '#666', '#666'],
+            }}>
+                <Menu />
 
                 <Flex sx={{
-                    minHeight: contentH,
+                    minHeight: contentH - (index < 2 ? 65 : 0),
                     width: '100%',
+                    bg: '#fff',
+                    p: 10,
                 }}>
                     {children}
                 </Flex>
