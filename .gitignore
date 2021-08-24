@@ -1,4 +1,8 @@
 node_modules/
 .next/
 .history
+<<<<<<< HEAD
 .env.local
+=======
+.env.local
+>>>>>>> layout/header+footer

@@ -77,7 +77,7 @@ export default function Page({}) {
         .map((v, i) => i + 1);
 
     return (
-        <>
+        <Box>
             <Input
                 onChange={(e) => {
                     setPage(1);
@@ -106,6 +106,6 @@ export default function Page({}) {
                     </Grid>
                 </>
             )}
-        </>
+        </Box>
     );
 }
