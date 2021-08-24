@@ -5,9 +5,10 @@ const heading = {
 };
 
 export const dark = {
+    breakpoints: ['420px', '800px', '1200px', '1800px'],
     colors: {
-        text: '#000',
-        background: '#E0E0E0',
+        text: '#313131',
+        background: '#fff',
         primary: '#E5353A',
         secondary: '#e37b1f',
         muted: '#cf0f36',
@@ -15,7 +16,7 @@ export const dark = {
         purple: '#c0f',
     },
     fonts: {
-        body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+        body: 'din-r, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
         heading: 'inherit',
         monospace: 'Menlo, monospace',
     },
@@ -40,9 +41,13 @@ export const dark = {
         },
     },
     styles: {
+        body: {
+            p: 0,
+            m: 0,
+            heading: '100vh',
+        },
         Container: {
-            p: 3,
-            maxWidth: 1024,
+            p: 0,
         },
         root: {
             fontFamily: 'body',
@@ -86,7 +91,6 @@ export const dark = {
             variant: 'prism',
             fontFamily: 'monospace',
             fontSize: 1,
-            p: 3,
             color: 'text',
             bg: 'muted',
             overflow: 'auto',
@@ -143,9 +147,9 @@ export const dark = {
             fontStyle: 'italic',
         },
         '.property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable':
-            {
-                color: 'purple',
-            },
+        {
+            color: 'purple',
+        },
         '.atrule,.attr-value,.keyword': {
             color: 'primary',
         },

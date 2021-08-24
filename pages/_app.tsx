@@ -6,6 +6,7 @@ import { AppProps, AppInitialProps, AppContext } from 'next/app';
 import App from 'next/app';
 import { signIn, useSession, getSession } from 'next-auth/client';
 import { useEffect } from 'react';
+import '../styles/globals.css';
 
 function KrossDashboardApp({ Component, pageProps }: AppProps) {
     if (pageProps.session === null && typeof window !== 'undefined') {
