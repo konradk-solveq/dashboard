@@ -86,6 +86,7 @@ const Menu: React.FC<{}> = ({ children }) => {
             >
                 {getList('Trasy:', (<>
                     {item('Lista Tras', '/routes', () => setMenuOn(false))}
+                    {item('Statystyki Tras', '/routessum', () => setMenuOn(false))}
                 </>)
                 )}
 
