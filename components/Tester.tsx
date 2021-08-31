@@ -9,7 +9,7 @@ import { useResponsiveValue, useBreakpointIndex } from '@theme-ui/match-media'
 
 
 const Tester: React.FC<{}> = ({ children }) => {
-    console.log('%c children:', 'background: #ffcc00; color: #003300', children);
+    // console.log('%c children:', 'background: #ffcc00; color: #003300', children);
 
     let test = useResponsiveValue<'10px' | '20px'>(['10px', '20px', '10px', '20px']);
     const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);

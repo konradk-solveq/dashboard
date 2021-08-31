@@ -23,7 +23,7 @@ const Layout: React.FC<{}> = ({ children }) => {
             const footerH = headerObj.current.offsetHeight;
 
             const h = window.innerHeight - footerH - headerH;
-            console.log('%c h:', 'background: #ffcc00; color: #003300', h)
+            // console.log('%c h:', 'background: #ffcc00; color: #003300', h)
             setContentH(h)
         }
     }, [headerObj.current, footerObj.current])

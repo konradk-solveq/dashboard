@@ -66,7 +66,7 @@ const getList = (str: string, list) => {
 }
 
 const Menu: React.FC<{}> = ({ children }) => {
-    console.log('%c children:', 'background: #ffcc00; color: #003300', children);
+    // console.log('%c children:', 'background: #ffcc00; color: #003300', children);
 
     let test = useResponsiveValue<'10px' | '20px'>(['10px', '20px', '10px', '20px']);
     const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
@@ -86,6 +86,7 @@ const Menu: React.FC<{}> = ({ children }) => {
             >
                 {getList('Trasy:', (<>
                     {item('Lista Tras', '/routes', () => setMenuOn(false))}
+                    {item('Statystyki Tras', '/routessum', () => setMenuOn(false))}
                 </>)
                 )}
 
