@@ -1,5 +1,5 @@
-import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/dist/client/router';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Box, Flex } from 'theme-ui';
 import fetcher from '../../../helpers/fetcher';
