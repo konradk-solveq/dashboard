@@ -6,6 +6,7 @@
     "@types/node": "^15.12.4",
     "@types/react": "^17.0.11",
     "axios": "^0.21.1",
+    "eventsource": "^1.1.0",
     "isomorphic-fetch": "^3.0.0",
     "next": "^11.0.0",
     "next-auth": "^3.27.0",
