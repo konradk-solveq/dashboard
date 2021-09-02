@@ -1,30 +1,17 @@
 import { useRouter } from 'next/dist/client/router';
-
-export const getStaticPaths = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/route`)
-    // const res = await fetch(`${process.env.API_URL}/routes/route`)
-    const data = await res.json()
-
-    const paths = data.map(e => ({
-        params: e,
-    }))
-
-    return {
-        paths,
-        fallback: true
-    };
-}
-
-export const getStaticProps = async (context) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/route/${context.params.id}`);
-    // const res = await fetch(`${process.env.API_URL}/routes/route/${context.params.id}`);
-    const data = await res.json();
-
-    return { props: { data } };
-}
-
+import { useState } from 'react';
+import useSWR from 'swr';
+const fetcher = (url: string) => {
+    return fetch(`${url}`).then((r) => r.json());
+};
 
 export default function Page(props) {
+
     const router = useRouter();
+    const [url, setUrl] = useState(`/api/route/${router.query.id}`);
+    const { data } = useSWR(url, fetcher);
+
+
+    console.log('%c props:', 'background: #ffcc00; color: #003300', data)
     return <>{router.query.id}</>;
 }
