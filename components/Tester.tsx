@@ -1,6 +1,6 @@
 import { Flex, Container, Text, Grid, StylePropertyValue, Box } from 'theme-ui';
 import Header from './Header';
-import Arrangement from './arrangement/Arrangement';
+// import Arrangement from './arrangement/Arrangement';
 import Footer from './Footer';
 import { signIn, useSession } from 'next-auth/client';
 import { useEffect } from 'react';
