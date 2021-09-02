@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import { getToken } from '../../components/utils/getToken';
+import { getToken } from '../../../../components/utils/getToken';
 
 const apiUrl = process.env.API_URL;
 

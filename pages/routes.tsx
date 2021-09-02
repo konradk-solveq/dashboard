@@ -58,7 +58,7 @@ import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 export default function Page({}) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
-    const [url, setUrl] = useState(`/api/findByName`);
+    const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
     const { data: { total, elements, links, limit } = defaultTo, error } = useSWR(url, fetcher);
     const debouncedName = useDebounce(name, 333);
     const debouncedTotal = useDebounce(total, 125);
@@ -66,7 +66,7 @@ export default function Page({}) {
     const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
     useEffect(() => {
-        setUrl(`/api/findByName?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
+        setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
     }, [debouncedName, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
