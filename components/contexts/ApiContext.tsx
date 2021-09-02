@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext } from 'react';
 
 export interface FetchStatus<T> {
     data: T | null;

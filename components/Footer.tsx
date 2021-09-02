@@ -1,12 +1,9 @@
+import { useResponsiveValue } from '@theme-ui/match-media';
 import React from 'react';
-import { Container, Flex, Box } from 'theme-ui';
-import { useResponsiveValue, useBreakpointIndex } from '@theme-ui/match-media'
-
+import { Box, Container, Flex } from 'theme-ui';
 
 const Footer: React.FC<{}> = ({ children }) => {
-
     const footerPart = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
-
 
     return (
         <Container
@@ -19,61 +16,81 @@ const Footer: React.FC<{}> = ({ children }) => {
                 position: 'relative',
                 bottom: 0,
             }}
-
         >
             <Flex
                 sx={{
                     flexDirection: ['column', 'row', 'row', 'row', 'row'],
                     justifyContent: 'stretch',
-                    width: '100%'
+                    width: '100%',
                 }}
             >
-                <Flex sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    justifyContent: 'stretch',
-                    width: ['100%', '50%', '50%', '50%', '50%']
-                }}>
-
+                <Flex
+                    sx={{
+                        flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                        justifyContent: 'stretch',
+                        width: ['100%', '50%', '50%', '50%', '50%'],
+                    }}
+                >
                     <Container
                         sx={{
-                            borderRight: ['none', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd'],
+                            borderRight: [
+                                'none',
+                                '1px solid #ddd',
+                                '1px solid #ddd',
+                                '1px solid #ddd',
+                                '1px solid #ddd',
+                            ],
                             borderBottom: ['1px solid #ddd', '1px solid #ddd', 'none', 'none', 'none'],
                             justifyContent: 'start',
-                            pl: 30
+                            pl: 30,
                         }}
-                    >text</Container>
+                    >
+                        text
+                    </Container>
                     <Container
                         sx={{
-                            borderRight: ['none', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd'],
+                            borderRight: [
+                                'none',
+                                '1px solid #ddd',
+                                '1px solid #ddd',
+                                '1px solid #ddd',
+                                '1px solid #ddd',
+                            ],
                             borderBottom: ['1px solid #ddd', 'none', 'none', 'none', 'none'],
                             justifyContent: 'start',
-                            pl: 30
+                            pl: 30,
                         }}
-                    >text</Container>
+                    >
+                        text
+                    </Container>
                 </Flex>
-                <Flex sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    justifyContent: 'stretch',
-                    width: ['100%', '50%', '50%', '50%', '50%']
-                }}>
-
+                <Flex
+                    sx={{
+                        flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                        justifyContent: 'stretch',
+                        width: ['100%', '50%', '50%', '50%', '50%'],
+                    }}
+                >
                     <Container
                         sx={{
                             borderRight: ['none', 'none', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd'],
                             borderBottom: ['1px solid #ddd', '1px solid #ddd', 'none', 'none', 'none'],
                             justifyContent: 'start',
-                            pl: 30
+                            pl: 30,
                         }}
-                    >text</Container>
+                    >
+                        text
+                    </Container>
                     <Container
                         sx={{
                             // borderRight: ['none', 'none', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd'],
                             justifyContent: 'start',
-                            pl: 30
+                            pl: 30,
                         }}
-                    >text</Container>
+                    >
+                        text
+                    </Container>
                 </Flex>
-
             </Flex>
             <Flex
                 sx={{
@@ -81,7 +98,7 @@ const Footer: React.FC<{}> = ({ children }) => {
                     width: '100%',
                     whiteSpace: 'nowrap',
                 }}
-                >
+            >
                 <Box
                     sx={{
                         borderTop: '1px solid #ddd',
@@ -89,7 +106,9 @@ const Footer: React.FC<{}> = ({ children }) => {
                         pt: '5px',
                         mt: 15,
                     }}
-                >2021 Kross. All rights reserved </Box>
+                >
+                    2021 Kross. All rights reserved{' '}
+                </Box>
             </Flex>
         </Container>
     );

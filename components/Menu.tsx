@@ -1,11 +1,7 @@
-import { Flex, Container, Grid, Link, Text, Box, Button } from 'theme-ui';
-import Header from './Header';
-import Footer from './Footer';
-import Tester from './Tester';
-import { signIn, useSession } from 'next-auth/client';
-import { useEffect, useRef, useState, useCallback } from 'react';
 import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 import Routing from 'next/link';
+import { useState } from 'react';
+import { Box, Button, Container, Link, Text } from 'theme-ui';
 
 const item = (str, href, onclick) => {
     return (
@@ -13,17 +9,15 @@ const item = (str, href, onclick) => {
             sx={{
                 pl: 10,
                 fontSize: '18px',
-                color: '#eee'
+                color: '#eee',
             }}
         >
             <Routing passHref href={href}>
-                <Link
-                    onClick={() => onclick()}
-                >{str}</Link>
+                <Link onClick={() => onclick()}>{str}</Link>
             </Routing>
         </Container>
-    )
-}
+    );
+};
 
 const spliter = () => {
     return (
@@ -38,8 +32,8 @@ const spliter = () => {
                 position: 'relative',
             }}
         ></Box>
-    )
-}
+    );
+};
 
 const getList = (str: string, list) => {
     const [showList, setShowList] = useState(true);
@@ -50,27 +44,31 @@ const getList = (str: string, list) => {
                 sx={{
                     width: '100%',
                 }}
-                onClick={() => { setShowList(!showList) }}
+                onClick={() => {
+                    setShowList(!showList);
+                }}
             >
                 <Text
                     sx={{
                         fontSize: '25px',
                         color: '#eee',
                     }}
-                >{str}</Text>
+                >
+                    {str}
+                </Text>
             </Box>
             {showList && list}
             {spliter()}
         </>
-    )
-}
+    );
+};
 
 const Menu: React.FC<{}> = ({ children }) => {
     // console.log('%c children:', 'background: #ffcc00; color: #003300', children);
 
     let test = useResponsiveValue<'10px' | '20px'>(['10px', '20px', '10px', '20px']);
     const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
-    const index = useBreakpointIndex()
+    const index = useBreakpointIndex();
 
     const [menuOn, setMenuOn] = useState(false);
 
@@ -84,26 +82,30 @@ const Menu: React.FC<{}> = ({ children }) => {
                     userSelect: 'none',
                 }}
             >
-                {getList('Trasy:', (<>
-                    {item('Lista Tras', '/routes', () => setMenuOn(false))}
-                    {item('Statystyki Tras', '/routessum', () => setMenuOn(false))}
-                </>)
+                {getList(
+                    'Trasy:',
+                    <>
+                        {item('Lista Tras', '/routes', () => setMenuOn(false))}
+                        {item('Statystyki Tras', '/routessum', () => setMenuOn(false))}
+                    </>,
                 )}
 
-                {getList('Teksty:', (<>
-                    {item('Rogulaminy', '/', () => setMenuOn(false))}
-                    {item('Polityka Pryatności', '/', () => setMenuOn(false))}
-                </>)
+                {getList(
+                    'Teksty:',
+                    <>
+                        {item('Rogulaminy', '/', () => setMenuOn(false))}
+                        {item('Polityka Pryatności', '/', () => setMenuOn(false))}
+                    </>,
                 )}
 
-                {getList('cdn...', (<></>))}
+                {getList('cdn...', <></>)}
             </Box>
-        )
-    }
+        );
+    };
 
     const hiddeManeu = {
         height: 0,
-    }
+    };
 
     if (index < 2) {
         return (
@@ -119,7 +121,9 @@ const Menu: React.FC<{}> = ({ children }) => {
                 }}
             >
                 <Button
-                    onClick={() => { setMenuOn(!menuOn) }}
+                    onClick={() => {
+                        setMenuOn(!menuOn);
+                    }}
                     sx={{
                         width: '60px',
                         px: 0,
@@ -127,14 +131,12 @@ const Menu: React.FC<{}> = ({ children }) => {
                         bg: '#444',
                         cursor: 'pointer',
                     }}
-                >Menu</Button>
-                <Container
-                    sx={menuOn ? {} : hiddeManeu}
                 >
-                    {content()}
-                </Container>
+                    Menu
+                </Button>
+                <Container sx={menuOn ? {} : hiddeManeu}>{content()}</Container>
             </Box>
-        )
+        );
     } else {
         return (
             <Container
@@ -149,7 +151,5 @@ const Menu: React.FC<{}> = ({ children }) => {
             </Container>
         );
     }
-
 };
 export default Menu;
-
