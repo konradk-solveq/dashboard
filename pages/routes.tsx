@@ -4,9 +4,7 @@ import useSWR from 'swr';
 import { Box, Button, Grid, Input, Link, AspectImage, Heading } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../components/utils/useDebounce';
-const fetcher = (url: string) => {
-    return fetch(`${url}`).then((r) => r.json());
-};
+import fetcher from '../helpers/fetcher';
 
 import NextLink from 'next/link';
 import { addEmitHelper } from 'typescript';
@@ -20,21 +18,21 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
     return (
         <Grid bg={bg} m={1} columns={[1, '3fr ']}>
             <Box p={1} sx={{ overflow: 'hidden' }}>
-                <NextLink href={`/routes/${route.id}`}>
+                <NextLink href={`/routes/route//${route.id}`}>
                     <Heading as="h3" sx={{ textAlign: 'center' }}>
                         <Link color="background">{route.name}</Link>
                     </Heading>
                 </NextLink>
             </Box>
             <Box p={1}>
-                <NextLink href={`/routes/${route.id}`} passHref>
+                <NextLink href={`/routes/route/${route.id}`} passHref>
                     <Link color="background">
                         <AspectImage ratio={1} src={image?.url || 'https://via.placeholder.com/640'}></AspectImage>
                     </Link>
                 </NextLink>
             </Box>
             <Box p={1}>
-                <NextLink href={`/routes/${route.id}`} passHref>
+                <NextLink href={`/routes/route/${route.id}`} passHref>
                     <Link color="background">{route.id}</Link>
                 </NextLink>
             </Box>
