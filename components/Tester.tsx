@@ -1,5 +1,11 @@
 import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
-import { Box, Flex } from 'theme-ui';
+import { Flex, Container, Text, Grid, Box } from 'theme-ui';
+import Header from './Header';
+import Footer from './Footer';
+import { signIn, useSession } from 'next-auth/client';
+import { useEffect } from 'react';
+
+
 
 const Tester: React.FC<{}> = ({ children }) => {
     // console.log('%c children:', 'background: #ffcc00; color: #003300', children);
