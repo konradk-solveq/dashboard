@@ -1,29 +1,7 @@
 // @ts-nocheck
-import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
-import { getToken } from '../../../components/utils/getToken';
+import { apiHandler } from '../../../components/api/apiHandler';
+import { getMapByIdHandler } from '../../../components/api/requestHandler/getMapByIdHandler';
 
-const apiUrl = process.env.API_URL;
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.method === 'GET') {
-
-        const token = await getToken(req);
-
-        if (!token) {
-            return res.status(401).send();
-        }
-
-        const { id } = req.query;
-
-        const { data } = await axios.get(
-            `${apiUrl}/routes/route/${id}`,
-            {
-                headers: { authorization: `Bearer ${token}` },
-            },
-        );
-
-        return res.status(200).json(data);
-    }
-    return res.status(404).send();
-};
+export default apiHandler({
+    get: getMapByIdHandler,
+});
