@@ -4,12 +4,10 @@ import useSWR from 'swr';
 import { Box, Button, Grid, Input, Link, AspectImage, Heading, Flex, Container } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../components/utils/useDebounce';
-const fetcher = (url: string) => {
-    return fetch(`${url}`).then((r) => r.json());
-};
-
+import fetcher from '../helpers/fetcher';
 import NextLink from 'next/link';
 import { addEmitHelper } from 'typescript';
+
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
