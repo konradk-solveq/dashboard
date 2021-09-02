@@ -18,10 +18,6 @@ const Page = (props) => {
     const router = useRouter();
     if (router.isFallback) return <div>Loading...</div>;
 
-    // const [url, setUrl] = useState(`/api/route/${router.query.id}`);
-    // const { data } = useSWR(url, fetcher);
-
-
     console.log('%c data:', 'background: #ffcc00; color: #003300', props.data)
     return <Flex sx={{
         flexDirection: 'column',
