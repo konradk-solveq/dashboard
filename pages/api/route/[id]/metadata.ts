@@ -4,14 +4,14 @@ import axios from 'axios';
 import { apiHandler } from '../../../../../helpers/apiHandler';
 
 export default apiHandler({
-    patch: patchMetadataHandler,
+    patch: patchRouteMetadataHandler,
 });
 
-const patchMetadataHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const patchRouteMetadataHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = req.query;
     const { body } = req.body;
     const { token, apiUrl } = res.locals;
-    const { data } = await axios.patch(`${apiUrl}/cycling-map/manage/${id}/metadata`, {
+    const { data } = await axios.patch(`${apiUrl}/routes/route/${id}/metadata`, {
         headers: { authorization: `Bearer ${token}` },
         data: body,
     });

@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authMiddleware } from './authMiddleware';
 import { envMiddleware } from './envMiddleware';
-export const apiHandler = (handler: Object) => {
+export const apiHandler = (handler: Object, callback) => {
     return async function (req: NextApiRequest, res: NextApiResponse) {
         const method = req.method.toLowerCase();
         if (!handler[method]) {
@@ -14,7 +14,7 @@ export const apiHandler = (handler: Object) => {
             await envMiddleware(req, res);
             await handler[method](req, res);
         } catch (err) {
-            return res.status(500).json(err);
+            return callback ? callback() : res.status(500).json(err);
         }
     };
 };

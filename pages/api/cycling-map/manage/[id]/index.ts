@@ -1,7 +1,17 @@
 // @ts-nocheck
-import { apiHandler } from '../../../../../components/api/apiHandler';
-import { deleteMapHandler } from '../../../../../components/api/requestHandler/deleteMapHandler';
+import { apiHandler } from '../../../../../helpers/apiHandler';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import axios from 'axios';
 
 export default apiHandler({
     delete: deleteMapHandler,
 });
+
+const deleteMapHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+    const { id } = req.query;
+    const { token, apiUrl } = res.locals;
+    const { data } = await axios.delete(`${apiUrl}/cycling-map/manage/${id}`, {
+        headers: { authorization: `Bearer ${token}` },
+    });
+    return res.status(200).json(data);
+};

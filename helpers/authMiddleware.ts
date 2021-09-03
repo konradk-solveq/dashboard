@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { getToken } from '../../components/utils/getToken';
+import { getToken } from '../components/utils/getToken';
 
 export const authMiddleware = async (req, res) => {
     const token = await getToken(req);
