@@ -7,24 +7,50 @@ import { useDebounce } from '../components/utils/useDebounce';
 import fetcher from '../helpers/fetcher';
 import NextLink from 'next/link';
 import { addEmitHelper } from 'typescript';
+import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
+import PieChart from '../components/charts/pie';
+import HistogramChart from '../components/charts/histogram';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 let sumPublic = [];
 let sumAll = [];
+let sumWrong = [];
 let listOfNames = [];
+let newRoutes = {};
 
-
-const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
+const Route: React.FC<{ route: any, setChartData: any }> = ({
+    route, setChartData,
+}) => {
 
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
 
-
     useEffect(() => {
         const broken = typeof route.images.find(({ type }) => type === 'map') == 'undefined';
+
+        const addToChart = () => {
+            const d = new Date(route.createdAt);
+            let mo = d.getMonth() + 1;
+            let m = '' + mo;
+            if (mo < 10) { m = '0' + m; }
+            let day = d.getDate();
+            let da = '' + day;
+            if (day < 10) { da = '0' + da };
+            const dName = `${d.getFullYear()}_${m}_${da}`;
+
+            const exist = typeof newRoutes[dName] != 'undefined';
+            if (exist) {
+                newRoutes[dName]++
+            } else {
+                newRoutes[dName] = 1;
+            }
+
+            setChartData(newRoutes);
+            // console.log('%c newRoutes:', 'background: #ffcc00; color: #003300', newRoutes)
+        }
 
         if (!broken) {
             if (!sumAll.some(e => e.id === route.id)) {
@@ -32,14 +58,12 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
                     id: route.id,
                     name: route.name,
                 });
-                listOfNames.push(route.name);
+                addToChart();
             }
 
             if (route.isPublic) {
 
                 if (!sumPublic.some(e => e.id === route.id)) {
-                    console.log('%c route:', 'background: #ffcc00; color: #003300', route.name);
-
                     let newItem = {
                         id: route.id,
                         name: route.name,
@@ -49,12 +73,20 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
                     listOfNames.push(route.name);
                 }
             }
+        } else {
+            if (!sumWrong.some(e => e.id === route.id)) {
+                sumWrong.push({
+                    id: route.id,
+                    name: route.name,
+                });
+                addToChart();
+            }
         }
     }, [route])
 
     return (
         <Box sx={{
-            bg: image?.url ? 'khaki' : 'red',
+            bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
             m: '2px',
             width: '12px',
             height: '12px',
@@ -62,8 +94,7 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
         }} />
     );
 };
-import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
-import { wrap } from 'module';
+
 
 export default function Page({ }) {
     const [name, setName] = useState('');
@@ -75,17 +106,30 @@ export default function Page({ }) {
     const debouncedLimit = useDebounce(limit, 125);
     const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
+    const [chartData, setChartData] = useState([]);
     useEffect(() => {
         setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 500 })}`);
     }, [debouncedName, page]);
+
+    useEffect(() => {
+
+        console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData)
+    }, [chartData, page])
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)
         .fill(0)
         .map((v, i) => i + 1);
 
-    console.table(listOfNames);
+    const goodRoutes = () => sumAll.length - sumPublic.length;
+    const wrongRoutes = () => sumWrong.length;
+    const pulicRoutes = () => sumPublic.length;
+    const allRoutes = () => sumAll.length + sumWrong.length;
 
+    const percents = (num) => {
+        const val = (num / (sumAll.length + sumWrong.length)) * 100;
+        return val.toFixed(1) + '%';
+    }
 
     return (
         <Flex sx={{
@@ -125,8 +169,33 @@ export default function Page({ }) {
                 width: '100%',
                 justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
             }}>
-                <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {sumAll.length}</h2>
-                <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {sumPublic.length}</h2>
+                <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
+                <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
+            </Flex>
+            <Flex sx={{
+                flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                width: '100%',
+                justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
+            }}>
+                <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
+                <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
+            </Flex>
+
+            <Flex>
+                <PieChart
+                    data={[
+                        { label: ['publiczne', percents(pulicRoutes())], value: pulicRoutes(), color: '#68B028' },
+                        { label: ['poprawne', percents(goodRoutes())], value: goodRoutes(), color: 'khaki' },
+                        { label: ['błędne', percents(wrongRoutes())], value: wrongRoutes(), color: '#cf0f36' },
+                    ]}
+                    outerRadius={160}
+                    innerRadius={0}
+                ></PieChart>
+
+                <HistogramChart
+                    data={chartData}
+                    page={page}
+                ></HistogramChart>
             </Flex>
 
             <Flex sx={{
@@ -145,13 +214,13 @@ export default function Page({ }) {
                         border: '1px solid #313131',
 
                     }} />
-                    <div> - trasy prawidłowe</div>
+                    <Box> - trasy prawidłowe</Box>
                 </Flex>
                 <Flex sx={{
                     flexDirection: 'row',
                 }}>
                     <Box sx={{
-                        bg: 'red',
+                        bg: '#68B028',
                         mx: '5px',
                         my: '7px',
                         width: '12px',
@@ -159,36 +228,55 @@ export default function Page({ }) {
                         border: '1px solid #313131',
 
                     }} />
-                    <div> - trasy uszkodzone</div>
+                    <Box> - trasy upublicznione</Box>
+                </Flex>
+                <Flex sx={{
+                    flexDirection: 'row',
+                }}>
+                    <Box sx={{
+                        bg: '#cf0f36',
+                        mx: '5px',
+                        my: '7px',
+                        width: '12px',
+                        height: '12px',
+                        border: '1px solid #313131',
+
+                    }} />
+                    <Box> - trasy uszkodzone</Box>
                 </Flex>
             </Flex>
-            {elements.length === 0 ? null : (
-                <>
-                    <Flex sx={{
-                        margin: 1,
-                        flexWrap: 'wrap',
-                    }}>
-                        {elements?.map((el, index) => {
-                            const bg = index % 2 ? 'primary' : 'muted';
-                            return <Route key={el.id} bg={bg} route={el}></Route>;
-                        })}
-                    </Flex>
-                </>
-            )}
+            {
+                elements.length === 0 ? null : (
+                    <>
+                        <Flex sx={{
+                            margin: 1,
+                            flexWrap: 'wrap',
+                        }}>
+                            {elements?.map((el, index) => {
+                                return <Route
+                                    key={'box' + index}
+                                    route={el}
+                                    setChartData={(e) => setChartData(e)}
+                                ></Route>;
+                            })}
+                        </Flex>
+                    </>
+                )
+            }
             <Flex sx={{
                 justifyContent: 'center',
                 width: '100%',
             }}>
                 <Container sx={{ width: 'max-content' }}>
                     <h3>Lista nazw tras publicznych</h3>
-                    {sumPublic.map(e => (
-                        <div>{e.name}</div>
+                    {sumPublic.map((e, i) => (
+                        <Box key={'name' + i}>{e.name}</Box>
                     ))}
                     <Box
                         sx={{ mb: '50px' }}
                     >-------------------------------------</Box>
                 </Container>
             </Flex>
-        </Flex>
+        </Flex >
     );
 }
