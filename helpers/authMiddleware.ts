@@ -6,5 +6,5 @@ export const authMiddleware = async (req, res) => {
     if (!token) {
         return res.status(401).send('Unauthorized request');
     }
-    res.locals.token = token;
+    req.locals.token = token;
 };
