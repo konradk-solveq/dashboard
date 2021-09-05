@@ -14,7 +14,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const source = new EventSource(`${apiUrl}/events/${req.query.channelId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(`${req.query.channelId}`);
         source.addEventListener('message', (ev) => {
             if (typeof ev === 'object') {
                 res.write(`data: ${ev.data}\n\n`);

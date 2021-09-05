@@ -1,9 +1,8 @@
-// @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authMiddleware } from './authMiddleware';
 import { axiosConfigMiddleware } from './axiosConfigMiddleware';
-export const apiHandler = (handler: Object, callback) => {
-    return async function (req: NextApiRequest, res: NextApiResponse) {
+export const apiHandler = (handler: Object, callback?: (err: any) => void) => {
+    return async function (req: NextApiRequest & { locals: any }, res: NextApiResponse) {
         const method = req.method.toLowerCase();
         if (!handler[method]) {
             return res.status(405).end(`Method ${req.method} Not Allowed`);
