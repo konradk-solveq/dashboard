@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { Box,  Grid, Input, Link, AspectImage, Heading, Flex,  AspectRatio } from 'theme-ui';
+import { Box, Grid, Input, Link, AspectImage, Heading, Flex, AspectRatio } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../components/utils/useDebounce';
 import fetcher from '../helpers/fetcher';
@@ -13,58 +13,47 @@ const Route: React.FC<{ bg: string; route: any, num: number }> = ({ bg, route, n
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
     return (
-        <Grid bg={bg} m={1} columns={[1, '3fr ']}>
-            <Box p={1} sx={{ overflow: 'hidden' }}>
-                <Box>nr: {num}</Box>
-                <NextLink href={`routes/route/${route.id}`}>
-                    <Heading as="h3" sx={{ textAlign: 'center' }}>
-                        <Link color="background">{route.name}</Link>
-                    </Heading>
-                </NextLink>
-            </Box>
-            <Box p={1}>
-                <NextLink href={`routes/route/${route.id}`} passHref>
-                    <Link color="background">
-                        {image?.url &&
-                            <AspectImage ratio={1} src={image?.url}></AspectImage>
-                        }
-                        {!image?.url &&
-                            <AspectRatio ratio={1} sx={{
-                                bg: '#555555',
-                            }}><Flex sx={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                height: '100%',
-                            }}>
-                                    <Box sx={{ bg: '#313131', p: '10px' }}>
-                                        no image
-                                    </Box>
-                                </Flex>
-                            </AspectRatio>
-                        }
+        <Grid sx={{ bg:bg, m:1}} columns={[1, '3fr ']} className='sys-btn'>
+            <NextLink href={`routes/route/${route.id}`} passHref>
+                <Link className='sys-btn'>
+                    <Box p={1} sx={{ overflow: 'hidden' }}>
+                        <Box>nr: {num}</Box>
+                        <Heading as="h3" sx={{ textAlign: 'center' }}>
+                            <Box>{route.name}</Box>
+                        </Heading>
+                    </Box>
+                    <Box p={1}>
+                        <Box sx={{color: '#fff'}}>
+                            {image?.url &&
+                                <AspectImage ratio={1} src={image?.url}></AspectImage>
+                            }
+                            {!image?.url &&
+                                <AspectRatio ratio={1} sx={{
+                                    bg: '#555555',
+                                }}><Flex sx={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    height: '100%',
+                                }}>
+                                        <Box sx={{ bg: '#313131', p: '10px' }}>
+                                            no image
+                                        </Box>
+                                    </Flex>
+                                </AspectRatio>
+                            }
 
-                    </Link>
-                </NextLink>
-            </Box>
-            <Box p={1}>
-                <NextLink href={`routes/route/${route.id}`} passHref>
-                    <Link color="background">{route.id}</Link>
-                </NextLink>
-            </Box>
-            <Box
-                sx={{
-                    padding: 1,
-                }}
-            >
-                {route.author}
-            </Box>
-            <Box
-                sx={{
-                    padding: 1,
-                }}
-            >
-                {route.createdAt}
-            </Box>
+                        </Box>
+                    </Box>
+                    <Box p={1}>{route.id}</Box>
+                    <Box sx={{ padding: 1, }} >
+                        {route.author}
+                    </Box>
+                    <Box sx={{ padding: 1, }}>
+                        {route.createdAt}
+                    </Box>
+                </Link>
+            </NextLink>
+
         </Grid>
     );
 };

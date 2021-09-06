@@ -22,9 +22,6 @@ const PagesBar: React.FC<Props> = ({
     barRef,
 }: Props) => {
 
-
-
-
     return (
         <Flex sx={{
             mt: '30px',
