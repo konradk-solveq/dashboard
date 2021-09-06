@@ -7,6 +7,7 @@ import App from 'next/app';
 import { signIn, useSession, getSession } from 'next-auth/client';
 import { useEffect } from 'react';
 import '../styles/globals.css';
+import { ApiContextContainer } from '../components/contexts/ApiContext';
 
 function KrossDashboardApp({ Component, pageProps }: AppProps) {
     if (pageProps.session === null && typeof window !== 'undefined') {
@@ -20,11 +21,13 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
                 keepAlive: 10,
             }}
         >
-            <ThemeProvider theme={theme as Theme}>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </ThemeProvider>
+            <ApiContextContainer>
+                <ThemeProvider theme={theme as Theme}>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </ThemeProvider>
+            </ApiContextContainer>
         </Provider>
     );
 }

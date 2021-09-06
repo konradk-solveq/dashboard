@@ -1,8 +1,8 @@
 // @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
 import { getToken } from '../../../components/utils/getToken';
-import * as EventSource from 'eventsource';
+import EventSource from 'eventsource';
+
 const apiUrl = process.env.API_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,10 +11,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!token) {
             return res.status(401).send();
         }
-        const source = new EventSource(`${apiUrl}/events/any`, {
+        const source = new EventSource(`${apiUrl}/events/${req.query.channelId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-
         source.addEventListener('message', (ev) => {
             if (typeof ev === 'object') {
                 res.write(`data: ${ev.data}\n\n`);
