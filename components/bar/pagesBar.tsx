@@ -38,6 +38,7 @@ const PagesBar: React.FC<Props> = ({
                     mr: '3px',
                     cursor: 'pointer',
                 }}
+                className='sys-btn'
                 onClick={() => { heandleScrollRight(true); }}
             >&lt;&lt;&lt;</Button>
             <Button
@@ -50,6 +51,7 @@ const PagesBar: React.FC<Props> = ({
                     mr: '10px',
                     cursor: 'pointer',
                 }}
+                className='sys-btn'
                 onClick={() => { heandleScrollRight(); }}
             >&lt;</Button>
             <Box
@@ -78,7 +80,8 @@ const PagesBar: React.FC<Props> = ({
                                     minHeight: '40px',
                                     cursor: 'pointer',
                                 }}
-                                bg={thePage === page ? 'secondary' : ''}
+                                bg={thePage === page ? '#555' : 'primary'}
+                                className='sys-btn'
                                 key={thePage}
                                 onClick={(e) => setPage(thePage)}
                             >
@@ -99,6 +102,7 @@ const PagesBar: React.FC<Props> = ({
                     ml: '10px',
                     cursor: 'pointer',
                 }}
+                className='sys-btn'
             >&gt;</Button>
             <Flex
                 sx={{
@@ -119,6 +123,7 @@ const PagesBar: React.FC<Props> = ({
                         ml: '3px',
                         cursor: 'pointer',
                     }}
+                    className='sys-btn'
                 >&gt;&gt;&gt;</Button>
                 <Box sx={{
                     position: 'absolute',

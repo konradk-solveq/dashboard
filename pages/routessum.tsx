@@ -1,5 +1,5 @@
 import { signIn, useSession } from 'next-auth/client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import useSWR from 'swr';
 import { Box, Button, Grid, Input, Link, AspectImage, Heading, Flex, Container } from 'theme-ui';
 import qs from 'querystring';
@@ -10,6 +10,7 @@ import { addEmitHelper } from 'typescript';
 import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 import PieChart from '../components/charts/pie';
 import HistogramChart from '../components/charts/histogram';
+import PagesBar from '../components/bar/pagesBar';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
@@ -131,6 +132,30 @@ export default function Page({ }) {
         return val.toFixed(1) + '%';
     }
 
+    const [scroll, setScroll] = useState(0);
+    const SCROLL_MOVE = 42 * 8;
+    const barRef = useRef();
+
+    const heandleScrolLeft = (end: boolean = false) => {
+        const pagesWidth = pages.length * 42;
+        const barWidth = barRef.current.clientWidth;
+        let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
+
+        if (pagesWidth + newPosition < barWidth) {
+            newPosition = -(pagesWidth - barWidth);
+        }
+        setScroll(newPosition);
+    }
+
+    const heandleScrollRight = (end: boolean) => {
+        let newPosition = end ? 0 : scroll + SCROLL_MOVE;
+
+        if (newPosition > 0) {
+            newPosition = 0;
+        }
+        setScroll(newPosition);
+    }
+
     return (
         <Flex sx={{
             flexDirection: 'column',
@@ -142,26 +167,15 @@ export default function Page({ }) {
             </Container>
 
 
-            <Flex sx={{
-                justifyContent: 'center',
-                width: '100%',
-            }}>
-                <Container sx={{ width: 'max-content' }}>
-
-                    {pages.map((thePage) => {
-                        return (
-                            <Button
-                                sx={{ margin: 1, width: 'max-content' }}
-                                bg={thePage === page ? 'secondary' : ''}
-                                key={thePage}
-                                onClick={(e) => setPage(thePage)}
-                            >
-                                {thePage}
-                            </Button>
-                        );
-                    })}
-                </Container>
-            </Flex>
+            <PagesBar
+                page={page}
+                pages={pages}
+                setPage={setPage}
+                scroll={scroll}
+                heandleScrollRight={heandleScrollRight}
+                heandleScrolLeft={heandleScrolLeft}
+                barRef={barRef}
+            />
 
 
             <Flex sx={{

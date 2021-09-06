@@ -4,7 +4,8 @@ import { Box, Grid, Input, Link, AspectImage, Heading, Flex, AspectRatio } from 
 import qs from 'querystring';
 import { useDebounce } from '../components/utils/useDebounce';
 import fetcher from '../helpers/fetcher';
-
+import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
+import PagesBar from '../components/bar/pagesBar';
 import NextLink from 'next/link';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
@@ -57,8 +58,6 @@ const Route: React.FC<{ bg: string; route: any, num: number }> = ({ bg, route, n
         </Grid>
     );
 };
-import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
-import PagesBar from '../components/bar/pagesBar';
 
 export default function Page({ }) {
     const [name, setName] = useState('');
