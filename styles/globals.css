@@ -32,3 +32,7 @@
     transition: all .3s;
     cursor: pointer;
 }
+
+.bar-scroll {
+    transition: left .9s cubic-bezier(.02, .8, .69, 1.08);
+}
