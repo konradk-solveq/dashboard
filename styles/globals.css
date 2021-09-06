@@ -32,3 +32,17 @@
     transition: all .3s;
     cursor: pointer;
 }
+
+.bar-scroll {
+    transition: left .9s cubic-bezier(.02, .8, .69, 1.08);
+}
+
+.sys-btn {
+    color: #fff !important;
+}
+
+.sys-btn:hover {
+    background-color: #f67e83;
+    transition: all .3s;
+    color: #313131 !important;
+}
