@@ -1,18 +1,17 @@
-import { createContext, useState } from 'react';
+import React, { createContext } from 'react';
+import { EventsContextContainer } from './EventsContext';
+import { ManageContextContainer } from './ManageContext';
+export interface ApiContextProps {}
 
-export interface FetchStatus<T> {
-    data: T | null;
-    ready: boolean;
-    error: string;
-}
-export interface ApiContextProps {
-    host: string;
-}
 export interface ApiContextInterface {}
 const context = createContext<ApiContextInterface>(null!);
 
-export const ApiContextContainer: React.FC<ApiContextProps> = ({ children, host }) => {
-    return <context.Provider value={{}}></context.Provider>;
+export const ApiContextContainer: React.FC<ApiContextProps> = ({ children }) => {
+    return (
+        <EventsContextContainer>
+            <ManageContextContainer>{children}</ManageContextContainer>
+        </EventsContextContainer>
+    );
 };
 
 export default context;

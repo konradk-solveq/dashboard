@@ -4,9 +4,7 @@ import useSWR from 'swr';
 import { Box, Button, Grid, Input, Link, AspectImage, Heading } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../components/utils/useDebounce';
-const fetcher = (url: string) => {
-    return fetch(`${url}`).then((r) => r.json());
-};
+import fetcher from '../helpers/fetcher';
 
 import NextLink from 'next/link';
 import { addEmitHelper } from 'typescript';
@@ -20,21 +18,21 @@ const Route: React.FC<{ bg: string; route: any }> = ({ bg, route }) => {
     return (
         <Grid bg={bg} m={1} columns={[1, '3fr ']}>
             <Box p={1} sx={{ overflow: 'hidden' }}>
-                <NextLink href={`/routes/${route.id}`}>
+                <NextLink href={`/routes/route//${route.id}`}>
                     <Heading as="h3" sx={{ textAlign: 'center' }}>
                         <Link color="background">{route.name}</Link>
                     </Heading>
                 </NextLink>
             </Box>
             <Box p={1}>
-                <NextLink href={`/routes/${route.id}`} passHref>
+                <NextLink href={`/routes/route/${route.id}`} passHref>
                     <Link color="background">
                         <AspectImage ratio={1} src={image?.url || 'https://via.placeholder.com/640'}></AspectImage>
                     </Link>
                 </NextLink>
             </Box>
             <Box p={1}>
-                <NextLink href={`/routes/${route.id}`} passHref>
+                <NextLink href={`/routes/route/${route.id}`} passHref>
                     <Link color="background">{route.id}</Link>
                 </NextLink>
             </Box>
@@ -60,7 +58,7 @@ import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 export default function Page({}) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
-    const [url, setUrl] = useState(`/api/findByName`);
+    const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
     const { data: { total, elements, links, limit } = defaultTo, error } = useSWR(url, fetcher);
     const debouncedName = useDebounce(name, 333);
     const debouncedTotal = useDebounce(total, 125);
@@ -68,7 +66,7 @@ export default function Page({}) {
     const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
     useEffect(() => {
-        setUrl(`/api/findByName?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
+        setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
     }, [debouncedName, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
@@ -77,7 +75,7 @@ export default function Page({}) {
         .map((v, i) => i + 1);
 
     return (
-        <>
+        <Box>
             <Input
                 onChange={(e) => {
                     setPage(1);
@@ -106,6 +104,6 @@ export default function Page({}) {
                     </Grid>
                 </>
             )}
-        </>
+        </Box>
     );
 }
