@@ -41,9 +41,10 @@ const InputForm: React.FC<Props> = ({
                     sx={{
                         fontFamily: 'din-b',
                         p: '3px',
-                        width: '250px'
+                        width: '250px',
+                        height: '30px',
                     }}>
-                    {value}
+                    {value ? value : '-- brak danych --'}
                 </Box>}
             </Box>
             <Button

@@ -25,6 +25,7 @@ const Page: React.FC<Props> = ({ }) => {
     const [tagsOptions, setTagsOptions] = useState([]);
 
     const [name, setName] = useState('')
+    const [location, setLocation] = useState('')
     const [descriptionShort, setDescriptionShort] = useState('')
     const [descriptionLong, setDescriptionLong] = useState('')
     const [recommended, setRecommended] = useState(false)
@@ -35,21 +36,24 @@ const Page: React.FC<Props> = ({ }) => {
     useEffect(() => {
         if (data) {
             if (data.difficulty) {
-                setDifficultyOptions(data.difficulty.options)
+                setDifficultyOptions(data.difficulty.options);
             }
             if (data.surface) {
-                setSurfaceOptions(data.surface.options)
+                setSurfaceOptions(data.surface.options);
             }
             if (data.tags) {
-                setTagsOptions(data.tags.options)
+                setTagsOptions(data.tags.options);
             }
 
-            setName(data.name)
+            setName(data.name);
+            setLocation(data.location);
+
             if (data.description) {
-                setDescriptionShort(data.description.short)
-                setDescriptionLong(data.description.long)
+                setDescriptionShort(data.description.short);
+                setDescriptionLong(data.description.long);
             }
-            setRecommended(data.recommended ? true : false)
+
+            setRecommended(data.recommended ? true : false);
         }
     }, [data])
 
@@ -102,6 +106,7 @@ const Page: React.FC<Props> = ({ }) => {
                         <Box>ownerId: {data.ownerId}</Box>
 
                         <InputForm title={'nazwa:'} value={name} setValue={e => setName(e)} />
+                        <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
 
                         {data.description && <>
                             <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
