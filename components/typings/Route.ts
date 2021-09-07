@@ -40,7 +40,7 @@ export class Route {
     difficulty?: LocalizedEnumOptionsArray<any>;
     ownerId: string;
     surface?: LocalizedEnumOptionsArray<any>;
-    description: {
+    description?: {
         short: string;
         long: string;
     };
@@ -55,8 +55,8 @@ export class Route {
     isPublic: boolean;
     isFeatured: boolean;
     createdAt: Date;
-    publishedAt: Date;
-    downloads: number;
+    publishedAt: Date | null;
+    downloads: number | null;
     reactions: ReactionsDTO;
     reaction: string;
 }
