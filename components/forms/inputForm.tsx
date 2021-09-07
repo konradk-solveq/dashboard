@@ -1,11 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/dist/client/router';
-import useSWR from 'swr';
+import { useState } from 'react';
 import { Box, Flex, Button, Label, Input } from 'theme-ui';
-import EventsContext from '../contexts/EventsContext';
-import ManageContext from '../contexts/ManageContext';
-import fetcher from '../../helpers/fetcher';
-import { Route } from '../typings/Route';
 
 interface Props {
     title: string;

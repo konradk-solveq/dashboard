@@ -1,13 +1,14 @@
 import { useRouter } from 'next/dist/client/router';
 import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Flex, Button, Label, Input } from 'theme-ui';
+import { Box, Flex, Button, Label, Input, Switch } from 'theme-ui';
 import EventsContext from '../../../components/contexts/EventsContext';
 import ManageContext from '../../../components/contexts/ManageContext';
 import fetcher from '../../../helpers/fetcher';
 import { Route } from '../../../components/typings/Route';
 
 import InputForm from '../../../components/forms/inputForm';
+import SwitchForm from '../../../components/forms/swithForm';
 
 interface Props { };
 const Page: React.FC<Props> = ({ }) => {
@@ -26,6 +27,7 @@ const Page: React.FC<Props> = ({ }) => {
     const [name, setName] = useState('')
     const [descriptionShort, setDescriptionShort] = useState('')
     const [descriptionLong, setDescriptionLong] = useState('')
+    const [recommended, setRecommended] = useState(false)
 
 
     const heandleSendData = () => { return false; };
@@ -47,6 +49,7 @@ const Page: React.FC<Props> = ({ }) => {
                 setDescriptionShort(data.description.short)
                 setDescriptionLong(data.description.long)
             }
+            setRecommended(data.recommended ? true : false)
         }
     }, [data])
 
@@ -62,7 +65,7 @@ const Page: React.FC<Props> = ({ }) => {
             surface: [],
             tags: [],
             location: '',
-            recommended: true,
+            recommended: recommended,
             bike: '',
             reactions: {
                 like: 0,
@@ -105,6 +108,10 @@ const Page: React.FC<Props> = ({ }) => {
                             <InputForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
                         </>}
 
+                        <SwitchForm
+                            title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)}
+
+                        />
 
 
                         {/* <Box>
