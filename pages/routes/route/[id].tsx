@@ -11,6 +11,7 @@ import InputForm from '../../../components/forms/inputForm';
 import SwitchForm from '../../../components/forms/swithForm';
 import TexareaForm from '../../../components/forms/texareaForm';
 import CheckboxList from '../../../components/forms/checkboxList';
+import { getData, getTime, getDistance } from '../../../helpers/dataFormat';
 
 interface Props { };
 const Page: React.FC<Props> = ({ }) => {
@@ -133,13 +134,13 @@ const Page: React.FC<Props> = ({ }) => {
                     <Flex><Box sx={{ mr: '5px' }}>id trasy: </Box>{checkNoData(id)}</Flex>
                     <Flex><Box sx={{ mr: '5px' }}>id właściciela: </Box>{checkNoData(data.ownerId)}</Flex>
                     <Flex><Box sx={{ mr: '5px' }}>autor: </Box>{checkNoData(data.author)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>utworzona: </Box>{checkNoData(data.createdAt)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>dystans: </Box>{checkNoData(data.distance)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>czas: </Box>{checkNoData(data.time)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>utworzona: </Box>{checkNoData(getData(data.createdAt))}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>dystans: </Box>{checkNoData(getDistance(data.distance))}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>czas: </Box>{checkNoData(getTime(data.time))}</Flex>
                     <Flex><Box sx={{ mr: '5px' }}>pobrania: </Box>{checkNoData(data.downloads)}</Flex>
                     <Flex><Box sx={{ mr: '5px' }}>lajki: </Box>{checkNoData(data.reactions.like)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex>
+                    {/* <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex> */}
+                    {/* <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex> */}
                     <Flex><Box sx={{ mr: '5px' }}>reakcje: </Box>{checkNoData(data.reaction)}</Flex>
                     <Flex><Box sx={{ mr: '5px' }}>polecana: </Box>{checkNoData(data.isFeatured)}</Flex>
 
