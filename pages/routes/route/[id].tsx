@@ -71,6 +71,7 @@ const Page: React.FC<Props> = ({ }) => {
     }
 
     const checkNoData = d => {
+        if (typeof d == 'undefined') { return (<Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- undefined --</Box>); }
         if (d == null) { return (<Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- null --</Box>); }
         else { return <Box sx={{ fontFamily: 'din-b', }}>{d.toString()}</Box> }
     }
@@ -190,7 +191,9 @@ const Page: React.FC<Props> = ({ }) => {
                         fontFamily: 'din-b',
                         fontSize: '20px',
                         color: 'primary',
-                    }}>brak opisów</Box>}
+                    }}>{typeof data.description == 'undefined' ? '-- undefined --' : (
+                        data.description == null ? '-- null --' : '-- brak danych --'
+                    )}</Box>}
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={data.isPublic} setChecked={() => (data.isPublic ? api.unpublish(id) : api.publish(id))} />

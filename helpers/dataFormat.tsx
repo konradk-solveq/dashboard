@@ -5,6 +5,7 @@ const getData = da => {
 };
 
 const getTime = t => {
+    if (typeof t == 'undefined') return t;
     const s = t % 60;
     const m = ((t - s) / 60) % 60;
     const h = (t - s - (m * 60)) / (60 * 60);
