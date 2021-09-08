@@ -68,16 +68,7 @@ const Page: React.FC<Props> = ({ }) => {
         else { return <Box sx={{ fontFamily: 'din-b', }}>{d.toString()}</Box> }
     }
 
-    const sx = {
-        label: {
-            mr: '5px',
-        },
-        value: {
-            fontFamily: 'din-b',
-        }
-    }
-
-    const heandleSaveData = () => {
+    const heandleSaveData = () => { // TODO backend
         const ret = {
             name: name,
             difficulty: [],
@@ -104,11 +95,11 @@ const Page: React.FC<Props> = ({ }) => {
         console.log('%c data:', 'background: #ffcc00; color: #003300', ret)
     }
 
-    const heandleNextRoute = () => {
+    const heandleNextRoute = () => { // TODO backend
         console.log('%c heandleNextRoute:', 'background: #ffcc00; color: #003300')
     }
 
-    const heandlePreviousRoute = () => {
+    const heandlePreviousRoute = () => { // TODO backend
         console.log('%c heandlePreviousRoute:', 'background: #ffcc00; color: #003300')
     }
 
