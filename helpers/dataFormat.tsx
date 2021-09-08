@@ -1,6 +1,6 @@
 const getData = da => {
     const d = new Date(da);
-    const res = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()} ${d.getUTCHours()}:${d.getMinutes()}`
+    const res = `${d.getFullYear()}-${d.getMonth() < 10 ? '0' : ''}${d.getMonth()}-${d.getDate() < 10 ? '0' : ''}${d.getDate()} ${d.getUTCHours() < 10 ? '0' : ''}${d.getUTCHours()}:${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}`
     return res;
 };
 
