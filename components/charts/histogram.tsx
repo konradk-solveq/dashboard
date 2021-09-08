@@ -20,13 +20,13 @@ const BarChart: React.FC<{ data: any, page: any }> = ({
             item[key] = data[key];
             da.push(item)
         }
-        console.log('%c da:', 'background: #ffcc00; color: #003300', da)
+        // console.log('%c da:', 'background: #ffcc00; color: #003300', da)
         drawChart(da.sort((a, b) => a.num - b.num));
     }, [data, page]);
 
 
     function drawChart(data) {
-        console.log('%c da--ta:', 'background: #ffcc00; color: #003300', data)
+        // console.log('%c da--ta:', 'background: #ffcc00; color: #003300', data)
         // 
 
         // Remove the old svg

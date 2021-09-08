@@ -39,6 +39,7 @@
 
 .sys-btn {
     color: #fff !important;
+    cursor: pointer;
 }
 
 .sys-btn:hover {
