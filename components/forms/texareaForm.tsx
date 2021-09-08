@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Flex, Button, Label, Input } from 'theme-ui';
+import { Box, Flex, Button, Label, Textarea } from 'theme-ui';
 
 interface Props {
     title: string;
@@ -7,7 +7,7 @@ interface Props {
     setValue: (e) => void;
 }
 
-const InputForm: React.FC<Props> = ({
+const TexareaForm: React.FC<Props> = ({
     title,
     value,
     setValue,
@@ -29,7 +29,7 @@ const InputForm: React.FC<Props> = ({
         }}>
             <Box sx={{ width: '100%' }}>
                 <Label>{title}</Label>
-                {edit && <Input
+                {edit && <Textarea
                     value={value}
                     onChange={e => setValue(e.target.value)}
                     sx={{
@@ -68,4 +68,4 @@ const InputForm: React.FC<Props> = ({
     )
 }
 
-export default InputForm;
+export default TexareaForm;

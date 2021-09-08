@@ -9,6 +9,7 @@ import { Route } from '../../../components/typings/Route';
 
 import InputForm from '../../../components/forms/inputForm';
 import SwitchForm from '../../../components/forms/swithForm';
+import TexareaForm from '../../../components/forms/texareaForm';
 
 interface Props { };
 const Page: React.FC<Props> = ({ }) => {
@@ -103,12 +104,27 @@ const Page: React.FC<Props> = ({ }) => {
         console.log('%c data:', 'background: #ffcc00; color: #003300', ret)
     }
 
+    const heandleNextRoute = () => {
+        console.log('%c heandleNextRoute:', 'background: #ffcc00; color: #003300')
+    }
+
+    const heandlePreviousRoute = () => {
+        console.log('%c heandlePreviousRoute:', 'background: #ffcc00; color: #003300')
+    }
+
     return (
         <Flex
             sx={{
                 flexDirection: 'column',
+                justifyContent: 'center',
+                width: '100%',
             }}
         >
+            <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px', }}>
+                <Button className='sys-btn' onClick={heandleNextRoute}>&lt;&lt;&lt; porprzednia</Button>
+                <Button className='sys-btn' onClick={heandlePreviousRoute}>następna &gt;&gt;&gt;</Button>
+            </Flex>
+
             {data && (
                 <Box as='form' onSubmit={heandleSendData}
                     sx={{
@@ -134,8 +150,41 @@ const Page: React.FC<Props> = ({ }) => {
                     <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
 
                     {data.description && <>
-                        <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
-                        <InputForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
+                        <Flex >
+                            <Box sx={{width: '90%'}}>
+                                <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
+                                <TexareaForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
+                            </Box>
+                            <Flex sx={{
+                                // bg: 'khaki',
+                                pl: '40px',
+                                pt: '20px',
+                                borderTop: '1px solid #55555544',
+                                mt: '5px',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                width: 'max-content' 
+                            }}>
+                                <Button
+                                    className='sys-btn'
+                                    type='button'
+                                    sx={{ py: '3px', px: '10px', mb: '5px' }}
+                                    onClick={() => { }}
+                                >połącz ze opisy</Button>
+                                <Button
+                                    className='sys-btn'
+                                    type='button'
+                                    sx={{ py: '3px', px: '10px', mb: '5px' }}
+                                    onClick={() => { }}
+                                >wybierz krótki</Button>
+                                <Button
+                                    className='sys-btn'
+                                    type='button'
+                                    sx={{ py: '3px', px: '10px', }}
+                                    onClick={() => { }}
+                                >wybierz długi</Button>
+                            </Flex>
+                        </Flex>
                     </>}
                     {!data.description && <Box sx={{
                         borderTop: '1px solid #55555544',
@@ -148,18 +197,20 @@ const Page: React.FC<Props> = ({ }) => {
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={data.isPublic} setChecked={() => (data.isPublic ? api.unpublish(id) : api.publish(id))} />
 
-
-
-
                     <Flex sx={{
                         width: '100%',
                         justifyContent: 'center',
                         mt: '16px',
                     }}>
-                        <Button type='button' onClick={heandleSaveData}>Zmień / zapisz</Button>
+                        <Button type='button' className='sys-btn' onClick={heandleSaveData}>Zmień / zapisz</Button>
                     </Flex>
                 </Box>
             )}
+
+            <Flex sx={{ width: '100%', justifyContent: 'space-between', mt: '20px', }}>
+                <Button className='sys-btn' onClick={heandleNextRoute}>&lt;&lt;&lt; porprzednia</Button>
+                <Button className='sys-btn' onClick={heandlePreviousRoute}>następna &gt;&gt;&gt;</Button>
+            </Flex>
         </Flex >
     );
 };
