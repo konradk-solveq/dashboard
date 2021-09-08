@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Flex, Button, Label, Input, Switch } from 'theme-ui';
+import { Box, Flex, Button, Label, Input, Checkbox } from 'theme-ui';
 import EventsContext from '../../../components/contexts/EventsContext';
 import ManageContext from '../../../components/contexts/ManageContext';
 import fetcher from '../../../helpers/fetcher';
@@ -10,6 +10,7 @@ import { Route } from '../../../components/typings/Route';
 import InputForm from '../../../components/forms/inputForm';
 import SwitchForm from '../../../components/forms/swithForm';
 import TexareaForm from '../../../components/forms/texareaForm';
+import CheckboxList from '../../../components/forms/checkboxList';
 
 interface Props { };
 const Page: React.FC<Props> = ({ }) => {
@@ -19,11 +20,13 @@ const Page: React.FC<Props> = ({ }) => {
     const api = useContext(ManageContext);
     const id = router.query.id as string;
     const { data, error } = useSWR<Route, any>(`/api/routes/route/${id}?${events.getRouteUpdates(id)}`, fetcher);
-    console.log('%c data:', 'background: #ffcc00; color: #003300', data)
 
     const [difficultyOptions, setDifficultyOptions] = useState([]);
+    const [difficulty, setDifficulty] = useState([]);
     const [surfaceOptions, setSurfaceOptions] = useState([]);
+    const [surface, setSurface] = useState([]);
     const [tagsOptions, setTagsOptions] = useState([]);
+    const [tags, setTags] = useState([]);
 
     const [name, setName] = useState('')
     const [location, setLocation] = useState('')
@@ -38,12 +41,15 @@ const Page: React.FC<Props> = ({ }) => {
         if (data) {
             if (data.difficulty) {
                 setDifficultyOptions(data.difficulty.options);
+                setDifficulty(data.difficulty.values)
             }
             if (data.surface) {
                 setSurfaceOptions(data.surface.options);
+                setSurface(data.surface.values);
             }
             if (data.tags) {
                 setTagsOptions(data.tags.options);
+                setTags(data.tags.values);
             }
 
             setName(data.name);
@@ -142,7 +148,7 @@ const Page: React.FC<Props> = ({ }) => {
 
                     {data.description && <>
                         <Flex >
-                            <Box sx={{width: '90%'}}>
+                            <Box sx={{ width: '90%' }}>
                                 <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
                                 <TexareaForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
                             </Box>
@@ -154,7 +160,7 @@ const Page: React.FC<Props> = ({ }) => {
                                 mt: '5px',
                                 flexDirection: 'column',
                                 justifyContent: 'center',
-                                width: 'max-content' 
+                                width: 'max-content'
                             }}>
                                 <Button
                                     className='sys-btn'
@@ -188,6 +194,33 @@ const Page: React.FC<Props> = ({ }) => {
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={data.isPublic} setChecked={() => (data.isPublic ? api.unpublish(id) : api.publish(id))} />
 
+                    <CheckboxList
+                        title={'trudność:'}
+                        listOptions={difficultyOptions}
+                        values={difficulty}
+                        setValues={e => setDifficulty(e)}
+                    />
+
+                    <CheckboxList
+                        title={'nawierzchnia:'}
+                        listOptions={surfaceOptions}
+                        values={surface}
+                        setValues={e => setSurface(e)}
+                    />
+
+                    <CheckboxList
+                        title={'tagi:'}
+                        listOptions={tagsOptions}
+                        values={tags}
+                        setValues={e => setTags(e)}
+                    />
+
+                    <Box sx={{
+                        borderTop: '1px solid #55555544',
+                        mt: '5px',
+                        py: '5px',
+                    }}></Box>
+
                     <Flex sx={{
                         width: '100%',
                         justifyContent: 'center',
@@ -195,6 +228,8 @@ const Page: React.FC<Props> = ({ }) => {
                     }}>
                         <Button type='button' className='sys-btn' onClick={heandleSaveData}>Zmień / zapisz</Button>
                     </Flex>
+
+
                 </Box>
             )}
 
