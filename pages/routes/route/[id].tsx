@@ -29,11 +29,12 @@ const Page: React.FC<Props> = ({ }) => {
     const [tagsOptions, setTagsOptions] = useState([]);
     const [tags, setTags] = useState([]);
 
-    const [name, setName] = useState('')
-    const [location, setLocation] = useState('')
-    const [descriptionShort, setDescriptionShort] = useState('')
-    const [descriptionLong, setDescriptionLong] = useState('')
-    const [recommended, setRecommended] = useState(false)
+    const [name, setName] = useState('');
+    const [location, setLocation] = useState('');
+    const [descriptionShort, setDescriptionShort] = useState('');
+    const [descriptionLong, setDescriptionLong] = useState('');
+    const [recommended, setRecommended] = useState(false);
+    const [isPublic, setIsPublic] = useState(false);
 
 
     const heandleSendData = () => { return false; };
@@ -61,7 +62,8 @@ const Page: React.FC<Props> = ({ }) => {
                 setDescriptionLong(data.description.long);
             }
 
-            setRecommended(data.recommended ? true : false);
+            setRecommended(!!data.recommended);
+            setIsPublic(!!data.isPublic)
         }
     }, [data])
 
@@ -77,6 +79,9 @@ const Page: React.FC<Props> = ({ }) => {
     }
 
     const heandleSaveData = () => { // TODO backend
+
+        if (isPublic) { api.publish(id) } else { api.unpublish(id) }
+
         const ret = {
             name: name,
             difficulty: difficulty,
@@ -196,7 +201,7 @@ const Page: React.FC<Props> = ({ }) => {
                     )}</Box>}
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
-                    <SwitchForm title={'publiczna'} checked={data.isPublic} setChecked={() => (data.isPublic ? api.unpublish(id) : api.publish(id))} />
+                    <SwitchForm title={'publiczna'} checked={isPublic} setChecked={e => setIsPublic(e)} />
 
                     <CheckboxList
                         title={'trudność:'}
