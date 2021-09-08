@@ -48,7 +48,10 @@ const InputForm: React.FC<Props> = ({
                         minHeight: '30px',
                         color: value ? '' : 'primary',
                     }}>
-                    {value ? value : '-- brak danych --'}
+                    {value ? value : (
+                        typeof value == 'undefined' ? '-- undefined --' : (
+                            value == null ? '-- null --' : '-- brak danych --'
+                        ))}
                 </Box>}
             </Box>
             <Button
