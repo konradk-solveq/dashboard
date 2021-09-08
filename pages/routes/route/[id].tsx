@@ -77,18 +77,18 @@ const Page: React.FC<Props> = ({ }) => {
     const heandleSaveData = () => { // TODO backend
         const ret = {
             name: name,
-            difficulty: [],
-            surface: [],
-            tags: [],
-            location: '',
+            difficulty: difficulty,
+            surface: surface,
+            tags: tags,
+            location: location,
             recommended: recommended,
-            bike: '',
-            reactions: {
-                like: 0,
-                wow: 0,
-                love: 0,
-            },
-            format: 'v1',
+            // bike: '',
+            // reactions: {
+            //     like: 0,
+            //     wow: 0,
+            //     love: 0,
+            // },
+            // format: 'v1',
         }
 
         if (data.description) {
@@ -228,8 +228,6 @@ const Page: React.FC<Props> = ({ }) => {
                     }}>
                         <Button type='button' className='sys-btn' onClick={heandleSaveData}>Zmień / zapisz</Button>
                     </Flex>
-
-
                 </Box>
             )}
 
