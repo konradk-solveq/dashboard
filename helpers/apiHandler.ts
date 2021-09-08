@@ -3,7 +3,7 @@ import { authMiddleware } from './authMiddleware';
 import { axiosConfigMiddleware } from './axiosConfigMiddleware';
 import { AxiosInstance } from 'axios';
 
-export type Q = {
+export type ExtendedApiRequest = {
     locals: {
         axios: AxiosInstance;
         token: string;

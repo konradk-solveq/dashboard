@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { apiHandler, Q } from '../../../../helpers/apiHandler';
+import { apiHandler, ExtendedApiRequest } from '../../../../helpers/apiHandler';
 
 export default apiHandler({
     get: getHandler,
 });
 
-async function getHandler(req: NextApiRequest & Q, res: NextApiResponse) {
+async function getHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApiResponse) {
     const { axios } = req.locals;
     const thisPath = req.url.split('?')[0];
     const { data, request } = await axios.get(`/cycling-map/manage/lookup`, {

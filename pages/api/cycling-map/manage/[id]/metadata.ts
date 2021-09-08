@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { apiHandler, Q } from '../../../../../helpers/apiHandler';
+import { apiHandler, ExtendedApiRequest } from '../../../../../helpers/apiHandler';
 
 export default apiHandler({
     patch: patchMetadataHandler,
 });
 
-async function patchMetadataHandler(req: NextApiRequest & Q, res: NextApiResponse) {
+async function patchMetadataHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApiResponse) {
     const { id } = req.query;
     const { body } = req;
     const { axios } = req.locals;

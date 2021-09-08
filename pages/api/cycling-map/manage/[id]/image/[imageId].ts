@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { apiHandler, Q } from '../../../../../../helpers/apiHandler';
+import { apiHandler, ExtendedApiRequest } from '../../../../../../helpers/apiHandler';
 
 export default apiHandler({
     delete: deleteMapImageHandler,
 });
 
-async function deleteMapImageHandler(req: NextApiRequest & Q, res: NextApiResponse) {
+async function deleteMapImageHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApiResponse) {
     const { id, imageId } = req.query;
     const { axios } = req.locals;
     const { data } = await axios.delete(`/cycling-map/manage/${id}/image/${imageId}`);
