@@ -24,9 +24,11 @@ const InputForm: React.FC<Props> = ({
         <Flex sx={{
             justifyContent: 'space-between',
             alignItems: 'flex-end',
+            borderTop: '1px solid #55555544',
+            mt: '5px'
         }}>
             <Box>
-                <Label sx={{ mt: '5px' }}>{title}</Label>
+                <Label>{title}</Label>
                 {edit && <Input
                     value={value}
                     onChange={e => setValue(e.target.value)}
@@ -42,7 +44,8 @@ const InputForm: React.FC<Props> = ({
                         fontFamily: 'din-b',
                         p: '3px',
                         width: '250px',
-                        height: '30px',
+                        minHeight: '30px',
+                        color: value ? '' : 'primary',
                     }}>
                     {value ? value : '-- brak danych --'}
                 </Box>}

@@ -62,6 +62,20 @@ const Page: React.FC<Props> = ({ }) => {
         return <div>Loading...</div>;
     }
 
+    const checkNoData = d => {
+        if (d == null) { return (<Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- null --</Box>); }
+        else { return <Box sx={{ fontFamily: 'din-b', }}>{d.toString()}</Box> }
+    }
+
+    const sx = {
+        label: {
+            mr: '5px',
+        },
+        value: {
+            fontFamily: 'din-b',
+        }
+    }
+
     const heandleSaveData = () => {
         const ret = {
             name: name,
@@ -95,72 +109,57 @@ const Page: React.FC<Props> = ({ }) => {
                 flexDirection: 'column',
             }}
         >
-            <Box>id: {id}</Box>
             {data && (
-                <>
-                    <Box as='form' onSubmit={heandleSendData}
-                        sx={{
-                            bg: 'khaki',
-                            px: '20px',
-                        }}>
-                        <Box>ownerId: {data.ownerId}</Box>
+                <Box as='form' onSubmit={heandleSendData}
+                    sx={{
+                        bg: '#ddd',
+                        px: '20px',
+                        py: '20px',
+                        borderRadius: '10px',
+                    }}>
+                    <Flex><Box sx={{ mr: '5px' }}>id trasy: </Box>{checkNoData(id)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>id właściciela: </Box>{checkNoData(data.ownerId)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>autor: </Box>{checkNoData(data.author)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>utworzona: </Box>{checkNoData(data.createdAt)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>dystans: </Box>{checkNoData(data.distance)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>czas: </Box>{checkNoData(data.time)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>pobrania: </Box>{checkNoData(data.downloads)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>lajki: </Box>{checkNoData(data.reactions.like)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>reakcje: </Box>{checkNoData(data.reaction)}</Flex>
+                    <Flex><Box sx={{ mr: '5px' }}>polecana: </Box>{checkNoData(data.isFeatured)}</Flex>
 
-                        <InputForm title={'nazwa:'} value={name} setValue={e => setName(e)} />
-                        <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
+                    <InputForm title={'nazwa:'} value={name} setValue={e => setName(e)} />
+                    <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
 
-                        {data.description && <>
-                            <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
-                            <InputForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
-                        </>}
+                    {data.description && <>
+                        <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
+                        <InputForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
+                    </>}
+                    {!data.description && <Box sx={{
+                        borderTop: '1px solid #55555544',
+                        mt: '5px',
+                        fontFamily: 'din-b',
+                        fontSize: '20px',
+                        color: 'primary',
+                    }}>brak opisów</Box>}
 
-                        <SwitchForm
-                            title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)}
-
-                        />
+                    <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
+                    <SwitchForm title={'publiczna'} checked={data.isPublic} setChecked={() => (data.isPublic ? api.unpublish(id) : api.publish(id))} />
 
 
-                        {/* <Box>
-                                status: <span>{events.getRouteStatus(id as string)}</span>
-                            </Box> */}
 
-                        {/* <Flex>
-                            <Box>
-                                <Label htmlFor='name' sx={sx.label}>nazwa trasy:</Label>
-                                {nameEdit && <Input value={name} name='name' id='name' onChange={e => setName(e.target.value)} sx={sx.input}></Input>}
-                                {!nameEdit && <Box sx={sx.input}>{name}</Box>}
-                            </Box>
-                        <Button onClick={()=>setNameEdit(!nameEdit)}>Edytuj</Button> 
-                        </Flex> */}
 
-                        {/* <Label htmlFor='autor' sx={sx.label}>autor:</Label>
-                        <Input value={data.author} name='author' id='author' onChange={() => { }} sx={sx.input}></Input> */}
-
-                        <Box>czas: {data.time}</Box>
-                        <Box>dystans: {data.distance}</Box>
-
-                        {data.description && <>
-                            <Box>opis krótki: {data.description.short}</Box>
-                            <Box>opis długi: {data.description.long}</Box>
-                        </>}
-
-                        <Box>lokalizacja: {data.location}</Box>
-                        <Box>rekomandowane: {data.recommended}</Box>
-                        <Box>pobrania: {data.downloads}</Box>
-                        <Box>lajki: {data.reactions.like}</Box>
-                        {/* <Box>wow: {data.reactions.wow}</Box>
-                    <Box>love: {data.reactions.love}</Box> */}
-                        <Box>reaction: {data.reaction}</Box>
-                        <Box>polecana: {data.isFeatured}</Box>
+                    <Flex sx={{
+                        width: '100%',
+                        justifyContent: 'center',
+                        mt: '16px',
+                    }}>
                         <Button type='button' onClick={heandleSaveData}>Zmień / zapisz</Button>
-                    </Box>
-                </>
-            )
-            }
-            <Button>
-                <span onClick={() => (data.isPublic ? api.unpublish(id) : api.publish(id))}>
-                    {data.isPublic ? 'Zrób niepublicznym' : 'Upublicznij'}
-                </span>
-            </Button>
+                    </Flex>
+                </Box>
+            )}
         </Flex >
     );
 };
