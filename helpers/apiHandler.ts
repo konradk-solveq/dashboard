@@ -7,6 +7,7 @@ export type ExtendedApiRequest = {
     locals: {
         axios: AxiosInstance;
         token: string;
+        apiUrl: string;
     };
 };
 
@@ -18,6 +19,7 @@ export const apiHandler = (handler: Object, callback?: (err: any) => void) => {
         }
         try {
             req.locals = {};
+            req.locals.apiUrl = process.env.API_URL;
             await authMiddleware(req, res);
             await axiosConfigMiddleware(req, res);
             await handler[method](req, res);
