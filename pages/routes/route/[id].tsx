@@ -13,9 +13,8 @@ import TexareaForm from '../../../components/forms/texareaForm';
 import CheckboxList from '../../../components/forms/checkboxList';
 import { getData, getTime, getDistance } from '../../../helpers/dataFormat';
 
-interface Props { };
-const Page: React.FC<Props> = ({ }) => {
-
+interface Props {}
+const Page: React.FC<Props> = ({}) => {
     const router = useRouter();
     const events = useContext(EventsContext);
     const api = useContext(ManageContext);
@@ -36,14 +35,15 @@ const Page: React.FC<Props> = ({ }) => {
     const [recommended, setRecommended] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
 
-
-    const heandleSendData = () => { return false; };
+    const heandleSendData = () => {
+        return false;
+    };
 
     useEffect(() => {
         if (data) {
             if (data.difficulty) {
                 setDifficultyOptions(data.difficulty.options);
-                setDifficulty(data.difficulty.values)
+                setDifficulty(data.difficulty.values);
             }
             if (data.surface) {
                 setSurfaceOptions(data.surface.options);
@@ -63,24 +63,28 @@ const Page: React.FC<Props> = ({ }) => {
             }
 
             setRecommended(!!data.recommended);
-            setIsPublic(!!data.isPublic)
+            setIsPublic(!!data.isPublic);
         }
-    }, [data])
+    }, [data]);
 
     if (router.isFallback) return <div>Loading...</div>;
     if (!data) {
         return <div>Loading...</div>;
     }
 
-    const checkNoData = d => {
-        if (typeof d == 'undefined') { return (<Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- undefined --</Box>); }
-        if (d == null) { return (<Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- null --</Box>); }
-        else { return <Box sx={{ fontFamily: 'din-b', }}>{d.toString()}</Box> }
-    }
+    const checkNoData = (d) => {
+        if (typeof d == 'undefined') {
+            return <Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- undefined --</Box>;
+        }
+        if (d == null) {
+            return <Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- null --</Box>;
+        } else {
+            return <Box sx={{ fontFamily: 'din-b' }}>{d.toString()}</Box>;
+        }
+    };
 
-    const heandleSaveData = () => { // TODO backend
-
-        if (isPublic) { api.publish(id) } else { api.unpublish(id) }
+    const handleSaveData = () => {
+        // TODO backend
 
         const ret = {
             name: name,
@@ -89,14 +93,7 @@ const Page: React.FC<Props> = ({ }) => {
             tags: tags,
             location: location,
             recommended: recommended,
-            // bike: '',
-            // reactions: {
-            //     like: 0,
-            //     wow: 0,
-            //     love: 0,
-            // },
-            // format: 'v1',
-        }
+        };
 
         if (data.description) {
             ret.description = {
@@ -104,17 +101,19 @@ const Page: React.FC<Props> = ({ }) => {
                 long: descriptionLong,
             };
         }
+        api.updateMetadata(id, ret as any);
+        console.log('%c data:', 'background: #ffcc00; color: #003300', ret);
+    };
 
-        console.log('%c data:', 'background: #ffcc00; color: #003300', ret)
-    }
+    const handleNextRoute = () => {
+        // TODO backend
+        console.log('%c heandleNextRoute:', 'background: #ffcc00; color: #003300');
+    };
 
-    const heandleNextRoute = () => { // TODO backend
-        console.log('%c heandleNextRoute:', 'background: #ffcc00; color: #003300')
-    }
-
-    const heandlePreviousRoute = () => { // TODO backend
-        console.log('%c heandlePreviousRoute:', 'background: #ffcc00; color: #003300')
-    }
+    const handlePreviousRoute = () => {
+        // TODO backend
+        console.log('%c heandlePreviousRoute:', 'background: #ffcc00; color: #003300');
+    };
 
     return (
         <Flex
@@ -124,127 +123,200 @@ const Page: React.FC<Props> = ({ }) => {
                 width: '100%',
             }}
         >
-            <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px', }}>
-                <Button className='sys-btn' onClick={heandleNextRoute}>&lt;&lt;&lt; porprzednia</Button>
-                <Button className='sys-btn' onClick={heandlePreviousRoute}>następna &gt;&gt;&gt;</Button>
+            <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px' }}>
+                <Button className="sys-btn" onClick={handleNextRoute}>
+                    &lt;&lt;&lt; porprzednia
+                </Button>
+                <Button className="sys-btn" onClick={handlePreviousRoute}>
+                    następna &gt;&gt;&gt;
+                </Button>
             </Flex>
 
             {data && (
-                <Box as='form' onSubmit={heandleSendData}
+                <Box
+                    as="form"
+                    onSubmit={heandleSendData}
                     sx={{
                         bg: '#ddd',
                         px: '20px',
                         py: '20px',
                         borderRadius: '10px',
-                    }}>
-                    <Flex><Box sx={{ mr: '5px' }}>id trasy: </Box>{checkNoData(id)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>id właściciela: </Box>{checkNoData(data.ownerId)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>autor: </Box>{checkNoData(data.author)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>utworzona: </Box>{checkNoData(getData(data.createdAt))}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>dystans: </Box>{checkNoData(getDistance(data.distance))}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>czas: </Box>{checkNoData(getTime(data.time))}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>pobrania: </Box>{checkNoData(data.downloads)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>lajki: </Box>{checkNoData(data.reactions.like)}</Flex>
+                    }}
+                >
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>id trasy: </Box>
+                        {checkNoData(id)}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>id właściciela: </Box>
+                        {checkNoData(data.ownerId)}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>autor: </Box>
+                        {checkNoData(data.author)}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>utworzona: </Box>
+                        {checkNoData(getData(data.createdAt))}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>dystans: </Box>
+                        {checkNoData(getDistance(data.distance))}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>czas: </Box>
+                        {checkNoData(getTime(data.time))}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>pobrania: </Box>
+                        {checkNoData(data.downloads)}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>lajki: </Box>
+                        {checkNoData(data.reactions.like)}
+                    </Flex>
                     {/* <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex> */}
                     {/* <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex> */}
-                    <Flex><Box sx={{ mr: '5px' }}>reakcje: </Box>{checkNoData(data.reaction)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>polecana: </Box>{checkNoData(data.isFeatured)}</Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>reakcje: </Box>
+                        {checkNoData(data.reaction)}
+                    </Flex>
+                    <Flex>
+                        <Box sx={{ mr: '5px' }}>polecana: </Box>
+                        {checkNoData(data.isFeatured)}
+                    </Flex>
 
-                    <InputForm title={'nazwa:'} value={name} setValue={e => setName(e)} />
-                    <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
+                    <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} />
+                    <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} />
 
-                    {data.description && <>
-                        <Flex >
-                            <Box sx={{ width: '90%' }}>
-                                <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
-                                <TexareaForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
-                            </Box>
-                            <Flex sx={{
-                                // bg: 'khaki',
-                                pl: '40px',
-                                pt: '20px',
+                    {data.description && (
+                        <>
+                            <Flex>
+                                <Box sx={{ width: '90%' }}>
+                                    <InputForm
+                                        title={'opis krótki'}
+                                        value={descriptionShort}
+                                        setValue={(e) => setDescriptionShort(e)}
+                                    />
+                                    <TexareaForm
+                                        title={'opis długi'}
+                                        value={descriptionLong}
+                                        setValue={(e) => setDescriptionLong(e)}
+                                    />
+                                </Box>
+                                <Flex
+                                    sx={{
+                                        // bg: 'khaki',
+                                        pl: '40px',
+                                        pt: '20px',
+                                        borderTop: '1px solid #55555544',
+                                        mt: '5px',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        width: 'max-content',
+                                    }}
+                                >
+                                    <Button
+                                        className="sys-btn"
+                                        type="button"
+                                        sx={{ py: '3px', px: '10px', mb: '5px' }}
+                                        onClick={() => {}}
+                                    >
+                                        połącz ze opisy
+                                    </Button>
+                                    <Button
+                                        className="sys-btn"
+                                        type="button"
+                                        sx={{ py: '3px', px: '10px', mb: '5px' }}
+                                        onClick={() => {}}
+                                    >
+                                        wybierz krótki
+                                    </Button>
+                                    <Button
+                                        className="sys-btn"
+                                        type="button"
+                                        sx={{ py: '3px', px: '10px' }}
+                                        onClick={() => {}}
+                                    >
+                                        wybierz długi
+                                    </Button>
+                                </Flex>
+                            </Flex>
+                        </>
+                    )}
+                    {!data.description && (
+                        <Box
+                            sx={{
                                 borderTop: '1px solid #55555544',
                                 mt: '5px',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                width: 'max-content'
-                            }}>
-                                <Button
-                                    className='sys-btn'
-                                    type='button'
-                                    sx={{ py: '3px', px: '10px', mb: '5px' }}
-                                    onClick={() => { }}
-                                >połącz ze opisy</Button>
-                                <Button
-                                    className='sys-btn'
-                                    type='button'
-                                    sx={{ py: '3px', px: '10px', mb: '5px' }}
-                                    onClick={() => { }}
-                                >wybierz krótki</Button>
-                                <Button
-                                    className='sys-btn'
-                                    type='button'
-                                    sx={{ py: '3px', px: '10px', }}
-                                    onClick={() => { }}
-                                >wybierz długi</Button>
-                            </Flex>
-                        </Flex>
-                    </>}
-                    {!data.description && <Box sx={{
-                        borderTop: '1px solid #55555544',
-                        mt: '5px',
-                        fontFamily: 'din-b',
-                        fontSize: '20px',
-                        color: 'primary',
-                    }}>{typeof data.description == 'undefined' ? '-- undefined --' : (
-                        data.description == null ? '-- null --' : '-- brak danych --'
-                    )}</Box>}
+                                fontFamily: 'din-b',
+                                fontSize: '20px',
+                                color: 'primary',
+                            }}
+                        >
+                            {typeof data.description == 'undefined'
+                                ? '-- undefined --'
+                                : data.description == null
+                                ? '-- null --'
+                                : '-- brak danych --'}
+                        </Box>
+                    )}
 
-                    <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
-                    <SwitchForm title={'publiczna'} checked={isPublic} setChecked={e => setIsPublic(e)} />
+                    <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
+                    <SwitchForm title={'publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />
 
                     <CheckboxList
                         title={'trudność:'}
                         listOptions={difficultyOptions}
                         values={difficulty}
-                        setValues={e => setDifficulty(e)}
+                        setValues={(e) => setDifficulty(e)}
                     />
 
                     <CheckboxList
                         title={'nawierzchnia:'}
                         listOptions={surfaceOptions}
                         values={surface}
-                        setValues={e => setSurface(e)}
+                        setValues={(e) => setSurface(e)}
                     />
 
                     <CheckboxList
                         title={'tagi:'}
                         listOptions={tagsOptions}
                         values={tags}
-                        setValues={e => setTags(e)}
+                        setValues={(e) => setTags(e)}
                     />
 
-                    <Box sx={{
-                        borderTop: '1px solid #55555544',
-                        mt: '5px',
-                        py: '5px',
-                    }}></Box>
+                    <Box
+                        sx={{
+                            borderTop: '1px solid #55555544',
+                            mt: '5px',
+                            py: '5px',
+                        }}
+                    ></Box>
 
-                    <Flex sx={{
-                        width: '100%',
-                        justifyContent: 'center',
-                        mt: '16px',
-                    }}>
-                        <Button type='button' className='sys-btn' onClick={heandleSaveData}>Zmień / zapisz</Button>
+                    <Flex
+                        sx={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            mt: '16px',
+                        }}
+                    >
+                        <Button type="button" className="sys-btn" onClick={handleSaveData}>
+                            Zmień / zapisz
+                        </Button>
                     </Flex>
                 </Box>
             )}
 
-            <Flex sx={{ width: '100%', justifyContent: 'space-between', mt: '20px', }}>
-                <Button className='sys-btn' onClick={heandleNextRoute}>&lt;&lt;&lt; porprzednia</Button>
-                <Button className='sys-btn' onClick={heandlePreviousRoute}>następna &gt;&gt;&gt;</Button>
+            <Flex sx={{ width: '100%', justifyContent: 'space-between', mt: '20px' }}>
+                <Button className="sys-btn" onClick={handleNextRoute}>
+                    &lt;&lt;&lt; poprzednia
+                </Button>
+                <Button className="sys-btn" onClick={handlePreviousRoute}>
+                    następna &gt;&gt;&gt;
+                </Button>
             </Flex>
-        </Flex >
+        </Flex>
     );
 };
 

@@ -60,3 +60,20 @@ export class Route {
     reactions: ReactionsDTO;
     reaction: string;
 }
+
+export type Metadata = {
+    author: string;
+    name: string;
+    difficulty: string[];
+    surface: string[];
+    description:
+        | string
+        | {
+              short: string;
+              long: string;
+          };
+    tags: string[];
+    location: string;
+    recommended: boolean;
+    bike: string;
+};

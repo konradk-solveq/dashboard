@@ -9,14 +9,14 @@ import PagesBar from '../components/bar/pagesBar';
 import NextLink from 'next/link';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
-const Route: React.FC<{ bg: string; route: any, num: number }> = ({ bg, route, num }) => {
+const Route: React.FC<{ bg: string; route: any; num: number }> = ({ bg, route, num }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
     return (
-        <Grid sx={{ bg:bg, m:1}} columns={[1, '3fr ']} className='sys-btn'>
+        <Grid sx={{ bg: bg, m: 1 }} columns={[1, '3fr ']} className="sys-btn">
             <NextLink href={`routes/route/${route.id}`} passHref>
-                <Link className='sys-btn'>
+                <Link className="sys-btn">
                     <Box p={1} sx={{ overflow: 'hidden' }}>
                         <Box>nr: {num}</Box>
                         <Heading as="h3" sx={{ textAlign: 'center' }}>
@@ -24,42 +24,38 @@ const Route: React.FC<{ bg: string; route: any, num: number }> = ({ bg, route, n
                         </Heading>
                     </Box>
                     <Box p={1}>
-                        <Box sx={{color: '#fff'}}>
-                            {image?.url &&
-                                <AspectImage ratio={1} src={image?.url}></AspectImage>
-                            }
-                            {!image?.url &&
-                                <AspectRatio ratio={1} sx={{
-                                    bg: '#555555',
-                                }}><Flex sx={{
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    height: '100%',
-                                }}>
-                                        <Box sx={{ bg: '#313131', p: '10px' }}>
-                                            no image
-                                        </Box>
+                        <Box sx={{ color: '#fff' }}>
+                            {image?.url && <AspectImage ratio={1} src={image?.url}></AspectImage>}
+                            {!image?.url && (
+                                <AspectRatio
+                                    ratio={1}
+                                    sx={{
+                                        bg: '#555555',
+                                    }}
+                                >
+                                    <Flex
+                                        sx={{
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            height: '100%',
+                                        }}
+                                    >
+                                        <Box sx={{ bg: '#313131', p: '10px' }}>no image</Box>
                                     </Flex>
                                 </AspectRatio>
-                            }
-
+                            )}
                         </Box>
                     </Box>
                     <Box p={1}>{route.id}</Box>
-                    <Box sx={{ padding: 1, }} >
-                        {route.author}
-                    </Box>
-                    <Box sx={{ padding: 1, }}>
-                        {route.createdAt}
-                    </Box>
+                    <Box sx={{ padding: 1 }}>{route.author}</Box>
+                    <Box sx={{ padding: 1 }}>{route.createdAt}</Box>
                 </Link>
             </NextLink>
-
         </Grid>
     );
 };
 
-export default function Page({ }) {
+export default function Page({}) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
@@ -84,14 +80,14 @@ export default function Page({ }) {
 
     const heandleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
-        const barWidth = barRef.current.clientWidth;
+        const barWidth = barRef?.current?.clientWidth;
         let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
 
         if (pagesWidth + newPosition < barWidth) {
             newPosition = -(pagesWidth - barWidth);
         }
         setScroll(newPosition);
-    }
+    };
 
     const heandleScrollRight = (end: boolean) => {
         let newPosition = end ? 0 : scroll + SCROLL_MOVE;
@@ -100,7 +96,7 @@ export default function Page({ }) {
             newPosition = 0;
         }
         setScroll(newPosition);
-    }
+    };
 
     return (
         <Box>
@@ -125,18 +121,23 @@ export default function Page({ }) {
                 barRef={barRef}
             />
 
-            {
-                elements.length === 0 ? null : (
-                    <>
-                        <Grid sx={{ margin: 1 }} gap={0} columns={[1, layout]}>
-                            {elements?.map((el, index) => {
-                                const bg = index % 2 ? 'primary' : 'muted';
-                                return <Route key={el.id} bg={bg} route={el} num={((page - 1 < 0 ? 0 : page - 1) * 12) + index}></Route>;
-                            })}
-                        </Grid>
-                    </>
-                )
-            }
+            {elements.length === 0 ? null : (
+                <>
+                    <Grid sx={{ margin: 1 }} gap={0} columns={[1, layout]}>
+                        {elements?.map((el, index) => {
+                            const bg = index % 2 ? 'primary' : 'muted';
+                            return (
+                                <Route
+                                    key={el.id}
+                                    bg={bg}
+                                    route={el}
+                                    num={(page - 1 < 0 ? 0 : page - 1) * 12 + index}
+                                ></Route>
+                            );
+                        })}
+                    </Grid>
+                </>
+            )}
 
             <PagesBar
                 page={page}
@@ -146,6 +147,6 @@ export default function Page({ }) {
                 heandleScrollRight={heandleScrollRight}
                 heandleScrolLeft={heandleScrolLeft}
             />
-        </Box >
+        </Box>
     );
 }
