@@ -14,10 +14,10 @@ const Route: React.FC<{ bg: string; route: any; num: number }> = ({ bg, route, n
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
     return (
-        <Grid sx={{ bg: bg, m: 1 }} columns={[1, '3fr ']} className="sys-btn">
-            <NextLink href={`routes/route/${route.id}`} passHref>
-                <Link className="sys-btn">
-                    <Box p={1} sx={{ overflow: 'hidden' }}>
+        <Grid sx={{ bg: bg, m: 1 }} columns={[1, '3fr ']} className='sys-btn'>
+            <NextLink href={`routes/route/${route.id}?num=${num}`} passHref>
+                <Link className='sys-btn'>
+                    <Box sx={{ overflow: 'hidden', p: 1 }}>
                         <Box>nr: {num}</Box>
                         <Heading as="h3" sx={{ textAlign: 'center' }}>
                             <Box>{route.name}</Box>
@@ -55,7 +55,7 @@ const Route: React.FC<{ bg: string; route: any; num: number }> = ({ bg, route, n
     );
 };
 
-export default function Page({}) {
+export default function Page({ }) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
