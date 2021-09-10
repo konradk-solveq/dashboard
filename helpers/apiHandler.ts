@@ -10,8 +10,14 @@ export type ExtendedApiRequest = {
         apiUrl: string;
     };
 };
-
-export const apiHandler = (handler: Object, callback?: (err: any) => void) => {
+export type HandlerOptions = {
+    annonymous?: boolean;
+};
+export const apiHandler = (
+    handler: Object,
+    options: HandlerOptions = { annonymous: false },
+    callback?: (err: any) => void,
+) => {
     return async function (req: NextApiRequest & { locals: any }, res: NextApiResponse) {
         const method = req.method.toLowerCase();
         if (!handler[method]) {
@@ -20,7 +26,9 @@ export const apiHandler = (handler: Object, callback?: (err: any) => void) => {
         try {
             req.locals = {};
             req.locals.apiUrl = process.env.API_URL;
-            await authMiddleware(req, res);
+            if (!options.annonymous) {
+                await authMiddleware(req, res);
+            }
             await axiosConfigMiddleware(req, res);
             await handler[method](req, res);
         } catch (err) {
