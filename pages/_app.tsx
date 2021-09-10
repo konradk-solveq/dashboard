@@ -21,7 +21,7 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
                 keepAlive: 10,
             }}
         >
-            <ApiContextContainer>
+            <ApiContextContainer config={pageProps.config}>
                 <ThemeProvider theme={theme as Theme}>
                     <Layout>
                         <Component {...pageProps} />
@@ -34,10 +34,14 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
 
 KrossDashboardApp.getInitialProps = async function (context: AppInitialProps & AppContext) {
     // App.getInitialProps(context);
-
     const props = await App.getInitialProps(context);
-    const session = await getSession(context.ctx);
+    const [session, config] = await Promise.all([
+        getSession(context.ctx),
+        fetch(`${process.env.NEXT_PUBLIC_URL}/api/application/config`).then((r) => r.json()),
+    ]);
+
     props.pageProps.session = session;
+    props.pageProps.config = config;
     return props;
 };
 
