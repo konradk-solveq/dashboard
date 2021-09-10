@@ -227,11 +227,11 @@ const Page: React.FC<Props> = ({ }) => {
                 location: location,
                 recommended: recommended,
                 // bike: '',
-                reactions: {
-                    like: 0,
-                    wow: 0,
-                    love: 0,
-                },
+                // reactions: {
+                //     like: ,
+                //     wow: 0,
+                //     love: 0,
+                // },
                 // description: {
                 //     // short: null,
                 //     short: 'description Short',
