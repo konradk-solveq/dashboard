@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import { useContext, useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
-import { Box, Flex, Button, Label, Input, Checkbox, AspectImage } from 'theme-ui';
+import { Box, Flex, Button, AspectImage } from 'theme-ui';
 import EventsContext from '../../../components/contexts/EventsContext';
 import ManageContext from '../../../components/contexts/ManageContext';
 import fetcher from '../../../helpers/fetcher';
