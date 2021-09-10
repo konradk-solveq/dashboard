@@ -145,7 +145,7 @@ const Page: React.FC<Props> = ({ }) => {
     useEffect(() => {
         const adjoiningPages = getAdjoiningPages(num);
 
-        fetch(`${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/lookup?page=${adjoiningPages.page+1}&limit=${adjoiningPages.limit}&name=%20&recommended=false&public=false`)
+        fetch(`${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/lookup?page=${adjoiningPages.page + 1}&limit=${adjoiningPages.limit}&name=%20&recommended=false&public=false`)
             .then(response => response.json())
             .then(data => {
 
@@ -190,6 +190,7 @@ const Page: React.FC<Props> = ({ }) => {
                     } else {
                         setDescriptionShort(data.description.short);
                         setDescriptionLong(data.description.long);
+                        setNewDescription(null)
                     }
                 }
             }
@@ -215,44 +216,43 @@ const Page: React.FC<Props> = ({ }) => {
 
     const heandleSaveData = async () => { // TODO backend
 
-    const handleSaveData = () => {
-        // TODO backend
+        const handleSaveData = () => {
+            // TODO backend
 
-        const body = {
-            name: name,
-            difficulty: difficulty,
-            surface: surface,
-            tags: tags,
-            location: location,
-            recommended: recommended,
-            // bike: '',
-            reactions: {
-                like: 0,
-                wow: 0,
-                love: 0,
-            },
-            // description: {
-            //     // short: null,
-            //     short: 'description Short',
-            //     long: 'description Long',
-            // }
-            // format: 'v1',
-        }
+            const body = {
+                name: name,
+                difficulty: difficulty,
+                surface: surface,
+                tags: tags,
+                location: location,
+                recommended: recommended,
+                // bike: '',
+                // reactions: {
+                //     like: ,
+                //     wow: 0,
+                //     love: 0,
+                // },
+                // description: {
+                //     // short: null,
+                //     short: 'description Short',
+                //     long: 'description Long',
+                // }
+                // format: 'v1',
+            }
 
-        if (!newDescription) {
-            body.description = {
-                short: descriptionShort,
-                long: descriptionLong,
-            };
-        } else {
-            body.description = {
-                short: null,
-                long: newDescription,
-            };
-        }
-        api.updateMetadata(id, ret as any);
-        console.log('%c data:', 'background: #ffcc00; color: #003300', ret);
-    };
+            if (!newDescription) {
+                body.description = {
+                    short: descriptionShort,
+                    long: descriptionLong,
+                };
+            } else {
+                body.description = {
+                    short: null,
+                    long: newDescription,
+                };
+            }
+            api.updateMetadata(id, ret as any);
+        };
 
         const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/${id}/metadata?id=${id}`, {
             method: 'PATCH',
@@ -260,7 +260,7 @@ const Page: React.FC<Props> = ({ }) => {
         });
     }
 
-    const heandleDataRefresh =  () => { // TODO backend
+    const heandleDataRefresh = () => { // TODO backend
         mutate();
     }
 
@@ -341,8 +341,6 @@ const Page: React.FC<Props> = ({ }) => {
                             <Box sx={{ width: '90%' }}>
                                 <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
                                 <TexareaForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
-                                {newDescription && <TexareaForm title={'nowy opis'} value={newDescription} setValue={e => setNewDescription(e)} highlight={true} />}
-
                             </Box>
                             <Flex sx={{
                                 // bg: 'khaki',
@@ -375,7 +373,7 @@ const Page: React.FC<Props> = ({ }) => {
                             </Flex>
                         </Flex>
                     </>}
-                    {(!data.description) || !(descriptionShort && descriptionLong) && <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} />}
+                    <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} />
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={isPublic} setChecked={e => setIsPublic(e)} />
