@@ -13,6 +13,8 @@ import TexareaForm from '../../../components/forms/texareaForm';
 import CheckboxList from '../../../components/forms/checkboxList';
 import { getData, getTime, getDistance } from '../../../helpers/dataFormat';
 import { wrap } from 'module';
+import InputOptional from '../../../components/forms/inputOpional';
+import { relative } from 'path/posix';
 
 interface Props { };
 const Page: React.FC<Props> = ({ }) => {
@@ -23,6 +25,7 @@ const Page: React.FC<Props> = ({ }) => {
     const id = router.query.id as string;
     const num = router.query.num as string;
     const { data, mutate } = useSWR<Route, any>(`/api/routes/route/${id}?${events.getRouteUpdates(id)}`, fetcher);
+    // console.log('%c data:', 'background: #ffcc00; color: #003300', data)
 
     const [difficultyOptions, setDifficultyOptions] = useState([]);
     const [difficulty, setDifficulty] = useState([]);
@@ -35,17 +38,19 @@ const Page: React.FC<Props> = ({ }) => {
     const [location, setLocation] = useState('');
     const [descriptionShort, setDescriptionShort] = useState('');
     const [descriptionLong, setDescriptionLong] = useState('');
+    const [newDescription, setNewDescription] = useState<null | string>(null);
     const [recommended, setRecommended] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
-
+    
     const [map, setMap] = useState(null);
     const [images, setImages] = useState(null);
-
+    
     const heandleSendData = () => { return false; };
-
+    
     useEffect(() => {
-        console.log('%c data:', 'background: #ffcc00; color: #003300', data)
-
+        // console.log('%c descriptionShort:', 'background: #ffcc00; color: #003300', descriptionShort)
+        // console.log('%c descriptionLong:', 'background: #ffcc00; color: #003300', descriptionLong)
+        // console.log('%c newDescription:', 'background: #ffcc00; color: #003300', newDescription)
         if (data) {
             if (data.difficulty) {
                 setDifficultyOptions(data.difficulty.options);
@@ -64,8 +69,18 @@ const Page: React.FC<Props> = ({ }) => {
             setLocation(data.location);
 
             if (data.description) {
-                setDescriptionShort(data.description.short);
-                setDescriptionLong(data.description.long);
+                if (typeof data.description == 'string') {
+                    setNewDescription(data.description);
+                } else {
+                    if (data.description.short == '') {
+                        setNewDescription(data.description.long);
+                        setDescriptionShort(null);
+                        setDescriptionLong(null);
+                    } else {
+                        setDescriptionShort(data.description.short);
+                        setDescriptionLong(data.description.long);
+                    }
+                }
             }
 
             setRecommended(!!data.recommended);
@@ -99,26 +114,35 @@ const Page: React.FC<Props> = ({ }) => {
             location: location,
             recommended: recommended,
             // bike: '',
-            // reactions: {
-            //     like: 0,
-            //     wow: 0,
-            //     love: 0,
-            // },
+            reactions: {
+                like: 0,
+                wow: 0,
+                love: 0,
+            },
+            // description: {
+            //     // short: null,
+            //     short: 'description Short',
+            //     long: 'description Long',
+            // }
             // format: 'v1',
         }
 
-        if (data.description) {
+        if (!newDescription) {
             body.description = {
                 short: descriptionShort,
                 long: descriptionLong,
             };
+        } else {
+            body.description = {
+                short: null,
+                long: newDescription,
+            };
         }
+        // console.log('%c newDescription:', 'background: #ffcc00; color: #003300', newDescription)
+        // console.log('%c body:', 'background: green; color: #003300', JSON.stringify(body))
 
-        console.log('%c body:', 'background: green; color: #003300', body)
-
-        const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/${id}/metadata`, {
+        const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/${id}/metadata?id=${id}`, {
             method: 'PATCH',
-            // headers: context.req.headers as Record<string, string>,
             body: JSON.stringify(body),
         });
     }
@@ -131,13 +155,16 @@ const Page: React.FC<Props> = ({ }) => {
         console.log('%c heandlePreviousRoute:', 'background: #ffcc00; color: #003300')
     }
 
-    const heandleTest = () => {
-        data.id = '000';
-        setTimeout(() => {
+    const heandleDescriptionConcat = () => {
+        setNewDescription(`${descriptionShort} ${descriptionLong}`)
+    }
 
-            mutate();
-        }, 300);
-        console.log('%c mutate:', 'background: #ffcc00; color: #003300')
+    const heandleDescriptionShort = () => {
+        setNewDescription(`${descriptionShort}`)
+    }
+
+    const heandleDescriptionLong = () => {
+        setNewDescription(`${descriptionLong}`)
     }
 
     return (
@@ -194,11 +221,13 @@ const Page: React.FC<Props> = ({ }) => {
                     <InputForm title={'nazwa:'} value={name} setValue={e => setName(e)} />
                     <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
 
-                    {data.description && <>
+                    {descriptionShort && descriptionLong && <>
                         <Flex >
                             <Box sx={{ width: '90%' }}>
                                 <InputForm title={'opis krótki'} value={descriptionShort} setValue={e => setDescriptionShort(e)} />
                                 <TexareaForm title={'opis długi'} value={descriptionLong} setValue={e => setDescriptionLong(e)} />
+                                {newDescription && <TexareaForm title={'nowy opis'} value={newDescription} setValue={e => setNewDescription(e)} highlight={true} />}
+
                             </Box>
                             <Flex sx={{
                                 // bg: 'khaki',
@@ -214,32 +243,24 @@ const Page: React.FC<Props> = ({ }) => {
                                     className='sys-btn'
                                     type='button'
                                     sx={{ py: '3px', px: '10px', mb: '5px' }}
-                                    onClick={() => { }}
+                                    onClick={() => heandleDescriptionConcat()}
                                 >połącz ze opisy</Button>
                                 <Button
                                     className='sys-btn'
                                     type='button'
                                     sx={{ py: '3px', px: '10px', mb: '5px' }}
-                                    onClick={() => { }}
+                                    onClick={() => heandleDescriptionShort()}
                                 >wybierz krótki</Button>
                                 <Button
                                     className='sys-btn'
                                     type='button'
                                     sx={{ py: '3px', px: '10px', }}
-                                    onClick={() => { }}
+                                    onClick={() => heandleDescriptionLong()}
                                 >wybierz długi</Button>
                             </Flex>
                         </Flex>
                     </>}
-                    {!data.description && <Box sx={{
-                        borderTop: '1px solid #55555544',
-                        mt: '5px',
-                        fontFamily: 'din-b',
-                        fontSize: '20px',
-                        color: 'primary',
-                    }}>{typeof data.description == 'undefined' ? '-- undefined --' : (
-                        data.description == null ? '-- null --' : '-- brak danych --'
-                    )}</Box>}
+                    {(!data.description) || !(descriptionShort && descriptionLong) && <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} />}
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={e => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={isPublic} setChecked={e => setIsPublic(e)} />
@@ -293,7 +314,6 @@ const Page: React.FC<Props> = ({ }) => {
                     }}>
                         <Button type='button' className='sys-btn' onClick={heandleSaveData}>Zmień / zapisz</Button>
                     </Flex>
-                    <Button onClick={() => heandleTest()}>test button</Button>
                 </Box>
             )}
 

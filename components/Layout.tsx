@@ -17,10 +17,9 @@ const Layout: React.FC<{}> = ({ children }) => {
     useEffect(() => {
         if (headerObj.current && footerObj.current) {
             const headerH = headerObj.current.offsetHeight;
-            const footerH = headerObj.current.offsetHeight;
+            const footerH = footerObj.current.offsetHeight;
 
             const h = window.innerHeight - footerH - headerH;
-            // console.log('%c h:', 'background: #ffcc00; color: #003300', h)
             setContentH(h);
         }
     }, [headerObj.current, footerObj.current]);
