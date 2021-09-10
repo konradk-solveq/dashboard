@@ -15,7 +15,7 @@ const Route: React.FC<{ bg: string; route: any, num: number }> = ({ bg, route, n
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
     return (
         <Grid sx={{ bg:bg, m:1}} columns={[1, '3fr ']} className='sys-btn'>
-            <NextLink href={`routes/route/${route.id}`} passHref>
+            <NextLink href={`routes/route/${route.id}?num=${num}`} passHref>
                 <Link className='sys-btn'>
                     <Box p={1} sx={{ overflow: 'hidden' }}>
                         <Box>nr: {num}</Box>

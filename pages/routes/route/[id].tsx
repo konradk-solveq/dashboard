@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import { useContext, useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { Box, Flex, Button, Label, Input, Checkbox } from 'theme-ui';
+import useSWR, { mutate } from 'swr';
+import { Box, Flex, Button, Label, Input, Checkbox, AspectImage } from 'theme-ui';
 import EventsContext from '../../../components/contexts/EventsContext';
 import ManageContext from '../../../components/contexts/ManageContext';
 import fetcher from '../../../helpers/fetcher';
@@ -12,6 +12,7 @@ import SwitchForm from '../../../components/forms/swithForm';
 import TexareaForm from '../../../components/forms/texareaForm';
 import CheckboxList from '../../../components/forms/checkboxList';
 import { getData, getTime, getDistance } from '../../../helpers/dataFormat';
+import { wrap } from 'module';
 
 interface Props { };
 const Page: React.FC<Props> = ({ }) => {
@@ -20,7 +21,8 @@ const Page: React.FC<Props> = ({ }) => {
     const events = useContext(EventsContext);
     const api = useContext(ManageContext);
     const id = router.query.id as string;
-    const { data, error } = useSWR<Route, any>(`/api/routes/route/${id}?${events.getRouteUpdates(id)}`, fetcher);
+    const num = router.query.num as string;
+    const { data, mutate } = useSWR<Route, any>(`/api/routes/route/${id}?${events.getRouteUpdates(id)}`, fetcher);
 
     const [difficultyOptions, setDifficultyOptions] = useState([]);
     const [difficulty, setDifficulty] = useState([]);
@@ -36,10 +38,14 @@ const Page: React.FC<Props> = ({ }) => {
     const [recommended, setRecommended] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
 
+    const [map, setMap] = useState(null);
+    const [images, setImages] = useState(null);
 
     const heandleSendData = () => { return false; };
 
     useEffect(() => {
+        console.log('%c data:', 'background: #ffcc00; color: #003300', data)
+
         if (data) {
             if (data.difficulty) {
                 setDifficultyOptions(data.difficulty.options);
@@ -64,6 +70,9 @@ const Page: React.FC<Props> = ({ }) => {
 
             setRecommended(!!data.recommended);
             setIsPublic(!!data.isPublic)
+
+            setMap(data.images.filter(e => e.type == 'map'));
+            setImages(data.images.filter(e => e.type == 'photo'));
         }
     }, [data])
 
@@ -78,11 +87,11 @@ const Page: React.FC<Props> = ({ }) => {
         else { return <Box sx={{ fontFamily: 'din-b', }}>{d.toString()}</Box> }
     }
 
-    const heandleSaveData = () => { // TODO backend
+    const heandleSaveData = async () => { // TODO backend
 
         if (isPublic) { api.publish(id) } else { api.unpublish(id) }
 
-        const ret = {
+        const body = {
             name: name,
             difficulty: difficulty,
             surface: surface,
@@ -99,13 +108,19 @@ const Page: React.FC<Props> = ({ }) => {
         }
 
         if (data.description) {
-            ret.description = {
+            body.description = {
                 short: descriptionShort,
                 long: descriptionLong,
             };
         }
 
-        console.log('%c data:', 'background: #ffcc00; color: #003300', ret)
+        console.log('%c body:', 'background: green; color: #003300', body)
+
+        const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/${id}/metadata`, {
+            method: 'PATCH',
+            // headers: context.req.headers as Record<string, string>,
+            body: JSON.stringify(body),
+        });
     }
 
     const heandleNextRoute = () => { // TODO backend
@@ -116,6 +131,15 @@ const Page: React.FC<Props> = ({ }) => {
         console.log('%c heandlePreviousRoute:', 'background: #ffcc00; color: #003300')
     }
 
+    const heandleTest = () => {
+        data.id = '000';
+        setTimeout(() => {
+
+            mutate();
+        }, 300);
+        console.log('%c mutate:', 'background: #ffcc00; color: #003300')
+    }
+
     return (
         <Flex
             sx={{
@@ -124,31 +148,48 @@ const Page: React.FC<Props> = ({ }) => {
                 width: '100%',
             }}
         >
+            <Box>{num}</Box>
             <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px', }}>
                 <Button className='sys-btn' onClick={heandleNextRoute}>&lt;&lt;&lt; porprzednia</Button>
                 <Button className='sys-btn' onClick={heandlePreviousRoute}>następna &gt;&gt;&gt;</Button>
             </Flex>
 
             {data && (
-                <Box as='form' onSubmit={heandleSendData}
+                <Box onSubmit={heandleSendData}
                     sx={{
                         bg: '#ddd',
                         px: '20px',
                         py: '20px',
                         borderRadius: '10px',
                     }}>
-                    <Flex><Box sx={{ mr: '5px' }}>id trasy: </Box>{checkNoData(id)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>id właściciela: </Box>{checkNoData(data.ownerId)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>autor: </Box>{checkNoData(data.author)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>utworzona: </Box>{checkNoData(getData(data.createdAt))}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>dystans: </Box>{checkNoData(getDistance(data.distance))}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>czas: </Box>{checkNoData(getTime(data.time))}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>pobrania: </Box>{checkNoData(data.downloads)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>lajki: </Box>{checkNoData(data.reactions.like)}</Flex>
-                    {/* <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex> */}
-                    {/* <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex> */}
-                    <Flex><Box sx={{ mr: '5px' }}>reakcje: </Box>{checkNoData(data.reaction)}</Flex>
-                    <Flex><Box sx={{ mr: '5px' }}>polecana: </Box>{checkNoData(data.isFeatured)}</Flex>
+                    <Flex sx={{
+                        justifyContent: 'space-between',
+                        flexDirection: ['column', 'column', 'row']
+                    }}>
+                        <Box>
+                            <Flex><Box sx={{ mr: '5px' }}>id trasy: </Box>{checkNoData(id)}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>id właściciela: </Box>{checkNoData(data.ownerId)}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>autor: </Box>{checkNoData(data.author)}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>utworzona: </Box>{checkNoData(getData(data.createdAt))}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>dystans: </Box>{checkNoData(getDistance(data.distance))}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>czas: </Box>{checkNoData(getTime(data.time))}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>pobrania: </Box>{checkNoData(data.downloads)}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>lajki: </Box>{checkNoData(data.reactions.like)}</Flex>
+                            {/* <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex> */}
+                            {/* <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex> */}
+                            <Flex><Box sx={{ mr: '5px' }}>reakcje: </Box>{checkNoData(data.reaction)}</Flex>
+                            <Flex><Box sx={{ mr: '5px' }}>polecana: </Box>{checkNoData(data.isFeatured)}</Flex>
+                        </Box>
+                        {map && <Box sx={{ width: ['100%', '80%', '45%', '35%'], maxWidth: '300px', mb: '15px' }}>
+                            <AspectImage
+                                sx={{
+                                    // width: '100px'
+                                }}
+                                ratio={1 / 1}
+                                src={map[0].variants.square[1].url}
+                            ></AspectImage>
+                        </Box>}
+                    </Flex>
 
                     <InputForm title={'nazwa:'} value={name} setValue={e => setName(e)} />
                     <InputForm title={'lokalizacja:'} value={location} setValue={e => setLocation(e)} />
@@ -230,6 +271,21 @@ const Page: React.FC<Props> = ({ }) => {
                         py: '5px',
                     }}></Box>
 
+                    {images && <Flex sx={{
+                        flexWrap: 'wrap'
+                    }}>
+                        {images.map((e, i) => <Box
+                            sx={{ width: ['100%', '80%', '45%', '35%'], maxWidth: '300px', mb: '15px', mr: '20px' }}
+                            key={'img_' + i}
+                        >
+                            <AspectImage
+
+                                ratio={1 / 1}
+                                src={e.variants.square[1].url}
+                            ></AspectImage>
+                        </Box>)}
+                    </Flex>}
+
                     <Flex sx={{
                         width: '100%',
                         justifyContent: 'center',
@@ -237,6 +293,7 @@ const Page: React.FC<Props> = ({ }) => {
                     }}>
                         <Button type='button' className='sys-btn' onClick={heandleSaveData}>Zmień / zapisz</Button>
                     </Flex>
+                    <Button onClick={() => heandleTest()}>test button</Button>
                 </Box>
             )}
 
