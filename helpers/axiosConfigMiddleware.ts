@@ -5,7 +5,10 @@ export const axiosConfigMiddleware = async (req, res) => {
         baseURL: req.locals.apiUrl,
     });
     httpClient.interceptors.request.use(function (config) {
-        config.headers.Authorization = `Bearer ${req.locals.token}`;
+        const { token } = req.locals;
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     });
     req.locals.axios = httpClient;
