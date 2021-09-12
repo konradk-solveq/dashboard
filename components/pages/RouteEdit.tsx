@@ -4,29 +4,33 @@ import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AspectImage, Box, Button, Flex } from 'theme-ui';
 
-import ApiContext from '../../../components/contexts/ApiContext';
-import EventsContext from '../../../components/contexts/EventsContext';
-import ManageContext from '../../../components/contexts/ManageContext';
-import CheckboxList from '../../../components/forms/checkboxList';
-import InputForm from '../../../components/forms/inputForm';
-import SwitchForm from '../../../components/forms/swithForm';
-import TexareaForm from '../../../components/forms/texareaForm';
-import { Route } from '../../../components/typings/Route';
-import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
-import fetcher from '../../../helpers/fetcher';
+import ApiContext from '../contexts/ApiContext';
+import EventsContext from '../contexts/EventsContext';
+import ManageContext from '../contexts/ManageContext';
+import CheckboxList from '../forms/checkboxList';
+import InputForm from '../forms/inputForm';
+import SwitchForm from '../forms/swithForm';
+import TexareaForm from '../forms/texareaForm';
+import { Route } from '../typings/Route';
+import { getData, getDistance, getTime } from '../../helpers/dataFormat';
+import fetcher from '../../helpers/fetcher';
 
-interface Props {}
-const Page: React.FC<Props> = ({}) => {
+interface Props {
+    routeId: string;
+    nextRouteUrl?: string;
+    previousRouteUrl?: string;
+}
+
+const RouteEdit: React.FC<Props> = (props) => {
+    const { routeId: id } = props;
     const router = useRouter();
     const { config } = useContext(ApiContext);
     const events = useContext(EventsContext);
     const manage = useContext(ManageContext);
-    const id = router.query.id as string;
-    const { data, mutate } = useSWR<Route, any>(`/api/routes/route/${id}?${events.getRouteUpdates(id)}`, fetcher);
-
-    const num = Number(router.query.num);
-    const [previousPage, setPreviousPage] = useState(null);
-    const [nextPage, setNextPage] = useState(null);
+    const { data, mutate } = useSWR<Route, any>(
+        id ? `/api/routes/route/${id}?${events.getRouteUpdates(id)}` : null,
+        fetcher,
+    );
 
     const tagsOptions = config.tags;
     const surfaceOptions = config.surfaces;
@@ -153,23 +157,22 @@ const Page: React.FC<Props> = ({}) => {
             }}
         >
             <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px' }}>
-                {previousPage && (
-                    <NextLink href={`${previousPage}?num=${num - 1}`} passHref>
+                {props.previousRouteUrl && (
+                    <NextLink href={props.previousRouteUrl} passHref>
                         <Button className="sys-btn" onClick={heandleDataRefresh}>
                             &lt;&lt;&lt; porprzednia
                         </Button>
                     </NextLink>
                 )}
-                {!previousPage && <Box sx={{ width: '100px', height: '20px' }} />}
-                <Box>{num}</Box>
-                {nextPage && (
-                    <NextLink href={`${nextPage}?num=${num + 1}`} passHref>
+                {!props.previousRouteUrl && <Box sx={{ width: '100px', height: '20px' }} />}
+                {props.nextRouteUrl && (
+                    <NextLink href={props.nextRouteUrl} passHref>
                         <Button className="sys-btn" onClick={heandleDataRefresh}>
                             następna &gt;&gt;&gt;
                         </Button>
                     </NextLink>
                 )}
-                {!nextPage && <Box sx={{ width: '100px', height: '20px' }} />}
+                {!props.nextRouteUrl && <Box sx={{ width: '100px', height: '20px' }} />}
             </Flex>
 
             {data && (
@@ -374,27 +377,8 @@ const Page: React.FC<Props> = ({}) => {
                     </Flex>
                 </Box>
             )}
-
-            <Flex sx={{ width: '100%', justifyContent: 'space-between', mt: '20px' }}>
-                {previousPage && (
-                    <NextLink href={`${previousPage}?num=${num - 1}`} passHref>
-                        <Button className="sys-btn" onClick={heandleDataRefresh}>
-                            &lt;&lt;&lt; porprzednia
-                        </Button>
-                    </NextLink>
-                )}
-                {!previousPage && <Box sx={{ width: '100px', height: '20px' }} />}
-                {nextPage && (
-                    <NextLink href={`${nextPage}?num=${num + 1}`} passHref>
-                        <Button className="sys-btn" onClick={heandleDataRefresh}>
-                            następna &gt;&gt;&gt;
-                        </Button>
-                    </NextLink>
-                )}
-                {!nextPage && <Box sx={{ width: '100px', height: '20px' }} />}
-            </Flex>
         </Flex>
     );
 };
 
-export default Page;
+export default RouteEdit;
