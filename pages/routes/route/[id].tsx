@@ -1,111 +1,19 @@
 import { useRouter } from 'next/dist/client/router';
+import NextLink from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Flex, Button, AspectImage } from 'theme-ui';
+import { AspectImage, Box, Button, Flex } from 'theme-ui';
+
+import ApiContext from '../../../components/contexts/ApiContext';
 import EventsContext from '../../../components/contexts/EventsContext';
 import ManageContext from '../../../components/contexts/ManageContext';
-import fetcher from '../../../helpers/fetcher';
-import { Route } from '../../../components/typings/Route';
-import NextLink from 'next/link';
-
+import CheckboxList from '../../../components/forms/checkboxList';
 import InputForm from '../../../components/forms/inputForm';
 import SwitchForm from '../../../components/forms/swithForm';
 import TexareaForm from '../../../components/forms/texareaForm';
-import CheckboxList from '../../../components/forms/checkboxList';
-import { getData, getTime, getDistance } from '../../../helpers/dataFormat';
-import ApiContext from '../../../components/contexts/ApiContext';
-
-const getAdjoiningPages = (num) => {
-    if (num > 3) {
-        let of3 = num % 3;
-        if (of3 == 1) return { page: Math.floor(num / 3), limit: 3, previous: 0, next: 2 };
-
-        let of4 = num % 4;
-        if (of4 == 1) return { page: Math.floor(num / 4), limit: 4, previous: 0, next: 2 };
-        if (of4 == 2) return { page: Math.floor(num / 4), limit: 4, previous: 1, next: 3 };
-
-        let of5 = num % 5;
-        if (of5 == 1) return { page: Math.floor(num / 5), limit: 5, previous: 0, next: 2 };
-        if (of5 == 2) return { page: Math.floor(num / 5), limit: 5, previous: 1, next: 3 };
-        if (of5 == 3) return { page: Math.floor(num / 5), limit: 5, previous: 2, next: 4 };
-
-        let of7 = num % 7;
-        if (of7 == 1) return { page: Math.floor(num / 7), limit: 7, previous: 0, next: 2 };
-        if (of7 == 2) return { page: Math.floor(num / 7), limit: 7, previous: 1, next: 3 };
-        if (of7 == 3) return { page: Math.floor(num / 7), limit: 7, previous: 2, next: 4 };
-        if (of7 == 4) return { page: Math.floor(num / 7), limit: 7, previous: 3, next: 5 };
-        if (of7 == 5) return { page: Math.floor(num / 7), limit: 7, previous: 4, next: 6 };
-
-        let of11 = num % 11;
-        if (of11 == 1) return { page: Math.floor(num / 11), limit: 11, previous: 0, next: 2 };
-        if (of11 == 2) return { page: Math.floor(num / 11), limit: 11, previous: 1, next: 3 };
-        if (of11 == 3) return { page: Math.floor(num / 11), limit: 11, previous: 2, next: 4 };
-        if (of11 == 4) return { page: Math.floor(num / 11), limit: 11, previous: 3, next: 5 };
-        if (of11 == 6) return { page: Math.floor(num / 11), limit: 11, previous: 4, next: 6 };
-        if (of11 == 7) return { page: Math.floor(num / 11), limit: 11, previous: 5, next: 7 };
-        if (of11 == 8) return { page: Math.floor(num / 11), limit: 11, previous: 6, next: 8 };
-        if (of11 == 9) return { page: Math.floor(num / 11), limit: 11, previous: 7, next: 9 };
-        if (of11 == 10) return { page: Math.floor(num / 11), limit: 11, previous: 8, next: 10 };
-
-        let of17 = num % 17;
-        if (of17 == 1) return { page: Math.floor(num / 17), limit: 17, previous: 0, next: 2 };
-        if (of17 == 2) return { page: Math.floor(num / 17), limit: 17, previous: 1, next: 3 };
-        if (of17 == 3) return { page: Math.floor(num / 17), limit: 17, previous: 2, next: 4 };
-        if (of17 == 4) return { page: Math.floor(num / 17), limit: 17, previous: 3, next: 5 };
-        if (of17 == 6) return { page: Math.floor(num / 17), limit: 17, previous: 4, next: 6 };
-        if (of17 == 7) return { page: Math.floor(num / 17), limit: 17, previous: 5, next: 7 };
-        if (of17 == 8) return { page: Math.floor(num / 17), limit: 17, previous: 6, next: 8 };
-        if (of17 == 9) return { page: Math.floor(num / 17), limit: 17, previous: 7, next: 9 };
-        if (of17 == 10) return { page: Math.floor(num / 17), limit: 17, previous: 8, next: 10 };
-        if (of17 == 11) return { page: Math.floor(num / 17), limit: 17, previous: 9, next: 11 };
-        if (of17 == 12) return { page: Math.floor(num / 17), limit: 17, previous: 10, next: 12 };
-        if (of17 == 13) return { page: Math.floor(num / 17), limit: 17, previous: 11, next: 13 };
-        if (of17 == 14) return { page: Math.floor(num / 17), limit: 17, previous: 12, next: 14 };
-        if (of17 == 15) return { page: Math.floor(num / 17), limit: 17, previous: 13, next: 15 };
-        if (of17 == 16) return { page: Math.floor(num / 17), limit: 17, previous: 14, next: 16 };
-
-        let of27 = num % 27;
-        if (of27 == 1) return { page: Math.floor(num / 27), limit: 27, previous: 0, next: 2 };
-        if (of27 == 2) return { page: Math.floor(num / 27), limit: 27, previous: 1, next: 3 };
-        if (of27 == 3) return { page: Math.floor(num / 27), limit: 27, previous: 2, next: 4 };
-        if (of27 == 4) return { page: Math.floor(num / 27), limit: 27, previous: 3, next: 5 };
-        if (of27 == 6) return { page: Math.floor(num / 27), limit: 27, previous: 4, next: 6 };
-        if (of27 == 7) return { page: Math.floor(num / 27), limit: 27, previous: 5, next: 7 };
-        if (of27 == 8) return { page: Math.floor(num / 27), limit: 27, previous: 6, next: 8 };
-        if (of27 == 9) return { page: Math.floor(num / 27), limit: 27, previous: 7, next: 9 };
-        if (of27 == 10) return { page: Math.floor(num / 27), limit: 27, previous: 8, next: 10 };
-        if (of27 == 11) return { page: Math.floor(num / 27), limit: 27, previous: 9, next: 11 };
-        if (of27 == 12) return { page: Math.floor(num / 27), limit: 27, previous: 10, next: 12 };
-        if (of27 == 13) return { page: Math.floor(num / 27), limit: 27, previous: 11, next: 13 };
-        if (of27 == 14) return { page: Math.floor(num / 27), limit: 27, previous: 12, next: 14 };
-        if (of27 == 15) return { page: Math.floor(num / 27), limit: 27, previous: 13, next: 15 };
-        if (of27 == 16) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 16 };
-        if (of27 == 17) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 17 };
-        if (of27 == 18) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 18 };
-        if (of27 == 19) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 19 };
-        if (of27 == 20) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 20 };
-        if (of27 == 21) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 21 };
-        if (of27 == 22) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 22 };
-        if (of27 == 23) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 23 };
-        if (of27 == 24) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 24 };
-        if (of27 == 25) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 25 };
-        if (of27 == 26) return { page: Math.floor(num / 27), limit: 27, previous: 14, next: 26 };
-    } else {
-        let page = 0;
-        switch (num) {
-            case 0:
-                return { page, limit: 2, previous: null, next: 1 };
-            case 1:
-                return { page, limit: 3, previous: 0, next: 2 };
-            case 2:
-                return { page, limit: 4, previous: 1, next: 3 };
-            case 3:
-                return { page, limit: 5, previous: 2, next: 4 };
-        }
-    }
-
-    return { page: 0, limit: 2, previous: null, next: null };
-};
+import { Route } from '../../../components/typings/Route';
+import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
+import fetcher from '../../../helpers/fetcher';
 
 interface Props {}
 const Page: React.FC<Props> = ({}) => {
@@ -144,37 +52,15 @@ const Page: React.FC<Props> = ({}) => {
     };
 
     useEffect(() => {
-        const adjoiningPages = getAdjoiningPages(num);
-
-        fetch(
-            `${process.env.NEXT_PUBLIC_URL}/api/cycling-map/manage/lookup?page=${adjoiningPages.page + 1}&limit=${
-                adjoiningPages.limit
-            }&name=%20&recommended=false&public=false`,
-        )
-            .then((response) => response.json())
-            .then((data) => {
-                if (num > 0) {
-                    let previousId = data.elements[adjoiningPages.previous].id;
-                    setPreviousPage(previousId);
-                }
-
-                if (num + 1 < data.total) {
-                    let nextId = data.elements[adjoiningPages.next].id;
-                    setNextPage(nextId);
-                }
-            });
-    }, [num, id, name]);
-
-    useEffect(() => {
         if (data) {
             if (data.difficulty) {
-                setDifficulty(data.difficulty.values);
+                setDifficulty(data.difficulty);
             }
             if (data.surface) {
-                setSurface(data.surface.values);
+                setSurface(data.surface);
             }
             if (data.tags) {
-                setTags(data.tags.values);
+                setTags(data.tags);
             }
 
             setName(data.name);
@@ -220,9 +106,7 @@ const Page: React.FC<Props> = ({}) => {
         }
     };
 
-    const heandleSaveData = () => {
-        // TODO backend
-
+    const handleSaveData = () => {
         const body: any = {
             name: name,
             difficulty: difficulty,
@@ -244,13 +128,9 @@ const Page: React.FC<Props> = ({}) => {
             };
         }
         manage.updateMetadata(id, body as any);
-        console.log('%c data:', 'background: #ffcc00; color: #003300', body);
     };
 
-    const heandleDataRefresh = () => {
-        // TODO backend
-        mutate();
-    };
+    const heandleDataRefresh = () => {};
 
     const heandleDescriptionConcat = () => {
         setNewDescription(`${descriptionShort} ${descriptionLong}`);
@@ -475,7 +355,7 @@ const Page: React.FC<Props> = ({}) => {
                                     }}
                                     key={'img_' + i}
                                 >
-                                    <AspectImage ratio={1 / 1} src={e.variants.square[1].url}></AspectImage>
+                                    <AspectImage ratio={1} src={e.variants.square[1].url}></AspectImage>
                                 </Box>
                             ))}
                         </Flex>
@@ -488,7 +368,7 @@ const Page: React.FC<Props> = ({}) => {
                             mt: '16px',
                         }}
                     >
-                        <Button type="button" className="sys-btn" onClick={heandleSaveData}>
+                        <Button type="button" className="sys-btn" onClick={handleSaveData}>
                             Zmień / zapisz
                         </Button>
                     </Flex>
