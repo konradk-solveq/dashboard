@@ -2,8 +2,9 @@ import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
 import Routing from 'next/link';
 import { useState } from 'react';
 import { Box, Button, Container, Link, Text } from 'theme-ui';
+import useToggle from './hooks/useToggle';
 
-const item = (str, href, onclick) => {
+const Item: React.FC<{ target: string; text: string }> = ({ target, text }) => {
     return (
         <Container
             sx={{
@@ -12,53 +13,43 @@ const item = (str, href, onclick) => {
                 color: '#eee',
             }}
         >
-            <Routing passHref href={href}>
-                <Link onClick={() => onclick()}>{str}</Link>
+            <Routing passHref href={target}>
+                <Link>{text}</Link>
             </Routing>
         </Container>
     );
 };
 
-const spliter = () => {
+const Splitter: React.FC<{}> = () => {
     return (
         <Box
             sx={{
                 width: '100%',
                 height: '1px',
-                // mx: 20,
                 my: '5px',
                 bg: '#777',
-                // left: -10,
                 position: 'relative',
             }}
         ></Box>
     );
 };
 
-const getList = (str: string, list) => {
-    const [showList, setShowList] = useState(true);
+const List: React.FC<{ title: string }> = ({ title, children }) => {
+    const [isShown, toggle] = useToggle(true);
 
     return (
         <>
-            <Box
-                sx={{
-                    width: '100%',
-                }}
-                onClick={() => {
-                    setShowList(!showList);
-                }}
-            >
+            <Box sx={{ width: '100%' }} onClick={toggle}>
                 <Text
                     sx={{
                         fontSize: '25px',
                         color: '#eee',
                     }}
                 >
-                    {str}
+                    {title}
                 </Text>
             </Box>
-            {showList && list}
-            {spliter()}
+            {isShown && children}
         </>
     );
 };
@@ -82,23 +73,15 @@ const Menu: React.FC<{}> = ({ children }) => {
                     userSelect: 'none',
                 }}
             >
-                {getList(
-                    'Trasy:',
-                    <>
-                        {item('Lista Tras', '/routes', () => setMenuOn(false))}
-                        {item('Statystyki Tras', '/routessum', () => setMenuOn(false))}
-                    </>,
-                )}
-
-                {getList(
-                    'Teksty:',
-                    <>
-                        {item('Rogulaminy', '/', () => setMenuOn(false))}
-                        {item('Polityka Pryatności', '/', () => setMenuOn(false))}
-                    </>,
-                )}
-
-                {getList('cdn...', <></>)}
+                <List title="Trasy">
+                    <Item text="Lista Tras" target="/routes" />
+                    <Item text="Statystyki Tras" target="/routessum" />
+                </List>
+                <Splitter />
+                <List title="Teksty">
+                    <Item text="Regulaminy" target="/" />
+                    <Item text="Polityka Prywatności" target="/" />
+                </List>
             </Box>
         );
     };
