@@ -10,7 +10,7 @@ import theme from '../components/theme';
 import { cache } from '../helpers/cache';
 
 const getConfig = cache(async () => {
-    const data = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/application/config`);
+    const data = await fetch(`${process.env.NEXT_PUBLIC_URL || ''}/api/application/config`);
     return data.json();
 });
 

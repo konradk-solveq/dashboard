@@ -85,7 +85,7 @@ export default function Page({}) {
 
     const [scroll, setScroll] = useState(0);
     const SCROLL_MOVE = 42 * 8;
-    const barRef = useRef();
+    const barRef = useRef<any>();
 
     const heandleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;

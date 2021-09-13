@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect, useCallback, useContext } from 'react';
 import { Metadata, Route } from '../typings/Route';
 import EventsContext from './EventsContext';
-import { json } from 'express';
 export interface ManageContextProps {}
 
 export interface ManageContextInterface {

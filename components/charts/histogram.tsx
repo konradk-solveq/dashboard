@@ -14,7 +14,7 @@ const BarChart: React.FC<{ data: any, page: any }> = ({
     useEffect(() => {
         const da = [];
         for (let key in data) {
-            const item = {};
+            const item = { num:0};
             const s = key.split('_');
             item.num = Number(s[0] + s[1] + s[2]);
             item[key] = data[key];
