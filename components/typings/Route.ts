@@ -37,14 +37,14 @@ export class Route {
     public id: string;
     public name: string;
     author: string;
-    difficulty?: LocalizedEnumOptionsArray<any>;
+    difficulty?: any[];
     ownerId: string;
-    surface?: LocalizedEnumOptionsArray<any>;
+    surface?: any[];
     description?: {
         short: string;
         long: string;
     };
-    tags: LocalizedEnumOptionsArray<any>;
+    tags: any[];
     location: string;
     recommended: boolean;
     public path: Array<number[]>;

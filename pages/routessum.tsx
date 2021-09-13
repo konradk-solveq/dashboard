@@ -21,10 +21,7 @@ let sumWrong = [];
 let listOfNames = [];
 let newRoutes = {};
 
-const Route: React.FC<{ route: any, setChartData: any }> = ({
-    route, setChartData,
-}) => {
-
+const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
@@ -36,25 +33,29 @@ const Route: React.FC<{ route: any, setChartData: any }> = ({
             const d = new Date(route.createdAt);
             let mo = d.getMonth() + 1;
             let m = '' + mo;
-            if (mo < 10) { m = '0' + m; }
+            if (mo < 10) {
+                m = '0' + m;
+            }
             let day = d.getDate();
             let da = '' + day;
-            if (day < 10) { da = '0' + da };
+            if (day < 10) {
+                da = '0' + da;
+            }
             const dName = `${d.getFullYear()}_${m}_${da}`;
 
             const exist = typeof newRoutes[dName] != 'undefined';
             if (exist) {
-                newRoutes[dName]++
+                newRoutes[dName]++;
             } else {
                 newRoutes[dName] = 1;
             }
 
             setChartData(newRoutes);
             // console.log('%c newRoutes:', 'background: #ffcc00; color: #003300', newRoutes)
-        }
+        };
 
         if (!broken) {
-            if (!sumAll.some(e => e.id === route.id)) {
+            if (!sumAll.some((e) => e.id === route.id)) {
                 sumAll.push({
                     id: route.id,
                     name: route.name,
@@ -63,19 +64,18 @@ const Route: React.FC<{ route: any, setChartData: any }> = ({
             }
 
             if (route.isPublic) {
-
-                if (!sumPublic.some(e => e.id === route.id)) {
+                if (!sumPublic.some((e) => e.id === route.id)) {
                     let newItem = {
                         id: route.id,
                         name: route.name,
-                    }
+                    };
 
                     sumPublic.push(newItem);
                     listOfNames.push(route.name);
                 }
             }
         } else {
-            if (!sumWrong.some(e => e.id === route.id)) {
+            if (!sumWrong.some((e) => e.id === route.id)) {
                 sumWrong.push({
                     id: route.id,
                     name: route.name,
@@ -83,21 +83,22 @@ const Route: React.FC<{ route: any, setChartData: any }> = ({
                 addToChart();
             }
         }
-    }, [route])
+    }, [route]);
 
     return (
-        <Box sx={{
-            bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
-            m: '2px',
-            width: '12px',
-            height: '12px',
-            border: '1px solid #313131',
-        }} />
+        <Box
+            sx={{
+                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
+                m: '2px',
+                width: '12px',
+                height: '12px',
+                border: '1px solid #313131',
+            }}
+        />
     );
 };
 
-
-export default function Page({ }) {
+export default function Page({}) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
@@ -113,9 +114,8 @@ export default function Page({ }) {
     }, [debouncedName, page]);
 
     useEffect(() => {
-
-        console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData)
-    }, [chartData, page])
+        console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData);
+    }, [chartData, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)
@@ -130,11 +130,11 @@ export default function Page({ }) {
     const percents = (num) => {
         const val = (num / (sumAll.length + sumWrong.length)) * 100;
         return val.toFixed(1) + '%';
-    }
+    };
 
     const [scroll, setScroll] = useState(0);
     const SCROLL_MOVE = 42 * 8;
-    const barRef = useRef();
+    const barRef = useRef<any>();
 
     const heandleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
@@ -145,7 +145,7 @@ export default function Page({ }) {
             newPosition = -(pagesWidth - barWidth);
         }
         setScroll(newPosition);
-    }
+    };
 
     const heandleScrollRight = (end: boolean) => {
         let newPosition = end ? 0 : scroll + SCROLL_MOVE;
@@ -154,18 +154,24 @@ export default function Page({ }) {
             newPosition = 0;
         }
         setScroll(newPosition);
-    }
+    };
 
     return (
-        <Flex sx={{
-            flexDirection: 'column',
-        }}>
-            <Container sx={{
-                px: ['0', '0', '50px', '50px', '50px'],
-            }}>
-                <h1>Przeklikaj poszczególne zakładni od 1 - do ostatniej aby zliczyć trasy i zbudować listę nazw tras publicznych</h1>
+        <Flex
+            sx={{
+                flexDirection: 'column',
+            }}
+        >
+            <Container
+                sx={{
+                    px: ['0', '0', '50px', '50px', '50px'],
+                }}
+            >
+                <h1>
+                    Przeklikaj poszczególne zakładni od 1 - do ostatniej aby zliczyć trasy i zbudować listę nazw tras
+                    publicznych
+                </h1>
             </Container>
-
 
             <PagesBar
                 page={page}
@@ -177,20 +183,23 @@ export default function Page({ }) {
                 barRef={barRef}
             />
 
-
-            <Flex sx={{
-                flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                width: '100%',
-                justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
-            }}>
+            <Flex
+                sx={{
+                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                    width: '100%',
+                    justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
+                }}
+            >
                 <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
                 <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
             </Flex>
-            <Flex sx={{
-                flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                width: '100%',
-                justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
-            }}>
+            <Flex
+                sx={{
+                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                    width: '100%',
+                    justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
+                }}
+            >
                 <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
                 <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
             </Flex>
@@ -206,91 +215,95 @@ export default function Page({ }) {
                     innerRadius={0}
                 ></PieChart>
 
-                <HistogramChart
-                    data={chartData}
-                    page={page}
-                ></HistogramChart>
+                <HistogramChart data={chartData} page={page}></HistogramChart>
             </Flex>
 
-            <Flex sx={{
-                flexDirection: 'column',
-                my: '20px',
-            }}>
-                <Flex sx={{
-                    flexDirection: 'row',
-                }}>
-                    <Box sx={{
-                        bg: 'khaki',
-                        mx: '5px',
-                        my: '7px',
-                        width: '12px',
-                        height: '12px',
-                        border: '1px solid #313131',
-
-                    }} />
+            <Flex
+                sx={{
+                    flexDirection: 'column',
+                    my: '20px',
+                }}
+            >
+                <Flex
+                    sx={{
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            bg: 'khaki',
+                            mx: '5px',
+                            my: '7px',
+                            width: '12px',
+                            height: '12px',
+                            border: '1px solid #313131',
+                        }}
+                    />
                     <Box> - trasy prawidłowe</Box>
                 </Flex>
-                <Flex sx={{
-                    flexDirection: 'row',
-                }}>
-                    <Box sx={{
-                        bg: '#68B028',
-                        mx: '5px',
-                        my: '7px',
-                        width: '12px',
-                        height: '12px',
-                        border: '1px solid #313131',
-
-                    }} />
+                <Flex
+                    sx={{
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            bg: '#68B028',
+                            mx: '5px',
+                            my: '7px',
+                            width: '12px',
+                            height: '12px',
+                            border: '1px solid #313131',
+                        }}
+                    />
                     <Box> - trasy upublicznione</Box>
                 </Flex>
-                <Flex sx={{
-                    flexDirection: 'row',
-                }}>
-                    <Box sx={{
-                        bg: '#cf0f36',
-                        mx: '5px',
-                        my: '7px',
-                        width: '12px',
-                        height: '12px',
-                        border: '1px solid #313131',
-
-                    }} />
+                <Flex
+                    sx={{
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            bg: '#cf0f36',
+                            mx: '5px',
+                            my: '7px',
+                            width: '12px',
+                            height: '12px',
+                            border: '1px solid #313131',
+                        }}
+                    />
                     <Box> - trasy uszkodzone</Box>
                 </Flex>
             </Flex>
-            {
-                elements.length === 0 ? null : (
-                    <>
-                        <Flex sx={{
+            {elements.length === 0 ? null : (
+                <>
+                    <Flex
+                        sx={{
                             margin: 1,
                             flexWrap: 'wrap',
-                        }}>
-                            {elements?.map((el, index) => {
-                                return <Route
-                                    key={'box' + index}
-                                    route={el}
-                                    setChartData={(e) => setChartData(e)}
-                                ></Route>;
-                            })}
-                        </Flex>
-                    </>
-                )
-            }
-            <Flex sx={{
-                justifyContent: 'center',
-                width: '100%',
-            }}>
+                        }}
+                    >
+                        {elements?.map((el, index) => {
+                            return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
+                        })}
+                    </Flex>
+                </>
+            )}
+            <Flex
+                sx={{
+                    justifyContent: 'center',
+                    width: '100%',
+                }}
+            >
                 <Container sx={{ width: 'max-content' }}>
                     <h3>Lista nazw tras publicznych</h3>
                     {sumPublic.map((e, i) => (
                         <Box key={'name' + i}>{e.name}</Box>
                     ))}
-                    <Box
-                        sx={{ mb: '50px' }}
-                    >-------------------------------------</Box>
+                    <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
                 </Container>
             </Flex>
-        </Flex >
+        </Flex>
     );
 }
