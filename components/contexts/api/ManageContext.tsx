@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback, useContext } from 'react';
-import { Metadata, Route } from '../typings/Route';
+import { Metadata, Route } from '../../typings/Route';
 import EventsContext from './EventsContext';
 export interface ManageContextProps {}
 
