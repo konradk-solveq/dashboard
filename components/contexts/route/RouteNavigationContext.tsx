@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import RouteEdit from '../../pages/RouteEdit';
 import { Route } from '../../typings/Route';
-interface Props {
+interface RouteNavigationContainerProps {
     elements: Route[];
     routeId: string;
     page: number;
@@ -11,6 +11,7 @@ interface Props {
     };
     getPathForRoute: (routeId?: string, page?: number) => string;
 }
+
 const lookupResponseToElements = async (r: Response) => {
     const data = await r.json();
     return data.elements as { id: string }[];
@@ -26,9 +27,8 @@ export type RouteNavigationContextProps = NavigationType & {};
 
 const RouteNavigationContext = createContext<RouteNavigationContextProps>(null!);
 
-export const RouteNavigationContainer: React.FC<Props> = (props) => {
-    const { elements = [], routeId, links, getPathForRoute, page } = props;
-
+export const RouteNavigationContainer: React.FC<RouteNavigationContainerProps> = (props) => {
+    const { elements = [], routeId, links = {}, getPathForRoute, page } = props;
     const routeIndex = elements.findIndex((el) => el.id === routeId);
 
     const [navigation, setNavigation] = useState<NavigationType>({
@@ -45,8 +45,8 @@ export const RouteNavigationContainer: React.FC<Props> = (props) => {
         [setNavigation],
     );
 
-    useEffect(() => {
-        const aborter = new AbortController();
+    const retrieveSiblingsIfNeeded = () => {
+        const aborter: AbortController = new AbortController();
         setSiblings({ previous: [], next: [] });
         (async () => {
             let prevP, nextP;
@@ -63,9 +63,9 @@ export const RouteNavigationContainer: React.FC<Props> = (props) => {
             aborter.abort();
             setSiblings({ previous: [], next: [] });
         };
-    }, [routeId, links, elements]);
+    };
 
-    useEffect(() => {
+    const updatePreviousUrlEffect = () => {
         const { previous } = siblings;
         const updatePreviousUrl = updateNavigationField('previousRouteUrl');
         if (routeIndex > 0) {
@@ -75,9 +75,9 @@ export const RouteNavigationContainer: React.FC<Props> = (props) => {
         } else {
             updatePreviousUrl('');
         }
-    }, [routeId, elements, siblings.previous, page, updateNavigationField]);
+    };
 
-    useEffect(() => {
+    const updateNextUrlEffect = () => {
         const { next } = siblings;
         const updateNextUrl = updateNavigationField('nextRouteUrl');
         if (routeIndex < elements.length - 1) {
@@ -87,7 +87,11 @@ export const RouteNavigationContainer: React.FC<Props> = (props) => {
         } else {
             updateNextUrl('');
         }
-    }, [routeId, elements, siblings.previous, page, updateNavigationField]);
+    };
+
+    useEffect(retrieveSiblingsIfNeeded, [routeId, links, elements]);
+    useEffect(updatePreviousUrlEffect, [routeId, elements, siblings.previous, page, updateNavigationField]);
+    useEffect(updateNextUrlEffect, [routeId, elements, siblings.next, page, updateNavigationField]);
 
     return (
         <RouteNavigationContext.Provider value={{ ...navigation }}>{props.children}</RouteNavigationContext.Provider>
