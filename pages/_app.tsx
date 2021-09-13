@@ -4,7 +4,7 @@ import { getSession, Provider, signIn } from 'next-auth/client';
 import App, { AppContext, AppInitialProps, AppProps } from 'next/app';
 import { Theme, ThemeProvider } from 'theme-ui';
 
-import { ApiContextContainer } from '../components/contexts/ApiContext';
+import { ApiContextContainer } from '../components/contexts/api';
 import Layout from '../components/Layout';
 import theme from '../components/theme';
 import { cache } from '../helpers/cache';
