@@ -4,21 +4,21 @@ import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AspectImage, Box, Button, Flex } from 'theme-ui';
 
-import ApiContext from '../contexts/ApiContext';
-import EventsContext from '../contexts/EventsContext';
-import ManageContext from '../contexts/ManageContext';
+import { getData, getDistance, getTime } from '../../helpers/dataFormat';
+import fetcher from '../../helpers/fetcher';
+import ApiContext from '../contexts/api';
+import EventsContext from '../contexts/api/EventsContext';
+import ManageContext from '../contexts/api/ManageContext';
+import RouteNavigationContext from '../contexts/route/RouteNavigationContext';
 import CheckboxList from '../forms/checkboxList';
 import InputForm from '../forms/inputForm';
 import SwitchForm from '../forms/swithForm';
 import TexareaForm from '../forms/texareaForm';
-import { Route } from '../typings/Route';
-import { getData, getDistance, getTime } from '../../helpers/dataFormat';
-import fetcher from '../../helpers/fetcher';
+import RouteNavigationButtons from './RouteNavigationButtons';
 
+import type { Route } from '../typings/Route';
 interface Props {
     routeId: string;
-    nextRouteUrl?: string;
-    previousRouteUrl?: string;
 }
 
 const RouteEdit: React.FC<Props> = (props) => {
@@ -31,7 +31,7 @@ const RouteEdit: React.FC<Props> = (props) => {
         id ? `/api/routes/route/${id}?${events.getRouteUpdates(id)}` : null,
         fetcher,
     );
-
+    const { backUrl } = useContext(RouteNavigationContext);
     const tagsOptions = config.tags;
     const surfaceOptions = config.surfaces;
     const difficultyOptions = config.difficulties;
@@ -156,24 +156,7 @@ const RouteEdit: React.FC<Props> = (props) => {
                 width: '100%',
             }}
         >
-            <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px' }}>
-                {props.previousRouteUrl && (
-                    <NextLink href={props.previousRouteUrl} passHref>
-                        <Button className="sys-btn" onClick={heandleDataRefresh}>
-                            &lt;&lt;&lt; porprzednia
-                        </Button>
-                    </NextLink>
-                )}
-                {!props.previousRouteUrl && <Box sx={{ width: '100px', height: '20px' }} />}
-                {props.nextRouteUrl && (
-                    <NextLink href={props.nextRouteUrl} passHref>
-                        <Button className="sys-btn" onClick={heandleDataRefresh}>
-                            następna &gt;&gt;&gt;
-                        </Button>
-                    </NextLink>
-                )}
-                {!props.nextRouteUrl && <Box sx={{ width: '100px', height: '20px' }} />}
-            </Flex>
+            <RouteNavigationButtons />
 
             {data && (
                 <Box
@@ -371,7 +354,13 @@ const RouteEdit: React.FC<Props> = (props) => {
                             mt: '16px',
                         }}
                     >
-                        <Button type="button" className="sys-btn" onClick={handleSaveData}>
+                        <NextLink href={backUrl} passHref>
+                            <Button variant="white" className="sys-btn" backgroundColor="gray">
+                                Zaniechaj
+                            </Button>
+                        </NextLink>
+
+                        <Button type="button" sx={{ marginLeft: 1 }} className="sys-btn" onClick={handleSaveData}>
                             Zmień / zapisz
                         </Button>
                     </Flex>

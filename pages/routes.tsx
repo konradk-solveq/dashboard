@@ -9,6 +9,8 @@ import PagesBar from '../components/bar/pagesBar';
 import NextLink from 'next/link';
 import { useRouter } from 'next/dist/client/router';
 import { RouteEditComponent } from '../components/RouteEditNavigation';
+import { RouteNavigationContainer } from '../components/contexts/route/RouteNavigationContext';
+import RouteEdit from '../components/pages/RouteEdit';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 const Route: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ bg, route, page, q }) => {
@@ -107,12 +109,12 @@ export default function Page({}) {
         setScroll(newPosition);
     };
 
-    const { routeId } = query;
+    const routeId = query.routeId?.toString();
 
     function getPathForRoute(routeId?: string, page?: number) {
         const queryString = qs.stringify({
             ...query,
-            routeId: routeId || query.routeId,
+            routeId: routeId === null ? undefined : routeId || query.routeId,
             page: page || query.page || 1,
             q: debouncedName,
         });
@@ -125,11 +127,13 @@ export default function Page({}) {
         if (asPath !== path) {
             replace(path, undefined, { scroll: false });
         }
-    }, [pathname, query, page, debouncedName]);
+    }, [pathname, query, asPath, page, debouncedName]);
 
     if (routeId) {
         return (
-            <RouteEditComponent {...{ elements, routeId: routeId?.toString(), limit, getPathForRoute, page, links }} />
+            <RouteNavigationContainer {...{ elements, getPathForRoute, links, routeId, page }}>
+                <RouteEdit routeId={routeId} />
+            </RouteNavigationContainer>
         );
     }
     return (
@@ -140,6 +144,7 @@ export default function Page({}) {
                     setPage(1);
                     setName(e.target.value);
                 }}
+                defaultValue={query.q}
                 sx={{
                     mb: '30px',
                 }}
