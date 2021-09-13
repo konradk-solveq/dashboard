@@ -27,14 +27,8 @@ const RouteEdit: React.FC<Props> = (props) => {
     const { config } = useContext(ApiContext);
     const events = useContext(EventsContext);
     const manage = useContext(ManageContext);
-    const { data, mutate } = useSWR<Route, any>(
-        id ? `/api/routes/route/${id}?${events.getRouteUpdates(id)}` : null,
-        fetcher,
-    );
+    const { data } = useSWR<Route, any>(id ? `/api/routes/route/${id}?${events.getRouteUpdates(id)}` : null, fetcher);
     const { backUrl } = useContext(RouteNavigationContext);
-    const tagsOptions = config.tags;
-    const surfaceOptions = config.surfaces;
-    const difficultyOptions = config.difficulties;
 
     const [difficulty, setDifficulty] = useState([]);
     const [surface, setSurface] = useState([]);
@@ -298,21 +292,21 @@ const RouteEdit: React.FC<Props> = (props) => {
 
                     <CheckboxList
                         title={'trudność:'}
-                        listOptions={difficultyOptions}
+                        listOptions={config.difficulties}
                         values={difficulty}
                         setValues={(e) => setDifficulty(e)}
                     />
 
                     <CheckboxList
                         title={'nawierzchnia:'}
-                        listOptions={surfaceOptions}
+                        listOptions={config.surfaces}
                         values={surface}
                         setValues={(e) => setSurface(e)}
                     />
 
                     <CheckboxList
                         title={'tagi:'}
-                        listOptions={tagsOptions}
+                        listOptions={config.tags}
                         values={tags}
                         setValues={(e) => setTags(e)}
                     />
