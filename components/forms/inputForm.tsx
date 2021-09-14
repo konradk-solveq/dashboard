@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Flex, Button, Label, Input } from 'theme-ui';
 
 interface Props {
     title: string;
     value: any;
     setValue: (e) => void;
+    freeze: boolean;
 }
 
 const InputForm: React.FC<Props> = ({
     title,
     value,
     setValue,
+    freeze,
 }) => {
 
 
@@ -19,6 +21,10 @@ const InputForm: React.FC<Props> = ({
     const heandleEdit = () => {
         setEdit(!edit)
     }
+
+    useEffect(()=>{
+        setEdit(false)
+    },[freeze])
 
     return (
         <Flex sx={{

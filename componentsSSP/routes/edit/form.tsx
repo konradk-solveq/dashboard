@@ -46,6 +46,7 @@ const Form: React.FC<Props> = (props) => {
 
     const [map, setMap] = useState(null);
     const [images, setImages] = useState(null);
+    const [freeze, setFreeze] = useState(false);
 
     const heandleSendData = () => {
         return false;
@@ -106,6 +107,7 @@ const Form: React.FC<Props> = (props) => {
             body.description = newDescription;
         }
         manage.updateMetadata(id, body as any);
+        setFreeze(!freeze);
     };
 
     if (router.isFallback || !data) {
@@ -169,8 +171,8 @@ const Form: React.FC<Props> = (props) => {
                         )}
                     </Flex>
 
-                    <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} />
-                    <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} />
+                    <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze}/>
+                    <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} freeze={freeze}/>
 
                     {descriptionShort && descriptionLong && (
                         <Description
@@ -179,9 +181,10 @@ const Form: React.FC<Props> = (props) => {
                             descriptionLong={descriptionLong}
                             setDescriptionLong={setDescriptionLong}
                             setNewDescription={setNewDescription}
+                            freeze={freeze}
                         />
                     )}
-                    <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} />
+                    <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} freeze={freeze}/>
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />

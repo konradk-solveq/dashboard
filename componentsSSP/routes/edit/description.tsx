@@ -1,29 +1,15 @@
-import { useRouter } from 'next/dist/client/router';
-import NextLink from 'next/link';
-import { useContext, useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { AspectImage, Box, Button, Flex } from 'theme-ui';
+import { Box, Button, Flex } from 'theme-ui';
 
-import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
-import fetcher from '../../../helpers/fetcher';
-import ApiContext from '../../../components/contexts/api';
-import EventsContext from '../../../components/contexts/api/EventsContext';
-import ManageContext from '../../../components/contexts/api/ManageContext';
-import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
-import CheckboxList from '../../../components/forms/checkboxList';
 import InputForm from '../../../components/forms/inputForm';
-import SwitchForm from '../../../components/forms/swithForm';
 import TexareaForm from '../../../components/forms/texareaForm';
-import RouteNavigationButtons from './navButtons';
 
-import type { Route } from '../../../components/typings/Route';
-import DataField from '../../../components/forms/dataField';
 interface Props {
     descriptionShort
     setDescriptionShort: () => void;
     descriptionLong
     setDescriptionLong: () => void;
     setNewDescription: () => void;
+    freeze: boolean;
 }
 
 const Description: React.FC<Props> = ({
@@ -31,9 +17,10 @@ const Description: React.FC<Props> = ({
     setDescriptionShort,
     descriptionLong,
     setDescriptionLong,
-    setNewDescription
+    setNewDescription,
+    freeze,
 }: Props) => {
-    
+
     const heandleDescriptionConcat = () => {
         setNewDescription(`${descriptionShort} ${descriptionLong}`);
     };
@@ -53,11 +40,13 @@ const Description: React.FC<Props> = ({
                     title={'opis krótki'}
                     value={descriptionShort}
                     setValue={(e) => setDescriptionShort(e)}
+                    freeze={freeze}
                 />
                 <TexareaForm
                     title={'opis długi'}
                     value={descriptionLong}
                     setValue={(e) => setDescriptionLong(e)}
+                    freeze={freeze}
                 />
             </Box>
             <Flex
