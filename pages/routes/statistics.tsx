@@ -1,16 +1,13 @@
-import { signIn, useSession } from 'next-auth/client';
 import React, { useEffect, useState, useRef } from 'react';
 import useSWR from 'swr';
-import { Box, Button, Grid, Input, Link, AspectImage, Heading, Flex, Container } from 'theme-ui';
+import { Box, Flex, Container } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
-import NextLink from 'next/link';
-import { addEmitHelper } from 'typescript';
-import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
-import PieChart from '../../components/charts/pie';
-import HistogramChart from '../../components/charts/histogram';
-import PagesBar from '../../components/bar/pagesBar';
+import { useResponsiveValue } from '@theme-ui/match-media';
+import PieChart from '../../components/charts/PieChart';
+import HistogramChart from '../../components/charts/BarChart';
+import PagesBar from '../../components/bar/PagesBar_';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
@@ -98,7 +95,7 @@ const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartDat
     );
 };
 
-export default function Page({}) {
+export default function Page({ }) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);

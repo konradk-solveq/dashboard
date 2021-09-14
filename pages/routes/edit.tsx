@@ -5,7 +5,7 @@ import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
 import { useRouter } from 'next/dist/client/router';
 import { RouteNavigationContainer } from '../../components/contexts/route/RouteNavigationContext';
-import Form from '../../componentsSSP/routes/edit/Form';
+import Form from '../../componentsSSP/routes/edit/Form_';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 export default function Page({ }) {

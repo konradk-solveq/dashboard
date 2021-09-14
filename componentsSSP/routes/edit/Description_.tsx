@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from 'theme-ui';
 
-import InputForm from '../../../components/forms/InputForm';
-import TexareaForm from '../../../components/forms/TexareaForm';
+import InputForm from '../../../components/forms/InputForm_';
+import TexareaForm from '../../../components/forms/TexareaForm_';
 
 interface Props {
     descriptionShort
