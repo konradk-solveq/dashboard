@@ -10,6 +10,7 @@ interface RouteNavigationContainerProps {
         prev?: string;
     };
     getPathForRoute: (routeId?: string, page?: number) => string;
+    getPathForBack: (routeId?: string, page?: number) => string;
 }
 
 const lookupResponseToElements = async (r: Response) => {
@@ -28,13 +29,13 @@ export type RouteNavigationContextProps = NavigationType & {};
 const RouteNavigationContext = createContext<RouteNavigationContextProps>(null!);
 
 export const RouteNavigationContainer: React.FC<RouteNavigationContainerProps> = (props) => {
-    const { elements = [], routeId, links = {}, getPathForRoute, page } = props;
+    const { elements = [], routeId, links = {}, getPathForRoute, getPathForBack, page } = props;
     const routeIndex = elements.findIndex((el) => el.id === routeId);
 
     const [navigation, setNavigation] = useState<NavigationType>({
         nextRouteUrl: '',
         previousRouteUrl: '',
-        backUrl: getPathForRoute(null, page),
+        backUrl: getPathForBack(null, page),
     });
     const [siblings, setSiblings] = useState({ previous: [], next: [] });
 

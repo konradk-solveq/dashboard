@@ -36,6 +36,17 @@ export default function Page({ }) {
         return path;
     }
 
+    function getPathForBack(routeId?: string, page?: number) {
+        const queryString = qs.stringify({
+            ...query,
+            routeId: routeId === null ? undefined : routeId || query.routeId,
+            page: page || query.page || 1,
+            q: debouncedName,
+        });
+        const path = `/routes/list?${queryString}`;
+        return path;
+    }
+
     useEffect(() => {
         const path = getPathForRoute();
         if (asPath !== path) {
@@ -49,7 +60,7 @@ export default function Page({ }) {
     }
 
     return (
-        <RouteNavigationContainer {...{ elements, getPathForRoute, links, routeId, page }}>
+        <RouteNavigationContainer {...{ elements, getPathForRoute,getPathForBack, links, routeId, page }}>
             <Form routeId={routeId} />
         </RouteNavigationContainer>
     );
