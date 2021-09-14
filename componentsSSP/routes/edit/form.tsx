@@ -47,6 +47,7 @@ const Form: React.FC<Props> = (props) => {
     const [map, setMap] = useState(null);
     const [images, setImages] = useState(null);
     const [freeze, setFreeze] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
 
     const heandleSendData = () => {
         return false;
@@ -54,7 +55,6 @@ const Form: React.FC<Props> = (props) => {
 
     useEffect(() => {
         if (data) {
-            console.log('%c data:', 'background: #ffcc00; color: #003300', data)
             if (data.difficulty) {
                 setDifficulty(data.difficulty);
             }
@@ -108,6 +108,10 @@ const Form: React.FC<Props> = (props) => {
         }
         manage.updateMetadata(id, body as any);
         setFreeze(!freeze);
+        setShowAlert(true);
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 800);
     };
 
     if (router.isFallback || !data) {
@@ -171,8 +175,8 @@ const Form: React.FC<Props> = (props) => {
                         )}
                     </Flex>
 
-                    <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze}/>
-                    <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} freeze={freeze}/>
+                    <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze} />
+                    <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} freeze={freeze} />
 
                     {descriptionShort && descriptionLong && (
                         <Description
@@ -184,7 +188,7 @@ const Form: React.FC<Props> = (props) => {
                             freeze={freeze}
                         />
                     )}
-                    <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} freeze={freeze}/>
+                    <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} freeze={freeze} />
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />
@@ -259,6 +263,27 @@ const Form: React.FC<Props> = (props) => {
                     </Flex>
                 </Box>
             )}
+
+            {showAlert && <Flex sx={{
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '100vh',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Box sx={{
+                    p: '15px 70px',
+                    bg: 'primary',
+                    borderRadius: '20px',
+                    color: '#fff',
+                    border: '2px solid #313131',
+                    boxShadow: '0px 0px 180px 140px rgba(255,255,255,.6);'
+                }}>
+                    <h1>Z A P I S A N O</h1>
+                </Box>
+            </Flex>}
         </Flex>
     );
 };
