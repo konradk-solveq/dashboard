@@ -1,65 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Grid, Input, Link, AspectImage, Heading, Flex, AspectRatio } from 'theme-ui';
+import { Box, Grid, Input } from 'theme-ui';
 import qs from 'querystring';
-import { useDebounce } from '../components/utils/useDebounce';
-import fetcher from '../helpers/fetcher';
+import { useDebounce } from '../../components/utils/useDebounce';
+import fetcher from '../../helpers/fetcher';
 import { useResponsiveValue } from '@theme-ui/match-media';
-import PagesBar from '../components/bar/pagesBar';
-import NextLink from 'next/link';
+import PagesBar from '../../components/bar/pagesBar';
 import { useRouter } from 'next/dist/client/router';
-import { RouteEditComponent } from '../components/RouteEditNavigation';
-import { RouteNavigationContainer } from '../components/contexts/route/RouteNavigationContext';
-import RouteEdit from '../components/pages/RouteEdit';
+import Tile from '../../componentsSSP/routes/list/tile';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
-const Route: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ bg, route, page, q }) => {
-    const mapImages = route.images.find(({ type }) => type === 'map') || {};
-    const squareImages = mapImages?.variants?.square;
-    const image = squareImages ? squareImages[squareImages.length - 1] : null;
-
-    return (
-        <Grid sx={{ bg: bg, m: 1 }} columns={[1, '3fr ']} className="sys-btn">
-            <NextLink href={`routes?routeId=${route.id}&page=${page}&q=${q}`} passHref>
-                <Link className="sys-btn">
-                    <Box sx={{ overflow: 'hidden', p: 1 }}>
-                        <Heading as="h3" sx={{ textAlign: 'center' }}>
-                            <Box>{route.name}</Box>
-                        </Heading>
-                    </Box>
-                    <Box p={1}>
-                        <Box sx={{ color: '#fff' }}>
-                            {image?.url && <AspectImage ratio={1} src={image?.url}></AspectImage>}
-                            {!image?.url && (
-                                <AspectRatio
-                                    ratio={1}
-                                    sx={{
-                                        bg: '#555555',
-                                    }}
-                                >
-                                    <Flex
-                                        sx={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            height: '100%',
-                                        }}
-                                    >
-                                        <Box sx={{ bg: '#313131', p: '10px' }}>no image</Box>
-                                    </Flex>
-                                </AspectRatio>
-                            )}
-                        </Box>
-                    </Box>
-                    <Box p={1}>{route.id}</Box>
-                    <Box sx={{ padding: 1 }}>{route.author}</Box>
-                    <Box sx={{ padding: 1 }}>{route.createdAt}</Box>
-                </Link>
-            </NextLink>
-        </Grid>
-    );
-};
-
-export default function Page({}) {
+export default function Page({ }) {
     const { query, pathname, replace, asPath } = useRouter();
     const [name, setName] = useState<string>(query?.q?.toString() || '');
     const page = Number(query?.page);
@@ -109,9 +60,7 @@ export default function Page({}) {
         setScroll(newPosition);
     };
 
-    const routeId = query.routeId?.toString();
-
-    function getPathForRoute(routeId?: string, page?: number) {
+    const getPathForRoute = (routeId?: string, page?: number) => {
         const queryString = qs.stringify({
             ...query,
             routeId: routeId === null ? undefined : routeId || query.routeId,
@@ -129,13 +78,6 @@ export default function Page({}) {
         }
     }, [pathname, query, asPath, page, debouncedName]);
 
-    if (routeId) {
-        return (
-            <RouteNavigationContainer {...{ elements, getPathForRoute, links, routeId, page }}>
-                <RouteEdit routeId={routeId} />
-            </RouteNavigationContainer>
-        );
-    }
     return (
         <Box>
             <Box>Wyszukaj po nazwie:</Box>
@@ -165,7 +107,7 @@ export default function Page({}) {
                     <Grid sx={{ margin: 1 }} gap={0} columns={[1, layout]}>
                         {elements?.map((el, index) => {
                             const bg = index % 2 ? 'primary' : 'muted';
-                            return <Route key={el.id} bg={bg} route={el} page={page} q={debouncedName}></Route>;
+                            return <Tile key={el.id} bg={bg} route={el} page={page} q={debouncedName}></Tile>;
                         })}
                     </Grid>
                 </>
