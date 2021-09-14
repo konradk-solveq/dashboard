@@ -24,7 +24,7 @@ export default function Page({ }) {
 
     const routeId = query.routeId?.toString();
 
-    const queryString = qs.stringify({
+    const queryString = (routeId?: string, page?: number) => qs.stringify({
         ...query,
         routeId: routeId === null ? undefined : routeId || query.routeId,
         page: page || query.page || 1,
@@ -32,11 +32,11 @@ export default function Page({ }) {
     });
 
     function getPathForRoute(routeId?: string, page?: number) {
-        return `${pathname}?${queryString}`;
+        return `${pathname}?${queryString(routeId, page)}`;
     }
 
     function getPathForBack(routeId?: string, page?: number) {
-        return `/routes/list?${queryString}`;
+        return `/routes/list?${queryString(routeId, page)}`;
     }
 
     useEffect(() => {
@@ -52,7 +52,7 @@ export default function Page({ }) {
     }
 
     return (
-        <RouteNavigationContainer {...{ elements, getPathForRoute,getPathForBack, links, routeId, page }}>
+        <RouteNavigationContainer {...{ elements, getPathForRoute, getPathForBack, links, routeId, page }}>
             <Form routeId={routeId} />
         </RouteNavigationContainer>
     );
