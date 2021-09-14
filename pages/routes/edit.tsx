@@ -10,7 +10,6 @@ const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 export default function Page({ }) {
     const { query, pathname, replace, asPath } = useRouter();
-    console.log('%c pathname:', 'background: #ffcc00; color: #003300', pathname)
     const [name, setName] = useState<string>(query?.q?.toString() || '');
     const page = Number(query?.page);
 

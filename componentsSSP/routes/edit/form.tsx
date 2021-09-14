@@ -18,6 +18,7 @@ import RouteNavigationButtons from './navButtons';
 
 import type { Route } from '../../../components/typings/Route';
 import DataField from '../../../components/forms/dataField';
+import Description from './description';
 interface Props {
     routeId: string;
 }
@@ -52,6 +53,7 @@ const Form: React.FC<Props> = (props) => {
 
     useEffect(() => {
         if (data) {
+            console.log('%c data:', 'background: #ffcc00; color: #003300', data)
             if (data.difficulty) {
                 setDifficulty(data.difficulty);
             }
@@ -68,16 +70,12 @@ const Form: React.FC<Props> = (props) => {
             if (data.description) {
                 if (typeof data.description == 'string') {
                     setNewDescription(data.description);
+                    setDescriptionShort(null);
+                    setDescriptionLong(null);
                 } else {
-                    if (data.description.short == '') {
-                        setNewDescription(data.description.long);
-                        setDescriptionShort(null);
-                        setDescriptionLong(null);
-                    } else {
-                        setDescriptionShort(data.description.short);
-                        setDescriptionLong(data.description.long);
-                        setNewDescription(null);
-                    }
+                    setDescriptionShort(data.description.short);
+                    setDescriptionLong(data.description.long);
+                    setNewDescription(null);
                 }
             }
 
@@ -88,22 +86,6 @@ const Form: React.FC<Props> = (props) => {
             setImages(data.images.filter((e) => e.type == 'photo'));
         }
     }, [data]);
-
-    if (router.isFallback) return <div>Loading...</div>;
-    if (!data) {
-        return <div>Loading...</div>;
-    }
-
-    const checkNoData = (d) => {
-        if (typeof d == 'undefined') {
-            return <Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- undefined --</Box>;
-        }
-        if (d == null) {
-            return <Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- null --</Box>;
-        } else {
-            return <Box sx={{ fontFamily: 'din-b' }}>{d.toString()}</Box>;
-        }
-    };
 
     const handleSaveData = () => {
         const body: any = {
@@ -121,25 +103,14 @@ const Form: React.FC<Props> = (props) => {
                 long: descriptionLong,
             };
         } else {
-            body.description = {
-                short: null,
-                long: newDescription,
-            };
+            body.description = newDescription;
         }
         manage.updateMetadata(id, body as any);
     };
 
-    const heandleDescriptionConcat = () => {
-        setNewDescription(`${descriptionShort} ${descriptionLong}`);
-    };
-
-    const heandleDescriptionShort = () => {
-        setNewDescription(`${descriptionShort}`);
-    };
-
-    const heandleDescriptionLong = () => {
-        setNewDescription(`${descriptionLong}`);
-    };
+    if (router.isFallback || !data) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <Flex
@@ -168,20 +139,20 @@ const Form: React.FC<Props> = (props) => {
                         }}
                     >
                         <Box>
-                        <Box>
-                            <DataField title={'id trasy: '} value={id}></DataField>
-                            <DataField title={'id właściciela: '} value={data.ownerId}></DataField>
-                            <DataField title={'autor: '} value={data.author}></DataField>
-                            <DataField title={'utworzona: '} value={getData(data.createdAt)}></DataField>
-                            <DataField title={'dystans: '} value={getDistance(data.distance)}></DataField>
-                            <DataField title={'czas: '} value={getTime(data.time)}></DataField>
-                            <DataField title={'pobrania: '} value={data.downloads}></DataField>
-                            <DataField title={'lajki: '} value={data.reactions.like}></DataField>
-                            {/* <DataField title={'wow: '} value={data.reactions.wow}></DataField> */}
-                            {/* <DataField title={'love: '} value={data.reactions.love}></DataField> */}
-                            <DataField title={'reakcje: '} value={data.reaction}></DataField>
-                            <DataField title={'polecana: '} value={data.isFeatured}></DataField>
-                        </Box>
+                            <Box>
+                                <DataField title={'id trasy: '} value={id}></DataField>
+                                <DataField title={'id właściciela: '} value={data.ownerId}></DataField>
+                                <DataField title={'autor: '} value={data.author}></DataField>
+                                <DataField title={'utworzona: '} value={getData(data.createdAt)}></DataField>
+                                <DataField title={'dystans: '} value={getDistance(data.distance)}></DataField>
+                                <DataField title={'czas: '} value={getTime(data.time)}></DataField>
+                                <DataField title={'pobrania: '} value={data.downloads}></DataField>
+                                <DataField title={'lajki: '} value={data.reactions.like}></DataField>
+                                {/* <DataField title={'wow: '} value={data.reactions.wow}></DataField> */}
+                                {/* <DataField title={'love: '} value={data.reactions.love}></DataField> */}
+                                <DataField title={'reakcje: '} value={data.reaction}></DataField>
+                                <DataField title={'polecana: '} value={data.isFeatured}></DataField>
+                            </Box>
                         </Box>
                         {map && map.length > 0 && (
                             <Box sx={{ width: ['100%', '80%', '45%', '35%'], maxWidth: '300px', mb: '15px' }}>
@@ -202,59 +173,13 @@ const Form: React.FC<Props> = (props) => {
                     <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} />
 
                     {descriptionShort && descriptionLong && (
-                        <>
-                            <Flex>
-                                <Box sx={{ width: '90%' }}>
-                                    <InputForm
-                                        title={'opis krótki'}
-                                        value={descriptionShort}
-                                        setValue={(e) => setDescriptionShort(e)}
-                                    />
-                                    <TexareaForm
-                                        title={'opis długi'}
-                                        value={descriptionLong}
-                                        setValue={(e) => setDescriptionLong(e)}
-                                    />
-                                </Box>
-                                <Flex
-                                    sx={{
-                                        // bg: 'khaki',
-                                        pl: '40px',
-                                        pt: '20px',
-                                        borderTop: '1px solid #55555544',
-                                        mt: '5px',
-                                        flexDirection: 'column',
-                                        justifyContent: 'center',
-                                        width: 'max-content',
-                                    }}
-                                >
-                                    <Button
-                                        className="sys-btn"
-                                        type="button"
-                                        sx={{ py: '3px', px: '10px', mb: '5px' }}
-                                        onClick={() => heandleDescriptionConcat()}
-                                    >
-                                        połącz ze opisy
-                                    </Button>
-                                    <Button
-                                        className="sys-btn"
-                                        type="button"
-                                        sx={{ py: '3px', px: '10px', mb: '5px' }}
-                                        onClick={() => heandleDescriptionShort()}
-                                    >
-                                        wybierz krótki
-                                    </Button>
-                                    <Button
-                                        className="sys-btn"
-                                        type="button"
-                                        sx={{ py: '3px', px: '10px' }}
-                                        onClick={() => heandleDescriptionLong()}
-                                    >
-                                        wybierz długi
-                                    </Button>
-                                </Flex>
-                            </Flex>
-                        </>
+                        <Description
+                            descriptionShort={descriptionShort}
+                            setDescriptionShort={setDescriptionShort}
+                            descriptionLong={descriptionLong}
+                            setDescriptionLong={setDescriptionLong}
+                            setNewDescription={setNewDescription}
+                        />
                     )}
                     <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} />
 
@@ -321,12 +246,12 @@ const Form: React.FC<Props> = (props) => {
                     >
                         <NextLink href={backUrl} passHref>
                             <Button variant="white" className="sys-btn" backgroundColor="gray">
-                                Zaniechaj
+                                Wróć do listy
                             </Button>
                         </NextLink>
 
                         <Button type="button" sx={{ marginLeft: 1 }} className="sys-btn" onClick={handleSaveData}>
-                            Zmień / zapisz
+                            Zmień / Zapisz
                         </Button>
                     </Flex>
                 </Box>
