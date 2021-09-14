@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
-import RouteEdit from '../../pages/RouteEdit';
+import RouteEdit from '../../../componentsSSP/routes/edit/form';
 import { Route } from '../../typings/Route';
 interface RouteNavigationContainerProps {
     elements: Route[];

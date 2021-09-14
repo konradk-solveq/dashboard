@@ -1,26 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Grid, Input, Link, AspectImage, Heading, Flex, AspectRatio } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
-import { useResponsiveValue } from '@theme-ui/match-media';
-import PagesBar from '../../components/bar/pagesBar';
-import NextLink from 'next/link';
 import { useRouter } from 'next/dist/client/router';
-import { RouteEditComponent } from '../../components/RouteEditNavigation';
 import { RouteNavigationContainer } from '../../components/contexts/route/RouteNavigationContext';
-import RouteEdit from '../../components/pages/RouteEdit';
+import Form from '../../componentsSSP/routes/edit/form';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 export default function Page({ }) {
     const { query, pathname, replace, asPath } = useRouter();
+    console.log('%c pathname:', 'background: #ffcc00; color: #003300', pathname)
     const [name, setName] = useState<string>(query?.q?.toString() || '');
     const page = Number(query?.page);
 
 
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
-    const { data: {  elements, links } = defaultTo, error } = useSWR<any>(url, fetcher);
+    const { data: { elements, links } = defaultTo, error } = useSWR<any>(url, fetcher);
     const debouncedName = useDebounce(name, 333);
 
     useEffect(() => {
@@ -52,10 +48,9 @@ export default function Page({ }) {
         return <div>Loading ...</div>
     }
 
-
     return (
         <RouteNavigationContainer {...{ elements, getPathForRoute, links, routeId, page }}>
-            <RouteEdit routeId={routeId} />
+            <Form routeId={routeId} />
         </RouteNavigationContainer>
     );
 }

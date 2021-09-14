@@ -4,24 +4,25 @@ import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AspectImage, Box, Button, Flex } from 'theme-ui';
 
-import { getData, getDistance, getTime } from '../../helpers/dataFormat';
-import fetcher from '../../helpers/fetcher';
-import ApiContext from '../contexts/api';
-import EventsContext from '../contexts/api/EventsContext';
-import ManageContext from '../contexts/api/ManageContext';
-import RouteNavigationContext from '../contexts/route/RouteNavigationContext';
-import CheckboxList from '../forms/checkboxList';
-import InputForm from '../forms/inputForm';
-import SwitchForm from '../forms/swithForm';
-import TexareaForm from '../forms/texareaForm';
-import RouteNavigationButtons from './RouteNavigationButtons';
+import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
+import fetcher from '../../../helpers/fetcher';
+import ApiContext from '../../../components/contexts/api';
+import EventsContext from '../../../components/contexts/api/EventsContext';
+import ManageContext from '../../../components/contexts/api/ManageContext';
+import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
+import CheckboxList from '../../../components/forms/checkboxList';
+import InputForm from '../../../components/forms/inputForm';
+import SwitchForm from '../../../components/forms/swithForm';
+import TexareaForm from '../../../components/forms/texareaForm';
+import RouteNavigationButtons from './navButtons';
 
-import type { Route } from '../typings/Route';
+import type { Route } from '../../../components/typings/Route';
+import DataField from '../../../components/forms/dataField';
 interface Props {
     routeId: string;
 }
 
-const RouteEdit: React.FC<Props> = (props) => {
+const Form: React.FC<Props> = (props) => {
     const { routeId: id } = props;
     const router = useRouter();
     const { config } = useContext(ApiContext);
@@ -128,8 +129,6 @@ const RouteEdit: React.FC<Props> = (props) => {
         manage.updateMetadata(id, body as any);
     };
 
-    const heandleDataRefresh = () => {};
-
     const heandleDescriptionConcat = () => {
         setNewDescription(`${descriptionShort} ${descriptionLong}`);
     };
@@ -169,48 +168,20 @@ const RouteEdit: React.FC<Props> = (props) => {
                         }}
                     >
                         <Box>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>id trasy: </Box>
-                                {checkNoData(id)}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>id właściciela: </Box>
-                                {checkNoData(data.ownerId)}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>autor: </Box>
-                                {checkNoData(data.author)}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>utworzona: </Box>
-                                {checkNoData(getData(data.createdAt))}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>dystans: </Box>
-                                {checkNoData(getDistance(data.distance))}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>czas: </Box>
-                                {checkNoData(getTime(data.time))}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>pobrania: </Box>
-                                {checkNoData(data.downloads)}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>lajki: </Box>
-                                {checkNoData(data.reactions.like)}
-                            </Flex>
-                            {/* <Flex><Box sx={{ mr: '5px' }}>wow: </Box>{checkNoData(data.reactions.wow)}</Flex> */}
-                            {/* <Flex><Box sx={{ mr: '5px' }}>love: </Box>{checkNoData(data.reactions.love)}</Flex> */}
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>reakcje: </Box>
-                                {checkNoData(data.reaction)}
-                            </Flex>
-                            <Flex>
-                                <Box sx={{ mr: '5px' }}>polecana: </Box>
-                                {checkNoData(data.isFeatured)}
-                            </Flex>
+                        <Box>
+                            <DataField title={'id trasy: '} value={id}></DataField>
+                            <DataField title={'id właściciela: '} value={data.ownerId}></DataField>
+                            <DataField title={'autor: '} value={data.author}></DataField>
+                            <DataField title={'utworzona: '} value={getData(data.createdAt)}></DataField>
+                            <DataField title={'dystans: '} value={getDistance(data.distance)}></DataField>
+                            <DataField title={'czas: '} value={getTime(data.time)}></DataField>
+                            <DataField title={'pobrania: '} value={data.downloads}></DataField>
+                            <DataField title={'lajki: '} value={data.reactions.like}></DataField>
+                            {/* <DataField title={'wow: '} value={data.reactions.wow}></DataField> */}
+                            {/* <DataField title={'love: '} value={data.reactions.love}></DataField> */}
+                            <DataField title={'reakcje: '} value={data.reaction}></DataField>
+                            <DataField title={'polecana: '} value={data.isFeatured}></DataField>
+                        </Box>
                         </Box>
                         {map && map.length > 0 && (
                             <Box sx={{ width: ['100%', '80%', '45%', '35%'], maxWidth: '300px', mb: '15px' }}>
@@ -364,4 +335,4 @@ const RouteEdit: React.FC<Props> = (props) => {
     );
 };
 
-export default RouteEdit;
+export default Form;
