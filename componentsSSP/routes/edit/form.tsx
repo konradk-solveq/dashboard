@@ -19,6 +19,7 @@ import RouteNavigationButtons from './navButtons';
 import type { Route } from '../../../components/typings/Route';
 import DataField from '../../../components/forms/dataField';
 import Description from './description';
+import BigAlert from '../../../components/contexts/modals/bigAlert';
 interface Props {
     routeId: string;
 }
@@ -108,14 +109,11 @@ const Form: React.FC<Props> = (props) => {
         }
         manage.updateMetadata(id, body as any);
         setFreeze(!freeze);
-        setShowAlert(true);
-        setTimeout(() => {
-            setShowAlert(false);
-        }, 800);
+        setShowAlert(!showAlert);
     };
 
     if (router.isFallback || !data) {
-        return <div>Loading...</div>;
+        return <h2>Loading...</h2>;
     }
 
     return (
@@ -264,26 +262,10 @@ const Form: React.FC<Props> = (props) => {
                 </Box>
             )}
 
-            {showAlert && <Flex sx={{
-                position: 'fixed',
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: '100vh',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Box sx={{
-                    p: '15px 70px',
-                    bg: 'primary',
-                    borderRadius: '20px',
-                    color: '#fff',
-                    border: '2px solid #313131',
-                    boxShadow: '0px 0px 180px 140px rgba(255,255,255,.6);'
-                }}>
-                    <h1>Z A P I S A N O</h1>
-                </Box>
-            </Flex>}
+            {showAlert && <BigAlert
+                text={'Z A P I S A N O'}
+                show={showAlert}
+            />}
         </Flex>
     );
 };
