@@ -4,7 +4,7 @@ import { Box, Button, Flex } from 'theme-ui';
 import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
 
 const NavButtons: React.FC<{}> = ({ }) => {
-    const { nextRouteUrl, previousRouteUrl, backUrl } = useContext(RouteNavigationContext);
+    const { nextRouteUrl, previousRouteUrl } = useContext(RouteNavigationContext);
     return (
         <Flex sx={{
             width: '100%',

@@ -10,16 +10,16 @@ import ApiContext from '../../../components/contexts/api';
 import EventsContext from '../../../components/contexts/api/EventsContext';
 import ManageContext from '../../../components/contexts/api/ManageContext';
 import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
-import CheckboxList from '../../../components/forms/CheckboxList_';
-import InputForm from '../../../components/forms/InputForm_';
-import SwitchForm from '../../../components/forms/SwithForm_';
-import TexareaForm from '../../../components/forms/TexareaForm_';
-import NavButtons from './NavButtons_';
+import CheckboxList from '../../../components/forms/CheckboxList';
+import InputForm from '../../../components/forms/InputForm';
+import SwitchForm from '../../../components/forms/SwithForm';
+import TexareaForm from '../../../components/forms/TexareaForm';
+import NavButtons from './NavButtons';
 
 import type { Route } from '../../../components/typings/Route';
-import DataField from '../../../components/forms/DataField_';
-import Description from './Description_';
-import BigAlert from '../../../components/contexts/modals/BigAlert_';
+import DataField from '../../../components/forms/DataField';
+import Description from './Description';
+import BigAlert from '../../../components/contexts/modals/BigAlert';
 interface Props {
     routeId: string;
 }
@@ -255,6 +255,10 @@ const Form: React.FC<Props> = (props) => {
                     </Flex>
                 </Box>
             )}
+
+            <Box sx={{mt: '20px'}}>
+                <NavButtons />
+            </Box>
 
             {showAlert && <BigAlert
                 text={'Z A P I S A N O'}

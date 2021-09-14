@@ -7,7 +7,7 @@ import fetcher from '../../helpers/fetcher';
 import { useResponsiveValue } from '@theme-ui/match-media';
 import PieChart from '../../components/charts/PieChart';
 import HistogramChart from '../../components/charts/BarChart';
-import PagesBar from '../../components/bar/PagesBar_';
+import PagesBar from '../../components/bar/PagesBar';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };

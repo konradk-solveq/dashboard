@@ -5,9 +5,9 @@ import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
 import { useResponsiveValue } from '@theme-ui/match-media';
-import PagesBar from '../../components/bar/PagesBar_';
+import PagesBar from '../../components/bar/PagesBar';
 import { useRouter } from 'next/dist/client/router';
-import Tile from '../../componentsSSP/routes/list/Tile_';
+import Tile from '../../componentsSSP/routes/list/Tile';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 export default function Page({ }) {
