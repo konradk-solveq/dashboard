@@ -5,7 +5,7 @@ import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
 import { useRouter } from 'next/dist/client/router';
 import { RouteNavigationContainer } from '../../components/contexts/route/RouteNavigationContext';
-import Form from '../../componentsSSP/routes/edit/form';
+import Form from '../../componentsSSP/routes/edit/Form';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 export default function Page({ }) {
@@ -24,26 +24,19 @@ export default function Page({ }) {
 
     const routeId = query.routeId?.toString();
 
+    const queryString = qs.stringify({
+        ...query,
+        routeId: routeId === null ? undefined : routeId || query.routeId,
+        page: page || query.page || 1,
+        q: debouncedName,
+    });
+
     function getPathForRoute(routeId?: string, page?: number) {
-        const queryString = qs.stringify({
-            ...query,
-            routeId: routeId === null ? undefined : routeId || query.routeId,
-            page: page || query.page || 1,
-            q: debouncedName,
-        });
-        const path = `${pathname}?${queryString}`;
-        return path;
+        return `${pathname}?${queryString}`;
     }
 
     function getPathForBack(routeId?: string, page?: number) {
-        const queryString = qs.stringify({
-            ...query,
-            routeId: routeId === null ? undefined : routeId || query.routeId,
-            page: page || query.page || 1,
-            q: debouncedName,
-        });
-        const path = `/routes/list?${queryString}`;
-        return path;
+        return `/routes/list?${queryString}`;
     }
 
     useEffect(() => {

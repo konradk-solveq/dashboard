@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from 'theme-ui';
 
-import InputForm from '../../../components/forms/inputForm';
-import TexareaForm from '../../../components/forms/texareaForm';
+import InputForm from '../../../components/forms/InputForm';
+import TexareaForm from '../../../components/forms/TexareaForm';
 
 interface Props {
     descriptionShort
@@ -21,15 +21,15 @@ const Description: React.FC<Props> = ({
     freeze,
 }: Props) => {
 
-    const heandleDescriptionConcat = () => {
+    const handleDescriptionConcat = () => {
         setNewDescription(`${descriptionShort} ${descriptionLong}`);
     };
 
-    const heandleDescriptionShort = () => {
+    const handleDescriptionShort = () => {
         setNewDescription(`${descriptionShort}`);
     };
 
-    const heandleDescriptionLong = () => {
+    const handleDescriptionLong = () => {
         setNewDescription(`${descriptionLong}`);
     };
 
@@ -65,7 +65,7 @@ const Description: React.FC<Props> = ({
                     className="sys-btn"
                     type="button"
                     sx={{ py: '3px', px: '10px', mb: '5px' }}
-                    onClick={() => heandleDescriptionConcat()}
+                    onClick={() => handleDescriptionConcat()}
                 >
                     połącz ze opisy
                 </Button>
@@ -73,7 +73,7 @@ const Description: React.FC<Props> = ({
                     className="sys-btn"
                     type="button"
                     sx={{ py: '3px', px: '10px', mb: '5px' }}
-                    onClick={() => heandleDescriptionShort()}
+                    onClick={() => handleDescriptionShort()}
                 >
                     wybierz krótki
                 </Button>
@@ -81,7 +81,7 @@ const Description: React.FC<Props> = ({
                     className="sys-btn"
                     type="button"
                     sx={{ py: '3px', px: '10px' }}
-                    onClick={() => heandleDescriptionLong()}
+                    onClick={() => handleDescriptionLong()}
                 >
                     wybierz długi
                 </Button>

@@ -14,7 +14,7 @@ const InputOptional: React.FC<Props> = ({
 
     const [edit, setEdit] = useState(false)
 
-    const heandleEdit = () => {
+    const handleEdit = () => {
         setEdit(!edit)
     }
 
@@ -62,7 +62,7 @@ const InputOptional: React.FC<Props> = ({
                     bg: edit ? '#888' : 'primary',
                     minWidth: '62px',
                 }}
-                onClick={heandleEdit}
+                onClick={handleEdit}
             >dodaj</Button>
         </Flex>
     )

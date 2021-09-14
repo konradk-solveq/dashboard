@@ -3,10 +3,14 @@ import { useContext } from 'react';
 import { Box, Button, Flex } from 'theme-ui';
 import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
 
-const NavButtons: React.FC<{}> = ({}) => {
+const NavButtons: React.FC<{}> = ({ }) => {
     const { nextRouteUrl, previousRouteUrl, backUrl } = useContext(RouteNavigationContext);
     return (
-        <Flex sx={{ width: '100%', justifyContent: 'space-between', mb: '20px' }}>
+        <Flex sx={{
+            width: '100%',
+            justifyContent: 'space-between',
+            mb: '20px',
+        }}>
             {previousRouteUrl && (
                 <NextLink href={previousRouteUrl} passHref>
                     <Button className="sys-btn">&lt;&lt;&lt; poprzednia</Button>

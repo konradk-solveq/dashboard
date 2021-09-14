@@ -18,7 +18,7 @@ const InputForm: React.FC<Props> = ({
 
     const [edit, setEdit] = useState(false)
 
-    const heandleEdit = () => {
+    const handleEdit = () => {
         setEdit(!edit)
     }
 
@@ -71,7 +71,7 @@ const InputForm: React.FC<Props> = ({
                     bg: edit ? '#888' : 'primary',
                     minWidth: '62px',
                 }}
-                onClick={heandleEdit}
+                onClick={handleEdit}
             >edytuj</Button>
         </Flex>
     )

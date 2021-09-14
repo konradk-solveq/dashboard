@@ -6,8 +6,8 @@ interface Props {
     pages: any;
     setPage: (Function);
     scroll: number;
-    heandleScrollRight: Function;
-    heandleScrolLeft: Function;
+    handleScrollRight: Function;
+    handleScrolLeft: Function;
     barRef?: any; // dodawany tlko raz na stronę
 }
 
@@ -17,8 +17,8 @@ const PagesBar: React.FC<Props> = ({
     pages,
     setPage,
     scroll,
-    heandleScrollRight,
-    heandleScrolLeft,
+    handleScrollRight,
+    handleScrolLeft,
     barRef,
 }: Props) => {
 
@@ -39,7 +39,7 @@ const PagesBar: React.FC<Props> = ({
                     cursor: 'pointer',
                 }}
                 className='sys-btn'
-                onClick={() => { heandleScrollRight(true); }}
+                onClick={() => { handleScrollRight(true); }}
             >&lt;&lt;&lt;</Button>
             <Button
                 sx={{
@@ -52,7 +52,7 @@ const PagesBar: React.FC<Props> = ({
                     cursor: 'pointer',
                 }}
                 className='sys-btn'
-                onClick={() => { heandleScrollRight(); }}
+                onClick={() => { handleScrollRight(); }}
             >&lt;</Button>
             <Box
                 ref={barRef}
@@ -92,7 +92,7 @@ const PagesBar: React.FC<Props> = ({
                 </Flex>
             </Box>
             <Button
-                onClick={() => heandleScrolLeft()}
+                onClick={() => handleScrolLeft()}
                 sx={{
                     p: '1px',
                     textAlign: 'center',
@@ -113,7 +113,7 @@ const PagesBar: React.FC<Props> = ({
                 }}
             >
                 <Button
-                    onClick={() => heandleScrolLeft(true)}
+                    onClick={() => handleScrolLeft(true)}
                     sx={{
                         p: '1px',
                         textAlign: 'center',

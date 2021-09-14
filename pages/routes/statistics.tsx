@@ -136,7 +136,7 @@ export default function Page({}) {
     const SCROLL_MOVE = 42 * 8;
     const barRef = useRef<any>();
 
-    const heandleScrolLeft = (end: boolean = false) => {
+    const handleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
         const barWidth = barRef.current.clientWidth;
         let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
@@ -147,7 +147,7 @@ export default function Page({}) {
         setScroll(newPosition);
     };
 
-    const heandleScrollRight = (end: boolean) => {
+    const handleScrollRight = (end: boolean) => {
         let newPosition = end ? 0 : scroll + SCROLL_MOVE;
 
         if (newPosition > 0) {
@@ -178,8 +178,8 @@ export default function Page({}) {
                 pages={pages}
                 setPage={setPage}
                 scroll={scroll}
-                heandleScrollRight={heandleScrollRight}
-                heandleScrolLeft={heandleScrolLeft}
+                handleScrollRight={handleScrollRight}
+                handleScrolLeft={handleScrolLeft}
                 barRef={barRef}
             />
 

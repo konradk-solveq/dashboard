@@ -10,16 +10,16 @@ import ApiContext from '../../../components/contexts/api';
 import EventsContext from '../../../components/contexts/api/EventsContext';
 import ManageContext from '../../../components/contexts/api/ManageContext';
 import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
-import CheckboxList from '../../../components/forms/checkboxList';
-import InputForm from '../../../components/forms/inputForm';
-import SwitchForm from '../../../components/forms/swithForm';
-import TexareaForm from '../../../components/forms/texareaForm';
-import RouteNavigationButtons from './navButtons';
+import CheckboxList from '../../../components/forms/CheckboxList';
+import InputForm from '../../../components/forms/InputForm';
+import SwitchForm from '../../../components/forms/SwithForm';
+import TexareaForm from '../../../components/forms/TexareaForm';
+import NavButtons from './NavButtons';
 
 import type { Route } from '../../../components/typings/Route';
-import DataField from '../../../components/forms/dataField';
-import Description from './description';
-import BigAlert from '../../../components/contexts/modals/bigAlert';
+import DataField from '../../../components/forms/DataField';
+import Description from './Description';
+import BigAlert from '../../../components/contexts/modals/BigAlert';
 interface Props {
     routeId: string;
 }
@@ -49,10 +49,6 @@ const Form: React.FC<Props> = (props) => {
     const [images, setImages] = useState(null);
     const [freeze, setFreeze] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
-
-    const heandleSendData = () => {
-        return false;
-    };
 
     useEffect(() => {
         if (data) {
@@ -120,15 +116,13 @@ const Form: React.FC<Props> = (props) => {
         <Flex
             sx={{
                 flexDirection: 'column',
-                justifyContent: 'center',
                 width: '100%',
             }}
         >
-            <RouteNavigationButtons />
+            <NavButtons />
 
             {data && (
                 <Box
-                    onSubmit={heandleSendData}
                     sx={{
                         bg: '#ddd',
                         px: '20px',
