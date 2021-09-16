@@ -1,16 +1,13 @@
-import { signIn, useSession } from 'next-auth/client';
 import React, { useEffect, useState, useRef } from 'react';
 import useSWR from 'swr';
-import { Box, Button, Grid, Input, Link, AspectImage, Heading, Flex, Container } from 'theme-ui';
+import { Box, Flex, Container } from 'theme-ui';
 import qs from 'querystring';
-import { useDebounce } from '../components/utils/useDebounce';
-import fetcher from '../helpers/fetcher';
-import NextLink from 'next/link';
-import { addEmitHelper } from 'typescript';
-import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
-import PieChart from '../components/charts/pie';
-import HistogramChart from '../components/charts/histogram';
-import PagesBar from '../components/bar/pagesBar';
+import { useDebounce } from '../../components/utils/useDebounce';
+import fetcher from '../../helpers/fetcher';
+import { useResponsiveValue } from '@theme-ui/match-media';
+import PieChart from '../../components/charts/PieChart';
+import HistogramChart from '../../components/charts/BarChart';
+import PagesBar from '../../components/bar/PagesBar';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
@@ -98,7 +95,7 @@ const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartDat
     );
 };
 
-export default function Page({}) {
+export default function Page({ }) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
@@ -136,7 +133,7 @@ export default function Page({}) {
     const SCROLL_MOVE = 42 * 8;
     const barRef = useRef<any>();
 
-    const heandleScrolLeft = (end: boolean = false) => {
+    const handleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
         const barWidth = barRef.current.clientWidth;
         let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
@@ -147,7 +144,7 @@ export default function Page({}) {
         setScroll(newPosition);
     };
 
-    const heandleScrollRight = (end: boolean) => {
+    const handleScrollRight = (end: boolean) => {
         let newPosition = end ? 0 : scroll + SCROLL_MOVE;
 
         if (newPosition > 0) {
@@ -178,8 +175,8 @@ export default function Page({}) {
                 pages={pages}
                 setPage={setPage}
                 scroll={scroll}
-                heandleScrollRight={heandleScrollRight}
-                heandleScrolLeft={heandleScrolLeft}
+                handleScrollRight={handleScrollRight}
+                handleScrolLeft={handleScrolLeft}
                 barRef={barRef}
             />
 

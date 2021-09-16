@@ -1,22 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Flex, Button, Label, Input } from 'theme-ui';
 
 interface Props {
+    title: string;
     value: any;
     setValue: (e) => void;
+    freeze: boolean;
 }
 
-const InputOptional: React.FC<Props> = ({
+const InputForm: React.FC<Props> = ({
+    title,
     value,
     setValue,
+    freeze,
 }) => {
 
 
     const [edit, setEdit] = useState(false)
 
-    const heandleEdit = () => {
+    const handleEdit = () => {
         setEdit(!edit)
     }
+
+    useEffect(()=>{
+        setEdit(false)
+    },[freeze])
 
     return (
         <Flex sx={{
@@ -26,8 +34,9 @@ const InputOptional: React.FC<Props> = ({
             mt: '5px'
         }}>
             <Box sx={{ width: '100%' }}>
+                <Label>{title}</Label>
                 {edit && <Input
-                    value={value}
+                    value={value ? value : ''}
                     onChange={e => setValue(e.target.value)}
                     sx={{
                         bg: '#fff',
@@ -62,10 +71,10 @@ const InputOptional: React.FC<Props> = ({
                     bg: edit ? '#888' : 'primary',
                     minWidth: '62px',
                 }}
-                onClick={heandleEdit}
-            >dodaj</Button>
+                onClick={handleEdit}
+            >edytuj</Button>
         </Flex>
     )
 }
 
-export default InputOptional;
+export default InputForm;

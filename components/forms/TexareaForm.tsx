@@ -6,6 +6,7 @@ interface Props {
     value: any;
     setValue: (e) => void;
     highlight?: boolean;
+    freeze: boolean;
 }
 
 const TexareaForm: React.FC<Props> = ({
@@ -13,13 +14,18 @@ const TexareaForm: React.FC<Props> = ({
     value,
     setValue,
     highlight,
+    freeze,
 }) => {
 
     const [edit, setEdit] = useState(false)
 
-    const heandleEdit = () => {
+    const handleEdit = () => {
         setEdit(!edit)
     }
+
+    useEffect(() => {
+        setEdit(false)
+    }, [freeze])
 
     const area = useRef(null);
     const [areaW, setAreaW] = useState(false)
@@ -85,7 +91,7 @@ const TexareaForm: React.FC<Props> = ({
                         bg: edit ? '#888' : 'primary',
                         minWidth: '62px',
                     }}
-                    onClick={heandleEdit}
+                    onClick={handleEdit}
                 >edytuj</Button>
             </Flex>
         </Flex>

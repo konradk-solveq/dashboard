@@ -8,7 +8,7 @@ interface Props {
 }
 
 const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }) => {
-    const heandlerOnChange = (val: string) => {
+    const handlerOnChange = (val: string) => {
         const tempValues = [...values];
 
         if (values.some((e) => e == val)) {
@@ -44,7 +44,7 @@ const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }
                             <Box>{e.i18nValue}</Box>
                             <Checkbox
                                 checked={values.includes(e.enumValue)}
-                                onChange={() => heandlerOnChange(e.enumValue)}
+                                onChange={() => handlerOnChange(e.enumValue)}
                             />
                         </Label>
                     </Flex>
