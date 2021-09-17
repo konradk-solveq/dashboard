@@ -13,7 +13,7 @@ import RouteNavigationContext from '../../../components/contexts/route/RouteNavi
 import CheckboxList from '../../../components/forms/CheckboxList';
 import InputForm from '../../../components/forms/InputForm';
 import SwitchForm from '../../../components/forms/SwithForm';
-import TexareaForm from '../../../components/forms/TexareaForm';
+import TextareaForm from '../../../components/forms/TextareaForm';
 import NavButtons from './NavButtons';
 
 import type { Route } from '../../../components/typings/Route';
@@ -180,7 +180,7 @@ const Form: React.FC<Props> = (props) => {
                             freeze={freeze}
                         />
                     )}
-                    <TexareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} freeze={freeze} />
+                    <TextareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} freeze={freeze} />
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />

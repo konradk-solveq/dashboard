@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from 'theme-ui';
 
 import InputForm from '../../../components/forms/InputForm';
-import TexareaForm from '../../../components/forms/TexareaForm';
+import TextareaForm from '../../../components/forms/TextareaForm';
 
 interface Props {
     descriptionShort
@@ -42,7 +42,7 @@ const Description: React.FC<Props> = ({
                     setValue={(e) => setDescriptionShort(e)}
                     freeze={freeze}
                 />
-                <TexareaForm
+                <TextareaForm
                     title={'opis długi'}
                     value={descriptionLong}
                     setValue={(e) => setDescriptionLong(e)}

@@ -9,7 +9,7 @@ interface Props {
     freeze: boolean;
 }
 
-const TexareaForm: React.FC<Props> = ({
+const TextareaForm: React.FC<Props> = ({
     title,
     value,
     setValue,
@@ -98,4 +98,4 @@ const TexareaForm: React.FC<Props> = ({
     )
 }
 
-export default TexareaForm;
+export default TextareaForm;
