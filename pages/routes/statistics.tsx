@@ -8,6 +8,7 @@ import { useResponsiveValue } from '@theme-ui/match-media';
 import PieChart from '../../components/charts/PieChart';
 import HistogramChart from '../../components/charts/BarChart';
 import PagesBar from '../../components/bar/PagesBar';
+import PieChart3D from '../../components/charts/PieChart3D';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
@@ -194,9 +195,9 @@ export default function Page({ }) {
                     top: '-20px'
                 }}
             >
-            {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b'}}>WCZYTANO WSZYSTKIE TRASY</Box>} 
-              {total - sumAll.length > 0 && <><Box>wszystkich tras: {total}, tras wczytanych: {sumAll.length}</Box>
-            <Box sx={{ml: '20px', fontFamily: 'din-b'}}> posostało do wczytania: {total - sumAll.length}</Box></>}
+                {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b' }}>WCZYTANO WSZYSTKIE TRASY</Box>}
+                {total - sumAll.length > 0 && <><Box>wszystkich tras: {total}, tras wczytanych: {sumAll.length}</Box>
+                    <Box sx={{ ml: '20px', fontFamily: 'din-b' }}> posostało do wczytania: {total - sumAll.length}</Box></>}
             </Flex>
 
             <Flex
@@ -221,7 +222,15 @@ export default function Page({ }) {
             </Flex>
 
             <Flex>
-
+                <PieChart3D
+                    data={[
+                        ['Trasa', 'ilość danego typu'],
+                        ['prywatne', goodRoutes()],
+                        ['upublicznione', pulicRoutes()],
+                        ['Uszkodzone', wrongRoutes()],
+                    ]}
+                    title={'Zestawienie ilości tras'}
+                />
 
             </Flex>
 
@@ -284,44 +293,44 @@ export default function Page({ }) {
                 </Flex>
             </Flex>
             {
-        elements.length === 0 ? null : (
-            <>
-                {elements?.map((el, index) => {
-                    return <ColectData key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></ColectData>;
-                })}
-            </>
-        )
-    }
-    {
-        sumAll.length === 0 ? null : (
-            <>
-                <Flex
-                    sx={{
-                        margin: 1,
-                        flexWrap: 'wrap',
-                    }}
-                >
-                    {sumAll?.map((el, index) => {
-                        return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
-                    })}
-                </Flex>
-            </>
-        )
-    }
-    <Flex
-        sx={{
-            justifyContent: 'center',
-            width: '100%',
-        }}
-    >
-        <Container sx={{ width: 'max-content' }}>
-            <h3>Lista nazw tras publicznych</h3>
-            {sumPublic.map((e, i) => (
-                <Box key={'name' + i}>{e.name}</Box>
-            ))}
-            <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
-        </Container>
-    </Flex>
+                elements.length === 0 ? null : (
+                    <>
+                        {elements?.map((el, index) => {
+                            return <ColectData key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></ColectData>;
+                        })}
+                    </>
+                )
+            }
+            {
+                sumAll.length === 0 ? null : (
+                    <>
+                        <Flex
+                            sx={{
+                                margin: 1,
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            {sumAll?.map((el, index) => {
+                                return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
+                            })}
+                        </Flex>
+                    </>
+                )
+            }
+            <Flex
+                sx={{
+                    justifyContent: 'center',
+                    width: '100%',
+                }}
+            >
+                <Container sx={{ width: 'max-content' }}>
+                    <h3>Lista nazw tras publicznych</h3>
+                    {sumPublic.map((e, i) => (
+                        <Box key={'name' + i}>{e.name}</Box>
+                    ))}
+                    <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
+                </Container>
+            </Flex>
         </Flex >
     );
 }
