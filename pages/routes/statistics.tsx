@@ -12,13 +12,31 @@ import PagesBar from '../../components/bar/PagesBar';
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
-let sumPublic = [];
 let sumAll = [];
+let sumPublic = [];
 let sumWrong = [];
 let listOfNames = [];
 let newRoutes = {};
 
 const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
+    const mapImages = route.images.find(({ type }) => type === 'map') || {};
+    const squareImages = mapImages?.variants?.square;
+    const image = squareImages ? squareImages[squareImages.length - 1] : null;
+
+    return (
+        <Box
+            sx={{
+                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
+                m: '2px',
+                width: '12px',
+                height: '12px',
+                border: '1px solid #313131',
+            }}
+        />
+    );
+};
+
+const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
@@ -51,14 +69,11 @@ const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartDat
             // console.log('%c newRoutes:', 'background: #ffcc00; color: #003300', newRoutes)
         };
 
+        if (!sumAll.some((e) => e.id === route.id)) {
+            sumAll.push(route);
+            addToChart();
+        }
         if (!broken) {
-            if (!sumAll.some((e) => e.id === route.id)) {
-                sumAll.push({
-                    id: route.id,
-                    name: route.name,
-                });
-                addToChart();
-            }
 
             if (route.isPublic) {
                 if (!sumPublic.some((e) => e.id === route.id)) {
@@ -83,15 +98,7 @@ const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartDat
     }, [route]);
 
     return (
-        <Box
-            sx={{
-                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
-                m: '2px',
-                width: '12px',
-                height: '12px',
-                border: '1px solid #313131',
-            }}
-        />
+        <></>
     );
 };
 
@@ -111,7 +118,8 @@ export default function Page({ }) {
     }, [debouncedName, page]);
 
     useEffect(() => {
-        console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData);
+        // console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData);
+        console.log('%c sumAll:', 'background: #ffcc00; color: #003300', sumAll)
     }, [chartData, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
@@ -119,10 +127,10 @@ export default function Page({ }) {
         .fill(0)
         .map((v, i) => i + 1);
 
-    const goodRoutes = () => sumAll.length - sumPublic.length;
+    const goodRoutes = () => sumAll.length - sumWrong.length;
     const wrongRoutes = () => sumWrong.length;
     const pulicRoutes = () => sumPublic.length;
-    const allRoutes = () => sumAll.length + sumWrong.length;
+    const allRoutes = () => sumAll.length;
 
     const percents = (num) => {
         const val = (num / (sumAll.length + sumWrong.length)) * 100;
@@ -182,6 +190,17 @@ export default function Page({ }) {
 
             <Flex
                 sx={{
+                    position: 'relative',
+                    top: '-20px'
+                }}
+            >
+            {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b'}}>WCZYTANO WSZYSTKIE TRASY</Box>} 
+              {total - sumAll.length > 0 && <><Box>wszystkich tras: {total}, tras wczytanych: {sumAll.length}</Box>
+            <Box sx={{ml: '20px', fontFamily: 'din-b'}}> posostało do wczytania: {total - sumAll.length}</Box></>}
+            </Flex>
+
+            <Flex
+                sx={{
                     flexDirection: ['column', 'column', 'row', 'row', 'row'],
                     width: '100%',
                     justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
@@ -202,17 +221,8 @@ export default function Page({ }) {
             </Flex>
 
             <Flex>
-                <PieChart
-                    data={[
-                        { label: ['publiczne', percents(pulicRoutes())], value: pulicRoutes(), color: '#68B028' },
-                        { label: ['poprawne', percents(goodRoutes())], value: goodRoutes(), color: 'khaki' },
-                        { label: ['błędne', percents(wrongRoutes())], value: wrongRoutes(), color: '#cf0f36' },
-                    ]}
-                    outerRadius={160}
-                    innerRadius={0}
-                ></PieChart>
 
-                <HistogramChart data={chartData} page={page}></HistogramChart>
+
             </Flex>
 
             <Flex
@@ -273,34 +283,45 @@ export default function Page({ }) {
                     <Box> - trasy uszkodzone</Box>
                 </Flex>
             </Flex>
-            {elements.length === 0 ? null : (
-                <>
-                    <Flex
-                        sx={{
-                            margin: 1,
-                            flexWrap: 'wrap',
-                        }}
-                    >
-                        {elements?.map((el, index) => {
-                            return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
-                        })}
-                    </Flex>
-                </>
-            )}
-            <Flex
-                sx={{
-                    justifyContent: 'center',
-                    width: '100%',
-                }}
-            >
-                <Container sx={{ width: 'max-content' }}>
-                    <h3>Lista nazw tras publicznych</h3>
-                    {sumPublic.map((e, i) => (
-                        <Box key={'name' + i}>{e.name}</Box>
-                    ))}
-                    <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
-                </Container>
-            </Flex>
-        </Flex>
+            {
+        elements.length === 0 ? null : (
+            <>
+                {elements?.map((el, index) => {
+                    return <ColectData key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></ColectData>;
+                })}
+            </>
+        )
+    }
+    {
+        sumAll.length === 0 ? null : (
+            <>
+                <Flex
+                    sx={{
+                        margin: 1,
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    {sumAll?.map((el, index) => {
+                        return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
+                    })}
+                </Flex>
+            </>
+        )
+    }
+    <Flex
+        sx={{
+            justifyContent: 'center',
+            width: '100%',
+        }}
+    >
+        <Container sx={{ width: 'max-content' }}>
+            <h3>Lista nazw tras publicznych</h3>
+            {sumPublic.map((e, i) => (
+                <Box key={'name' + i}>{e.name}</Box>
+            ))}
+            <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
+        </Container>
+    </Flex>
+        </Flex >
     );
 }
