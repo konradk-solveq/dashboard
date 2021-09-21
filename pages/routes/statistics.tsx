@@ -227,11 +227,10 @@ export default function Page({ }) {
                         ['Trasa', 'ilość danego typu'],
                         ['prywatne', goodRoutes()],
                         ['upublicznione', pulicRoutes()],
-                        ['Uszkodzone', wrongRoutes()],
+                        ['uszkodzone', wrongRoutes()],
                     ]}
                     title={'Zestawienie ilości tras'}
                 />
-
             </Flex>
 
             <Flex
