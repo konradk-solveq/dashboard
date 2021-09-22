@@ -4,11 +4,11 @@ import { Box, Flex, Container } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
-import { useResponsiveValue } from '@theme-ui/match-media';
-import PieChart from '../../components/charts/PieChart';
-import HistogramChart from '../../components/charts/BarChart';
 import PagesBar from '../../components/bar/PagesBar';
-import PieChart3D from '../../components/charts/PieChart3D';
+import PieChart3D from '../../componentsSSP/routes/statistics/PieChart3D';
+import LineChartDate from '../../componentsSSP/routes/statistics/LineChartDate';
+import LineChartDay from '../../componentsSSP/routes/statistics/LineChartDay';
+import LineChartHour from '../../componentsSSP/routes/statistics/LineChartHour';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
@@ -19,7 +19,7 @@ let sumWrong = [];
 let listOfNames = [];
 let newRoutes = {};
 
-const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
+const Route: React.FC<{ route: any }> = ({ route }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
@@ -37,42 +37,13 @@ const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartDat
     );
 };
 
-const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
-    const mapImages = route.images.find(({ type }) => type === 'map') || {};
-    const squareImages = mapImages?.variants?.square;
-    const image = squareImages ? squareImages[squareImages.length - 1] : null;
+const ColectData: React.FC<{ route: any, setChartData: any }> = ({ route, setChartData }) => {
 
     useEffect(() => {
         const broken = typeof route.images.find(({ type }) => type === 'map') == 'undefined';
 
-        const addToChart = () => {
-            const d = new Date(route.createdAt);
-            let mo = d.getMonth() + 1;
-            let m = '' + mo;
-            if (mo < 10) {
-                m = '0' + m;
-            }
-            let day = d.getDate();
-            let da = '' + day;
-            if (day < 10) {
-                da = '0' + da;
-            }
-            const dName = `${d.getFullYear()}_${m}_${da}`;
-
-            const exist = typeof newRoutes[dName] != 'undefined';
-            if (exist) {
-                newRoutes[dName]++;
-            } else {
-                newRoutes[dName] = 1;
-            }
-
-            setChartData(newRoutes);
-            // console.log('%c newRoutes:', 'background: #ffcc00; color: #003300', newRoutes)
-        };
-
         if (!sumAll.some((e) => e.id === route.id)) {
             sumAll.push(route);
-            addToChart();
         }
         if (!broken) {
 
@@ -93,9 +64,10 @@ const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setCha
                     id: route.id,
                     name: route.name,
                 });
-                addToChart();
             }
         }
+
+        setChartData(sumAll);
     }, [route]);
 
     return (
@@ -111,17 +83,11 @@ export default function Page({ }) {
     const debouncedName = useDebounce(name, 333);
     const debouncedTotal = useDebounce(total, 125);
     const debouncedLimit = useDebounce(limit, 125);
-    const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
-    const [chartData, setChartData] = useState([]);
     useEffect(() => {
         setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 500 })}`);
     }, [debouncedName, page]);
 
-    useEffect(() => {
-        // console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData);
-        console.log('%c sumAll:', 'background: #ffcc00; color: #003300', sumAll)
-    }, [chartData, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)
@@ -133,10 +99,7 @@ export default function Page({ }) {
     const pulicRoutes = () => sumPublic.length;
     const allRoutes = () => sumAll.length;
 
-    const percents = (num) => {
-        const val = (num / (sumAll.length + sumWrong.length)) * 100;
-        return val.toFixed(1) + '%';
-    };
+    const [chartData, setChartData] = useState(null);
 
     const [scroll, setScroll] = useState(0);
     const SCROLL_MOVE = 42 * 8;
@@ -221,7 +184,7 @@ export default function Page({ }) {
                 <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
             </Flex>
 
-            <Flex>
+            <Flex sx={{ mt: '20px', pt: '30px', borderTop: '1px solid #ddd', flexDirection: 'row', maxWidth: '100%', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                 <PieChart3D
                     data={[
                         ['Trasa', 'ilość danego typu'],
@@ -230,6 +193,24 @@ export default function Page({ }) {
                         ['uszkodzone', wrongRoutes()],
                     ]}
                     title={'Zestawienie ilości tras'}
+                />
+
+                <LineChartDay
+                    data={chartData}
+                    title={'Ilość tras według dni'}
+                    page={page}
+                />
+
+                <LineChartHour
+                    data={chartData}
+                    title={'Ilość tras według godzin'}
+                    page={page}
+                />
+
+                <LineChartDate
+                    data={chartData}
+                    title={'Ilość tras według dat'}
+                    page={page}
                 />
             </Flex>
 
@@ -295,7 +276,11 @@ export default function Page({ }) {
                 elements.length === 0 ? null : (
                     <>
                         {elements?.map((el, index) => {
-                            return <ColectData key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></ColectData>;
+                            return <ColectData
+                                key={'box' + index}
+                                route={el}
+                                setChartData={setChartData}
+                            ></ColectData>;
                         })}
                     </>
                 )
@@ -310,7 +295,7 @@ export default function Page({ }) {
                             }}
                         >
                             {sumAll?.map((el, index) => {
-                                return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
+                                return <Route key={'box' + index} route={el}></Route>;
                             })}
                         </Flex>
                     </>
