@@ -3,7 +3,7 @@ import * as React from "react";
 import { Chart } from "react-google-charts";
 
 
-const PieChart3D: React.FC<{ data: any, title: string }> = ({
+const ChartTypes3D: React.FC<{ data: any, title: string }> = ({
     data, title
 }) => {
     return (<Box sx={{ maxWidth: '500px' }}>
@@ -22,11 +22,12 @@ const PieChart3D: React.FC<{ data: any, title: string }> = ({
                     3: { color: '#cf0f36' },
                 },
                 width: 500,
-                height: 500,
+                height: 350,
             }}
+            rootProps={{ 'data-testid': '1' }}
         />
     </Box>
     );
 };
 
-export default PieChart3D;
+export default ChartTypes3D;

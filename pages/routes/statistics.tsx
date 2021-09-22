@@ -5,10 +5,10 @@ import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
 import PagesBar from '../../components/bar/PagesBar';
-import PieChart3D from '../../componentsSSP/routes/statistics/PieChart3D';
-import LineChartDate from '../../componentsSSP/routes/statistics/LineChartDate';
-import LineChartDay from '../../componentsSSP/routes/statistics/LineChartDay';
-import LineChartHour from '../../componentsSSP/routes/statistics/LineChartHour';
+import ChartTypes3D from '../../componentsSSP/routes/statistics/ChartTypes3D';
+import ChartDate from '../../componentsSSP/routes/statistics/ChartDate';
+import ChartDay from '../../componentsSSP/routes/statistics/ChartDay';
+import ChartHour from '../../componentsSSP/routes/statistics/ChartHour';
 
 const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
@@ -163,55 +163,64 @@ export default function Page({ }) {
                     <Box sx={{ ml: '20px', fontFamily: 'din-b' }}> posostało do wczytania: {total - sumAll.length}</Box></>}
             </Flex>
 
-            <Flex
-                sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    width: '100%',
-                    justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
-                }}
-            >
-                <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
-                <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
+            <Flex sx={{ maxHeight: '350px' }}>
+                <Flex
+                    sx={{
+                        flexDirection: 'column',
+                        width: '50%',
+                    }}
+                >
+                    <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
+                    <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
+                    <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
+                    <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
+                </Flex>
+                <Box sx={{ width: '50%' }}>
+                    <ChartTypes3D
+                        data={[
+                            ['Trasa', 'ilość danego typu'],
+                            ['prywatne', goodRoutes()],
+                            ['upublicznione', pulicRoutes()],
+                            ['uszkodzone', wrongRoutes()],
+                        ]}
+                        title={'Zestawienie ilości tras'}
+                    />
+                </Box>
             </Flex>
-            <Flex
-                sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    width: '100%',
-                    justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
-                }}
-            >
-                <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
-                <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
-            </Flex>
 
-            <Flex sx={{ mt: '20px', pt: '30px', borderTop: '1px solid #ddd', flexDirection: 'row', maxWidth: '100%', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                <PieChart3D
-                    data={[
-                        ['Trasa', 'ilość danego typu'],
-                        ['prywatne', goodRoutes()],
-                        ['upublicznione', pulicRoutes()],
-                        ['uszkodzone', wrongRoutes()],
-                    ]}
-                    title={'Zestawienie ilości tras'}
-                />
+            <Flex sx={{
+                mt: '20px',
+                pt: '30px',
+                borderTop: '1px solid #ddd',
+                flexDirection: 'row',
+                maxWidth: '100%',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around'
+            }}>
 
-                <LineChartDay
-                    data={chartData}
-                    title={'Ilość tras według dni'}
-                    page={page}
-                />
+                <Box sx={{ width: '500px' }}>
+                    <ChartDay
+                        data={chartData}
+                        title={'Ilość tras według dni'}
+                        page={page}
+                    />
+                </Box>
 
-                <LineChartHour
-                    data={chartData}
-                    title={'Ilość tras według godzin'}
-                    page={page}
-                />
+                <Box sx={{ width: '500px' }}>
+                    <ChartHour
+                        data={chartData}
+                        title={'Ilość tras według godzin'}
+                        page={page}
+                    />
+                </Box>
 
-                <LineChartDate
-                    data={chartData}
-                    title={'Ilość tras według dat'}
-                    page={page}
-                />
+                <Box>
+                    <ChartDate
+                        data={chartData}
+                        title={'Ilość tras według dat'}
+                        page={page}
+                    />
+                </Box>
             </Flex>
 
             <Flex
@@ -273,7 +282,7 @@ export default function Page({ }) {
                 </Flex>
             </Flex>
             {
-                elements.length === 0 ? null : (
+                elements?.length === 0 ? null : (
                     <>
                         {elements?.map((el, index) => {
                             return <ColectData

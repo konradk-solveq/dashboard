@@ -3,7 +3,7 @@ import { Chart } from "react-google-charts";
 
 const now = new Date(Date.now());
 
-const LineChartDate: React.FC<{ data: any, title: string, page: any }> = ({
+const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
     data, title, page
 }) => {
 
@@ -55,7 +55,7 @@ const LineChartDate: React.FC<{ data: any, title: string, page: any }> = ({
         });
 
         tempData.unshift([
-            { type: 'date', label: 'dni' },
+            'dni' ,
             'Wszystkich',
             'Publicznych',
             'Uszkodzonych',
@@ -73,7 +73,7 @@ const LineChartDate: React.FC<{ data: any, title: string, page: any }> = ({
         {chartData && <Chart
             width={'100%'}
             height={'500px'}
-            chartType="Line"
+            chartType="AreaChart"
             loader={<div>Loading Chart</div>}
             data={chartData}
             options={{
@@ -82,11 +82,15 @@ const LineChartDate: React.FC<{ data: any, title: string, page: any }> = ({
                 },
                 width: 1200,
                 height: 500,
+                'chartArea': { 'width': '85%', 'height': '75%' },
+                'legend': { 'position': 'bottom' }
+
             }}
+            rootProps={{ 'data-testid': '2' }}
         />
         }
     </>);
 };
 
-export default LineChartDate;
+export default ChartDate;
 
