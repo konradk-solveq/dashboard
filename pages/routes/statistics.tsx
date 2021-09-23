@@ -10,6 +10,7 @@ import ChartDate from '../../componentsSSP/routes/statistics/ChartDate';
 import ChartDay from '../../componentsSSP/routes/statistics/ChartDay';
 import ChartHour from '../../componentsSSP/routes/statistics/ChartHour';
 import DateInputs from '../../componentsSSP/routes/statistics/DateInputs';
+import ChartHoursOfDay from '../../componentsSSP/routes/statistics/ChartHoursOfDay';
 
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
@@ -18,6 +19,16 @@ let sumPublic = [];
 let sumWrong = [];
 let listOfNames = [];
 let newRoutes = {};
+
+const DAYS_HOURS = [
+    { title: 'Poniedziałek', day: 1 },
+    { title: 'Wtorek', day: 2 },
+    { title: 'Środa', day: 3 },
+    { title: 'Czwartek', day: 4 },
+    { title: 'Piątek', day: 5 },
+    { title: 'Sobota', day: 6 },
+    { title: 'Niedziela', day: 0 },
+]
 
 const Route: React.FC<{ route: any }> = ({ route }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
@@ -283,6 +294,28 @@ export default function Page({ }) {
                         page={page}
                     />
                 </Box>
+            </Flex>
+
+            <Flex sx={{
+                my: '20px',
+                pb: '30px',
+                borderTop: '1px solid #ddd',
+                borderBottom: '1px solid #ddd',
+                flexDirection: 'row',
+                maxWidth: '100%',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around'
+            }}>
+                {DAYS_HOURS.map(e => (
+                    <Box sx={{ width: '300px' }}>
+                        <ChartHoursOfDay
+                            data={filteredChartData}
+                            day={e.day}
+                            id={'10' + e.day}
+                            title={e.title}
+                            page={page}
+                        />
+                    </Box>))}
             </Flex>
 
             <Flex
