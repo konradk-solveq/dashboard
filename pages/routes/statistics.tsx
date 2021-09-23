@@ -9,8 +9,8 @@ import ChartTypes3D from '../../componentsSSP/routes/statistics/ChartTypes3D';
 import ChartDate from '../../componentsSSP/routes/statistics/ChartDate';
 import ChartDay from '../../componentsSSP/routes/statistics/ChartDay';
 import ChartHour from '../../componentsSSP/routes/statistics/ChartHour';
+import DateInputs from '../../componentsSSP/routes/statistics/DateInputs';
 
-const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 let sumAll = [];
@@ -70,8 +70,28 @@ const ColectData: React.FC<{ route: any, setChartData: any }> = ({ route, setCha
         setChartData(sumAll);
     }, [route]);
 
+    return (null);
+};
+
+const Legend: React.FC<{ color: string, title: string }> = ({ color, title }) => {
     return (
-        <></>
+        <Flex
+            sx={{
+                flexDirection: 'row',
+            }}
+        >
+            <Box
+                sx={{
+                    bg: color,
+                    mx: '5px',
+                    my: '7px',
+                    width: '12px',
+                    height: '12px',
+                    border: '1px solid #313131',
+                }}
+            />
+            <Box>{title}</Box>
+        </Flex>
     );
 };
 
@@ -100,10 +120,43 @@ export default function Page({ }) {
     const allRoutes = () => sumAll.length;
 
     const [chartData, setChartData] = useState(null);
+    const [filteredChartData, setFilteredChartData] = useState(null);
 
     const [scroll, setScroll] = useState(0);
     const SCROLL_MOVE = 42 * 8;
     const barRef = useRef<any>();
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [veryStartDate, setVeryStartDate] = useState(new Date());
+    const [veryEndDate, setVeryEndDate] = useState(new Date());
+
+    useEffect(() => {
+        if (!chartData || chartData.length == 0) return;
+        let firstDate = new Date();
+        let lastDate = new Date();
+        for (let cd of chartData) {
+            const itemDate = new Date(cd.createdAt);
+            if (firstDate > itemDate) firstDate = itemDate;
+            if (lastDate < itemDate) lastDate = itemDate;
+        }
+        setStartDate(firstDate);
+        setVeryStartDate(firstDate);
+        setVeryEndDate(lastDate);
+    }, [chartData, page])
+
+    useEffect(() => {
+        if (!chartData) return;
+        const tempChartData = [];
+        for (const cd of chartData) {
+            const itemData = new Date(cd.createdAt);
+            if (itemData < startDate) continue;
+            if (itemData > endDate) continue;
+            tempChartData.push(cd);
+        }
+        setFilteredChartData(tempChartData);
+    }, [chartData, startDate, endDate])
+
 
     const handleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
@@ -188,19 +241,36 @@ export default function Page({ }) {
                 </Box>
             </Flex>
 
+            <DateInputs
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                veryStartDate={veryStartDate}
+                veryEndDate={veryEndDate}
+            />
+
             <Flex sx={{
-                mt: '20px',
-                pt: '30px',
+                my: '20px',
+                pb: '30px',
                 borderTop: '1px solid #ddd',
+                borderBottom: '1px solid #ddd',
                 flexDirection: 'row',
                 maxWidth: '100%',
                 flexWrap: 'wrap',
                 justifyContent: 'space-around'
             }}>
+                <Box>
+                    <ChartDate
+                        data={filteredChartData}
+                        title={'Ilość tras według dat'}
+                        page={page}
+                    />
+                </Box>
 
                 <Box sx={{ width: '500px' }}>
                     <ChartDay
-                        data={chartData}
+                        data={filteredChartData}
                         title={'Ilość tras według dni'}
                         page={page}
                     />
@@ -208,16 +278,8 @@ export default function Page({ }) {
 
                 <Box sx={{ width: '500px' }}>
                     <ChartHour
-                        data={chartData}
+                        data={filteredChartData}
                         title={'Ilość tras według godzin'}
-                        page={page}
-                    />
-                </Box>
-
-                <Box>
-                    <ChartDate
-                        data={chartData}
-                        title={'Ilość tras według dat'}
                         page={page}
                     />
                 </Box>
@@ -229,57 +291,18 @@ export default function Page({ }) {
                     my: '20px',
                 }}
             >
-                <Flex
-                    sx={{
-                        flexDirection: 'row',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            bg: 'khaki',
-                            mx: '5px',
-                            my: '7px',
-                            width: '12px',
-                            height: '12px',
-                            border: '1px solid #313131',
-                        }}
-                    />
-                    <Box> - trasy prawidłowe</Box>
-                </Flex>
-                <Flex
-                    sx={{
-                        flexDirection: 'row',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            bg: '#68B028',
-                            mx: '5px',
-                            my: '7px',
-                            width: '12px',
-                            height: '12px',
-                            border: '1px solid #313131',
-                        }}
-                    />
-                    <Box> - trasy upublicznione</Box>
-                </Flex>
-                <Flex
-                    sx={{
-                        flexDirection: 'row',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            bg: '#cf0f36',
-                            mx: '5px',
-                            my: '7px',
-                            width: '12px',
-                            height: '12px',
-                            border: '1px solid #313131',
-                        }}
-                    />
-                    <Box> - trasy uszkodzone</Box>
-                </Flex>
+                <Legend
+                    color={'khaki'}
+                    title={' - trasy prawidłowe'}
+                />
+                <Legend
+                    color={'#68B028'}
+                    title={' - trasy upublicznione'}
+                />
+                <Legend
+                    color={'#cf0f36'}
+                    title={' - trasy uszkodzone'}
+                />
             </Flex>
             {
                 elements?.length === 0 ? null : (
