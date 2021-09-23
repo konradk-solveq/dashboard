@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from "react-google-charts";
 
-const now = new Date(Date.now());
+// const now = new Date(Date.now());
 
 const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
     data, title, page
@@ -15,8 +15,8 @@ const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
         let tempData = [];
 
         for (let d of data) {
-            const date = new Date(d.createdAt)
-            if (date > now) continue;
+            const date = new Date(d.createdAt);
+            // if (date > now) continue;
 
             const day = new Date(date.getFullYear(), date.getMonth(), date.getDate())
             const broken = typeof d.images.find(({ type }) => type === 'map') == 'undefined';
@@ -65,10 +65,6 @@ const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
         // console.table(tempData)
     }, [data, page])
 
-
-
-
-
     return (<>
         {chartData && <Chart
             width={'100%'}
@@ -93,4 +89,3 @@ const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
 };
 
 export default ChartDate;
-
