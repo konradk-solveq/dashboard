@@ -1,10 +1,9 @@
-import { Box } from '@theme-ui/components';
 import React, { useEffect, useState } from 'react';
 import { Chart } from "react-google-charts";
 import { Flex, Text } from 'theme-ui';
 
-const ChartHour: React.FC<{ data: any, title: string, page: any }> = ({
-    data, title, page
+const ChartHoursOfDay: React.FC<{ data: any, day: number, id: string, title: string, page: any }> = ({
+    data, day, id, title, page
 }) => {
 
     const [chartData, setChartData] = useState(null)
@@ -16,6 +15,9 @@ const ChartHour: React.FC<{ data: any, title: string, page: any }> = ({
 
         for (let d of data) {
             const date = new Date(d.createdAt)
+            const itemDay = date.getDay();
+            if (itemDay != day) continue;
+
             const hour = date.getHours();
 
             const broken = typeof d.images.find(({ type }) => type === 'map') == 'undefined';
@@ -61,27 +63,28 @@ const ChartHour: React.FC<{ data: any, title: string, page: any }> = ({
     }, [data, page])
 
     return (<>
-        <Flex sx={{ width: '500px', justifyContent: 'space-around', height: 0 }}>
-            <Text sx={{ fontFamily: 'din-b', fontSize: '18px', position: 'relative', top: '25px', zIndex: 100 }}>{title}</Text>
+        <Flex sx={{ width: '300px', justifyContent: 'space-around', height: 0 }}>
+            <Text sx={{ fontFamily: 'din-b', fontSize: '18px', position: 'relative', top: '10px', zIndex: 100 }}>{title}</Text>
         </Flex>
+
         {chartData && <Chart
-            width={'500px'}
-            height={'500px'}
+            width={'300px'}
+            height={'300px'}
             chartType="AreaChart"
             loader={<div>Loading Chart</div>}
             data={chartData}
             options={{
-                width: 500,
-                height: 500,
+                titlePosition: 'top',
+                width: 300,
+                height: 300,
                 'chartArea': { 'width': '85%', 'height': '75%' },
-                'legend': { 'position': 'bottom' }
-
+                'legend': { 'position': 'bottom' },
             }}
-            rootProps={{ 'data-testid': '4' }}
+            rootProps={{ 'data-testid': id }}
         />
         }
     </>);
 };
 
-export default ChartHour;
+export default ChartHoursOfDay;
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from "react-google-charts";
+import { Flex, Text } from 'theme-ui';
 
 // const now = new Date(Date.now());
 
@@ -55,7 +56,7 @@ const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
         });
 
         tempData.unshift([
-            'dni' ,
+            'dni',
             'Wszystkich',
             'Publicznych',
             'Uszkodzonych',
@@ -66,6 +67,9 @@ const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
     }, [data, page])
 
     return (<>
+        <Flex sx={{ width: '1200px', justifyContent: 'space-around', height: 0 }}>
+            <Text sx={{ fontFamily: 'din-b', fontSize: '18px', position: 'relative', top: '25px', zIndex: 100 }}>{title}</Text>
+        </Flex>
         {chartData && <Chart
             width={'100%'}
             height={'500px'}
@@ -73,14 +77,10 @@ const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
             loader={<div>Loading Chart</div>}
             data={chartData}
             options={{
-                chart: {
-                    title: title,
-                },
                 width: 1200,
                 height: 500,
                 'chartArea': { 'width': '85%', 'height': '75%' },
                 'legend': { 'position': 'bottom' }
-
             }}
             rootProps={{ 'data-testid': '2' }}
         />
