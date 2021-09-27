@@ -10,9 +10,12 @@ export const dark = {
         text: '#313131',
         background: '#fff',
         primary: '#E5353A',
+        primary2: '#e21e24',
+        primary0: '#e84c50',
         secondary: '#e37b1f',
         muted: '#cf0f36',
         gray: '#999',
+        darkGray: '#666',
         purple: '#c0f',
     },
     fonts: {
@@ -147,9 +150,9 @@ export const dark = {
             fontStyle: 'italic',
         },
         '.property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable':
-        {
-            color: 'purple',
-        },
+            {
+                color: 'purple',
+            },
         '.atrule,.attr-value,.keyword': {
             color: 'primary',
         },

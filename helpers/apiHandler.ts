@@ -8,14 +8,17 @@ export type ExtendedApiRequest = {
         axios: AxiosInstance;
         token: string;
         apiUrl: string;
+        dashboardVersion: string;
+        nodeVersion: string;
+        nodeEnv: string;
     };
 };
 export type HandlerOptions = {
-    annonymous?: boolean;
+    anonymous?: boolean;
 };
 export const apiHandler = (
     handler: Object,
-    options: HandlerOptions = { annonymous: false },
+    options: HandlerOptions = { anonymous: false },
     callback?: (err: any) => void,
 ) => {
     return async function (req: NextApiRequest & { locals: any }, res: NextApiResponse) {
@@ -24,9 +27,13 @@ export const apiHandler = (
             return res.status(405).end(`Method ${req.method} Not Allowed`);
         }
         try {
-            req.locals = {};
-            req.locals.apiUrl = process.env.API_URL;
-            if (!options.annonymous) {
+            req.locals = {
+                apiUrl: process.env.API_URL,
+                dashboardVersion: process.env.DASHBOARD_VERSION,
+                nodeVersion: process.version,
+                nodeEnv: process.env.NODE_ENV,
+            };
+            if (!options.anonymous) {
                 await authMiddleware(req, res);
             }
             await axiosConfigMiddleware(req, res);

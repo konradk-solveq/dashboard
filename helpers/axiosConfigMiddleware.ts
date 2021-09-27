@@ -5,10 +5,13 @@ export const axiosConfigMiddleware = async (req, res) => {
         baseURL: req.locals.apiUrl,
     });
     httpClient.interceptors.request.use(function (config) {
-        const { token } = req.locals;
+        const { token, dashboardVersion, nodeVersion, nodeEnv } = req.locals;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+        config.headers['User-Agent'] = `myKROSS${
+            nodeEnv === 'development' ? '-local' : ''
+        }/${dashboardVersion}-dashboard-0 Node/${nodeVersion}`;
         return config;
     });
     req.locals.axios = httpClient;

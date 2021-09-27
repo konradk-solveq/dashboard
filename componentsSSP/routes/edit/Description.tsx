@@ -5,10 +5,10 @@ import TextareaForm from '../../../components/forms/TextareaForm';
 
 interface Props {
     descriptionShort
-    setDescriptionShort: () => void;
+    setDescriptionShort: (value: string) => void;
     descriptionLong
-    setDescriptionLong: () => void;
-    setNewDescription: () => void;
+    setDescriptionLong: (value: string) => void;
+    setNewDescription: (value: string) => void;
     freeze: boolean;
 }
 

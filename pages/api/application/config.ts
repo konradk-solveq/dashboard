@@ -6,7 +6,7 @@ export default apiHandler(
     {
         get: getHandler,
     },
-    { annonymous: true },
+    { anonymous: true },
 );
 
 async function getHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApiResponse) {
