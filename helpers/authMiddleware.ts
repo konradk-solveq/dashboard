@@ -4,7 +4,7 @@ import { getToken } from '../components/utils/getToken';
 export const authMiddleware = async (req, res) => {
     const token = await getToken(req);
     if (!token) {
-        return res.status(401).send('Unauthorized request');
+        throw () => res.status(401).send('Unauthorized request');
     }
     req.locals.token = token;
 };

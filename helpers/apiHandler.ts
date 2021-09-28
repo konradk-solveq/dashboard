@@ -39,7 +39,11 @@ export const apiHandler = (
             await axiosConfigMiddleware(req, res);
             await handler[method](req, res);
         } catch (err) {
-            return callback ? callback(err) : res.status(500).json(err);
+            if (typeof err === 'function') {
+                err();
+            } else {
+                return callback ? callback(err) : res.status(500).json(err);
+            }
         }
     };
 };
