@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { apiHandler, ExtendedApiRequest } from '../../../helpers/apiHandler';
-import EventSource from 'eventsource';
 
 export default apiHandler(
     {
