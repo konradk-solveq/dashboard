@@ -159,13 +159,19 @@ export default function Page({ }) {
     useEffect(() => {
         if (!chartData) return;
         const tempChartData = [];
+        const imgTempData = [];
         for (const cd of chartData) {
             const itemData = new Date(cd.createdAt);
             if (itemData < startDate) continue;
             if (itemData > endDate) continue;
             tempChartData.push(cd);
+
+            if (cd.images.length > 1) imgTempData.push(cd);
         }
         setFilteredChartData(tempChartData);
+        console.log('%c imgTempData:', 'background: #ffcc00; color: #003300', imgTempData)
+
+
     }, [chartData, startDate, endDate])
 
 
@@ -380,6 +386,6 @@ export default function Page({ }) {
                     <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
                 </Container>
             </Flex>
-        </Flex >
+        </Flex>
     );
 }
