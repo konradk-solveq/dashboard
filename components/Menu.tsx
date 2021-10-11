@@ -77,6 +77,7 @@ const Menu: React.FC<{}> = ({ children }) => {
                     <Item text="Lista Tras" target="/routes/list" />
                     <Item text="Wyróżnione Trasy" target="/routes/featured" />
                     <Item text="Statystyki Tras" target="/routes/statistics" />
+                    <Item text="Raporty" target="/routes/raports" />
                 </List>
 
                 <Splitter />

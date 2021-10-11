@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Chart } from "react-google-charts";
 import { Flex, Text } from 'theme-ui';
 
-// const now = new Date(Date.now());
-
 const ChartDate: React.FC<{ data: any, title: string, page: any }> = ({
     data, title, page
 }) => {
