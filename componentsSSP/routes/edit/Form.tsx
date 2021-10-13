@@ -104,6 +104,10 @@ const Form: React.FC<Props> = (props) => {
             body.description = newDescription;
         }
         manage.updateMetadata(id, body as any);
+        console.log(data.isPublic, isPublic);
+        if (data.isPublic !== isPublic) {
+            isPublic ? manage.publish(id) : manage.unpublish(id);
+        }
         setFreeze(!freeze);
         setShowAlert(!showAlert);
     };
@@ -168,7 +172,12 @@ const Form: React.FC<Props> = (props) => {
                     </Flex>
 
                     <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze} />
-                    <InputForm title={'lokalizacja:'} value={location} setValue={(e) => setLocation(e)} freeze={freeze} />
+                    <InputForm
+                        title={'lokalizacja:'}
+                        value={location}
+                        setValue={(e) => setLocation(e)}
+                        freeze={freeze}
+                    />
 
                     {descriptionShort && descriptionLong && (
                         <Description
@@ -180,7 +189,13 @@ const Form: React.FC<Props> = (props) => {
                             freeze={freeze}
                         />
                     )}
-                    <TextareaForm title={'opis'} value={newDescription} setValue={setNewDescription} highlight={true} freeze={freeze} />
+                    <TextareaForm
+                        title={'opis'}
+                        value={newDescription}
+                        setValue={setNewDescription}
+                        highlight={true}
+                        freeze={freeze}
+                    />
 
                     <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
                     <SwitchForm title={'publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />
@@ -256,14 +271,11 @@ const Form: React.FC<Props> = (props) => {
                 </Box>
             )}
 
-            <Box sx={{mt: '20px'}}>
+            <Box sx={{ mt: '20px' }}>
                 <NavButtons />
             </Box>
 
-            {showAlert && <BigAlert
-                text={'Z A P I S A N O'}
-                show={showAlert}
-            />}
+            {showAlert && <BigAlert text={'Z A P I S A N O'} show={showAlert} />}
         </Flex>
     );
 };
