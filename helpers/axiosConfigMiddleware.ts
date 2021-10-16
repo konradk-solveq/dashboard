@@ -7,7 +7,8 @@ export const axiosConfigMiddleware = async (req, res) => {
     httpClient.interceptors.request.use(function (config) {
         const { token, dashboardVersion, nodeVersion, nodeEnv } = req.locals;
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['Content-Type'] = `application/json`;
         }
         config.headers['User-Agent'] = `myKROSS${
             nodeEnv === 'development' ? '-local' : ''

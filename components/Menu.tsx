@@ -80,9 +80,8 @@ const Menu: React.FC<{}> = ({ children }) => {
                 </List>
 
                 <Splitter />
-                <List title="Teksty">
-                    <Item text="Regulaminy" target="/" />
-                    <Item text="Polityka Prywatności" target="/" />
+                <List title="Ustawienia">
+                    <Item text="Wersja aplikacji" target="/settings/version" />
                 </List>
             </Box>
         );
