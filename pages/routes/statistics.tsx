@@ -4,61 +4,59 @@ import { Box, Flex, Container } from 'theme-ui';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
-import { useResponsiveValue } from '@theme-ui/match-media';
-import PieChart from '../../components/charts/PieChart';
-import HistogramChart from '../../components/charts/BarChart';
 import PagesBar from '../../components/bar/PagesBar';
+import ChartTypes3D from '../../componentsSSP/routes/statistics/ChartTypes3D';
+import ChartDate from '../../componentsSSP/routes/statistics/ChartDate';
+import ChartDay from '../../componentsSSP/routes/statistics/ChartDay';
+import ChartHour from '../../componentsSSP/routes/statistics/ChartHour';
+import DateInputs from '../../componentsSSP/routes/statistics/DateInputs';
+import ChartHoursOfDay from '../../componentsSSP/routes/statistics/ChartHoursOfDay';
 
-const conf = `1fr `;
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
-let sumPublic = [];
 let sumAll = [];
+let sumPublic = [];
 let sumWrong = [];
 let listOfNames = [];
 let newRoutes = {};
 
-const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
+const DAYS_HOURS = [
+    { title: 'Poniedziałek', day: 1 },
+    { title: 'Wtorek', day: 2 },
+    { title: 'Środa', day: 3 },
+    { title: 'Czwartek', day: 4 },
+    { title: 'Piątek', day: 5 },
+    { title: 'Sobota', day: 6 },
+    { title: 'Niedziela', day: 0 },
+]
+
+const Route: React.FC<{ route: any }> = ({ route }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
     const squareImages = mapImages?.variants?.square;
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
 
+    return (
+        <Box
+            sx={{
+                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
+                m: '2px',
+                width: '12px',
+                height: '12px',
+                border: '1px solid #313131',
+            }}
+        />
+    );
+};
+
+const ColectData: React.FC<{ route: any, setChartData: any }> = ({ route, setChartData }) => {
+
     useEffect(() => {
         const broken = typeof route.images.find(({ type }) => type === 'map') == 'undefined';
 
-        const addToChart = () => {
-            const d = new Date(route.createdAt);
-            let mo = d.getMonth() + 1;
-            let m = '' + mo;
-            if (mo < 10) {
-                m = '0' + m;
-            }
-            let day = d.getDate();
-            let da = '' + day;
-            if (day < 10) {
-                da = '0' + da;
-            }
-            const dName = `${d.getFullYear()}_${m}_${da}`;
-
-            const exist = typeof newRoutes[dName] != 'undefined';
-            if (exist) {
-                newRoutes[dName]++;
-            } else {
-                newRoutes[dName] = 1;
-            }
-
-            setChartData(newRoutes);
-            // console.log('%c newRoutes:', 'background: #ffcc00; color: #003300', newRoutes)
-        };
-
+        if (!sumAll.some((e) => e.id === route.id)) {
+            sumAll.push(route);
+        }
         if (!broken) {
-            if (!sumAll.some((e) => e.id === route.id)) {
-                sumAll.push({
-                    id: route.id,
-                    name: route.name,
-                });
-                addToChart();
-            }
 
             if (route.isPublic) {
                 if (!sumPublic.some((e) => e.id === route.id)) {
@@ -77,21 +75,34 @@ const Route: React.FC<{ route: any; setChartData: any }> = ({ route, setChartDat
                     id: route.id,
                     name: route.name,
                 });
-                addToChart();
             }
         }
+
+        setChartData(sumAll);
     }, [route]);
 
+    return (null);
+};
+
+const Legend: React.FC<{ color: string, title: string }> = ({ color, title }) => {
     return (
-        <Box
+        <Flex
             sx={{
-                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
-                m: '2px',
-                width: '12px',
-                height: '12px',
-                border: '1px solid #313131',
+                flexDirection: 'row',
             }}
-        />
+        >
+            <Box
+                sx={{
+                    bg: color,
+                    mx: '5px',
+                    my: '7px',
+                    width: '12px',
+                    height: '12px',
+                    border: '1px solid #313131',
+                }}
+            />
+            <Box>{title}</Box>
+        </Flex>
     );
 };
 
@@ -103,35 +114,66 @@ export default function Page({ }) {
     const debouncedName = useDebounce(name, 333);
     const debouncedTotal = useDebounce(total, 125);
     const debouncedLimit = useDebounce(limit, 125);
-    const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
-    const [chartData, setChartData] = useState([]);
     useEffect(() => {
         setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 500 })}`);
     }, [debouncedName, page]);
 
-    useEffect(() => {
-        console.log('%c chartData:', 'background: #ffcc00; color: #003300', chartData);
-    }, [chartData, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)
         .fill(0)
         .map((v, i) => i + 1);
 
-    const goodRoutes = () => sumAll.length - sumPublic.length;
+    const goodRoutes = () => sumAll.length - sumWrong.length;
     const wrongRoutes = () => sumWrong.length;
     const pulicRoutes = () => sumPublic.length;
-    const allRoutes = () => sumAll.length + sumWrong.length;
+    const allRoutes = () => sumAll.length;
 
-    const percents = (num) => {
-        const val = (num / (sumAll.length + sumWrong.length)) * 100;
-        return val.toFixed(1) + '%';
-    };
+    const [chartData, setChartData] = useState(null);
+    const [filteredChartData, setFilteredChartData] = useState(null);
 
     const [scroll, setScroll] = useState(0);
     const SCROLL_MOVE = 42 * 8;
     const barRef = useRef<any>();
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [veryStartDate, setVeryStartDate] = useState(new Date());
+    const [veryEndDate, setVeryEndDate] = useState(new Date());
+
+    useEffect(() => {
+        if (!chartData || chartData.length == 0) return;
+        let firstDate = new Date();
+        let lastDate = new Date();
+        for (let cd of chartData) {
+            const itemDate = new Date(cd.createdAt);
+            if (firstDate > itemDate) firstDate = itemDate;
+            if (lastDate < itemDate) lastDate = itemDate;
+        }
+        setStartDate(firstDate);
+        setVeryStartDate(firstDate);
+        setVeryEndDate(lastDate);
+    }, [chartData, page])
+
+    useEffect(() => {
+        if (!chartData) return;
+        const tempChartData = [];
+        const imgTempData = [];
+        for (const cd of chartData) {
+            const itemData = new Date(cd.createdAt);
+            if (itemData < startDate) continue;
+            if (itemData > endDate) continue;
+            tempChartData.push(cd);
+
+            if (cd.images.length > 1) imgTempData.push(cd);
+        }
+        setFilteredChartData(tempChartData);
+        console.log('%c imgTempData:', 'background: #ffcc00; color: #003300', imgTempData)
+
+
+    }, [chartData, startDate, endDate])
+
 
     const handleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
@@ -182,37 +224,104 @@ export default function Page({ }) {
 
             <Flex
                 sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    width: '100%',
-                    justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
+                    position: 'relative',
+                    top: '-20px'
                 }}
             >
-                <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
-                <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
-            </Flex>
-            <Flex
-                sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    width: '100%',
-                    justifyContent: ['stretch', 'stretch', 'space-around', 'space-around', 'space-around'],
-                }}
-            >
-                <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
-                <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
+                {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b' }}>WCZYTANO WSZYSTKIE TRASY</Box>}
+                {total - sumAll.length > 0 && <><Box>wszystkich tras: {total}, tras wczytanych: {sumAll.length}</Box>
+                    <Box sx={{ ml: '20px', fontFamily: 'din-b' }}> posostało do wczytania: {total - sumAll.length}</Box></>}
             </Flex>
 
-            <Flex>
-                <PieChart
-                    data={[
-                        { label: ['publiczne', percents(pulicRoutes())], value: pulicRoutes(), color: '#68B028' },
-                        { label: ['poprawne', percents(goodRoutes())], value: goodRoutes(), color: 'khaki' },
-                        { label: ['błędne', percents(wrongRoutes())], value: wrongRoutes(), color: '#cf0f36' },
-                    ]}
-                    outerRadius={160}
-                    innerRadius={0}
-                ></PieChart>
+            <Flex sx={{ maxHeight: '350px' }}>
+                <Flex
+                    sx={{
+                        flexDirection: 'column',
+                        width: '50%',
+                    }}
+                >
+                    <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
+                    <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
+                    <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
+                    <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
+                </Flex>
+                <Box sx={{ width: '50%' }}>
+                    <ChartTypes3D
+                        data={[
+                            ['Trasa', 'ilość danego typu'],
+                            ['prywatne', goodRoutes()],
+                            ['upublicznione', pulicRoutes()],
+                            ['uszkodzone', wrongRoutes()],
+                        ]}
+                        title={'Zestawienie ilości tras'}
+                    />
+                </Box>
+            </Flex>
 
-                <HistogramChart data={chartData} page={page}></HistogramChart>
+            <DateInputs
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                veryStartDate={veryStartDate}
+                veryEndDate={veryEndDate}
+            />
+
+            <Flex sx={{
+                my: '20px',
+                pb: '30px',
+                borderTop: '1px solid #ddd',
+                borderBottom: '1px solid #ddd',
+                flexDirection: 'row',
+                maxWidth: '100%',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around'
+            }}>
+                <Box>
+                    <ChartDate
+                        data={filteredChartData}
+                        title={'Ilość tras według dat'}
+                        page={page}
+                    />
+                </Box>
+
+                <Box sx={{ width: '500px' }}>
+                    <ChartDay
+                        data={filteredChartData}
+                        title={'Ilość tras według dni'}
+                        page={page}
+                    />
+                </Box>
+
+                <Box sx={{ width: '500px' }}>
+                    <ChartHour
+                        data={filteredChartData}
+                        title={'Ilość tras według godzin'}
+                        page={page}
+                    />
+                </Box>
+            </Flex>
+
+            <Flex sx={{
+                my: '20px',
+                pb: '30px',
+                borderTop: '1px solid #ddd',
+                borderBottom: '1px solid #ddd',
+                flexDirection: 'row',
+                maxWidth: '100%',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around'
+            }}>
+                {DAYS_HOURS.map(e => (
+                    <Box sx={{ width: '300px' }}>
+                        <ChartHoursOfDay
+                            data={filteredChartData}
+                            day={e.day}
+                            id={'10' + e.day}
+                            title={e.title}
+                            page={page}
+                        />
+                    </Box>))}
             </Flex>
 
             <Flex
@@ -221,72 +330,48 @@ export default function Page({ }) {
                     my: '20px',
                 }}
             >
-                <Flex
-                    sx={{
-                        flexDirection: 'row',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            bg: 'khaki',
-                            mx: '5px',
-                            my: '7px',
-                            width: '12px',
-                            height: '12px',
-                            border: '1px solid #313131',
-                        }}
-                    />
-                    <Box> - trasy prawidłowe</Box>
-                </Flex>
-                <Flex
-                    sx={{
-                        flexDirection: 'row',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            bg: '#68B028',
-                            mx: '5px',
-                            my: '7px',
-                            width: '12px',
-                            height: '12px',
-                            border: '1px solid #313131',
-                        }}
-                    />
-                    <Box> - trasy upublicznione</Box>
-                </Flex>
-                <Flex
-                    sx={{
-                        flexDirection: 'row',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            bg: '#cf0f36',
-                            mx: '5px',
-                            my: '7px',
-                            width: '12px',
-                            height: '12px',
-                            border: '1px solid #313131',
-                        }}
-                    />
-                    <Box> - trasy uszkodzone</Box>
-                </Flex>
+                <Legend
+                    color={'khaki'}
+                    title={' - trasy prawidłowe'}
+                />
+                <Legend
+                    color={'#68B028'}
+                    title={' - trasy upublicznione'}
+                />
+                <Legend
+                    color={'#cf0f36'}
+                    title={' - trasy uszkodzone'}
+                />
             </Flex>
-            {elements.length === 0 ? null : (
-                <>
-                    <Flex
-                        sx={{
-                            margin: 1,
-                            flexWrap: 'wrap',
-                        }}
-                    >
+            {
+                elements?.length === 0 ? null : (
+                    <>
                         {elements?.map((el, index) => {
-                            return <Route key={'box' + index} route={el} setChartData={(e) => setChartData(e)}></Route>;
+                            return <ColectData
+                                key={'box' + index}
+                                route={el}
+                                setChartData={setChartData}
+                            ></ColectData>;
                         })}
-                    </Flex>
-                </>
-            )}
+                    </>
+                )
+            }
+            {
+                sumAll.length === 0 ? null : (
+                    <>
+                        <Flex
+                            sx={{
+                                margin: 1,
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            {sumAll?.map((el, index) => {
+                                return <Route key={'box' + index} route={el}></Route>;
+                            })}
+                        </Flex>
+                    </>
+                )
+            }
             <Flex
                 sx={{
                     justifyContent: 'center',
