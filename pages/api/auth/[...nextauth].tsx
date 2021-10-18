@@ -4,7 +4,7 @@ import fetch from 'isomorphic-fetch';
 
 interface UserPassword {
     email: string;
-    passoword: string;
+    password: string;
 }
 export interface UserResponse {
     access_token: string;

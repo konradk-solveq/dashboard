@@ -3,18 +3,11 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-interface Props {
-    startDate: Date,
-    setStartDate: (e) => void;
-    endDate: Date;
-    setEndDate: (e) => void;
-    veryStartDate: Date;
-    veryEndDate: Date;
-}
 
-const Btn: React.FC<{ title: string, onclick: Function }> = ({
+
+const Btn: React.FC<{ title: string, onclick: () => void }> = ({
     title, onclick
-}: Props) => {
+}) => {
     return (<Button
         className='sys-btn'
         type='button'
@@ -31,8 +24,17 @@ const Btn: React.FC<{ title: string, onclick: Function }> = ({
     >{title}</Button>)
 }
 
-const Title: React.FC<{ title: string }> = ({ title }: Props) => {
+const Title: React.FC<{ title: string }> = ({ title }) => {
     return (<Text sx={{ fontFamily: 'din-b', fontSize: '16px' }}>{title}</Text>)
+}
+
+interface Props {
+    startDate: Date,
+    setStartDate: (e) => void;
+    endDate: Date;
+    setEndDate: (e) => void;
+    veryStartDate: Date;
+    veryEndDate: Date;
 }
 
 const DateInputs: React.FC<Props> = ({
