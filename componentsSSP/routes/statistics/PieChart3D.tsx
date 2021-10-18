@@ -1,3 +1,4 @@
+import { Box } from "@theme-ui/components";
 import * as React from "react";
 import { Chart } from "react-google-charts";
 
@@ -5,10 +6,10 @@ import { Chart } from "react-google-charts";
 const PieChart3D: React.FC<{ data: any, title: string }> = ({
     data, title
 }) => {
-    return (
+    return (<Box sx={{ maxWidth: '500px' }}>
         <Chart
             width={'500px'}
-            height={'300px'}
+            height={'500px'}
             chartType="PieChart"
             loader={<div>Loading Chart</div>}
             data={data}
@@ -19,10 +20,12 @@ const PieChart3D: React.FC<{ data: any, title: string }> = ({
                     0: { color: '#68B028' },
                     1: { color: '#69b3a2' },
                     3: { color: '#cf0f36' },
-                  },
+                },
+                width: 500,
+                height: 500,
             }}
-            rootProps={{ 'data-testid': '2' }}
         />
+    </Box>
     );
 };
 
