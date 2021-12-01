@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+    dashboard:
+        image: 546593544982.dkr.ecr.eu-west-1.amazonaws.com/kross:dashboard-${TAG}
+        platform: linux/x86_64
+        build:
+            context: .
+            target: production
+        environment:
+            NEXTAUTH_URL: 'https://dashboard.pre.mykross.kross.pl'
+            API_URL: 'https://api.pre.mykross.kross.pl'
+            NEXT_PUBLIC_URL: 'https://dashboard.pre.mykross.kross.pl'

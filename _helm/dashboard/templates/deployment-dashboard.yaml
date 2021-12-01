@@ -1,0 +1,56 @@
+{{- $name := printf "%s-%s" $.Release.Name "dashboard"}}
+{{- $names := dict "fullnameOverride" $name "nameOverride" $name }}
+{{- $Values := dict "Values" $names }}
+{{- $root := mergeOverwrite (deepCopy $) $Values }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kross-api.fullname" $root }}
+  labels:
+    {{- include "kross-api.selectorLabels" $root | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "kross-api.selectorLabels" $root | nindent 6 }}
+  template:
+    metadata:
+      {{- with $.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "kross-api.selectorLabels" $root | nindent 8 }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: dashboard
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          envFrom:
+              - configMapRef:
+                  name: dashboard
+          command:
+            - npm
+            - start
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

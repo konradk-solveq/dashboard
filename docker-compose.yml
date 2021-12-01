@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+    dashboard:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - NEXTAUTH_URL=http://localhost:3001
+            - API_URL=http://app:3000
+            - NEXT_PUBLIC_URL=http://localhost:3001
+            - PORT=3001
+        ports:
+            - 3001:3001
+        volumes:
+            - ./pages:/app/pages
+            - ./components:/app/components
+            - ./helpers:/app/helpers
+            - ./package.json:/app/package.json
+        profiles:
+            - dashboard

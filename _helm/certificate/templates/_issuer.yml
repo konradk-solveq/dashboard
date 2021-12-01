@@ -1,0 +1,25 @@
+{{- define "certificate-lib.issuer" -}}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .name }}-issuer
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    preferredChain: 'DST Root CA X3'
+    email:  {{ .email }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: {{.name}}-issuer-account-key
+    solvers:
+      - dns01:
+          route53:
+            region: eu-west-1
+            accessKeyID: {{ .accessKeyID }}
+            secretAccessKeySecretRef:
+              name: {{.name}}-secret
+              key: secret-access-key
+            hostedZoneID: {{ .hostedZoneID }}
+{{- end -}}

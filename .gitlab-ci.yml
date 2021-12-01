@@ -1,0 +1,63 @@
+image: registry.gitlab.com/solveq/mykross/backend/docker-kubectl-helm-aws-doppler
+services:
+    - docker:dind
+
+.envsubst-env: &envsubst-env
+    - cd _helm/dashboard
+    - cat values.yaml | envsubst | sponge values.yaml
+    - cd values
+    - doppler run -t $DOPPLER_TOKEN_ROUTE53_PRE -- sh -c 'cat route53.yml | envsubst | sponge route53.yml'
+    - doppler run -t $DOPPLER_TOKEN_MAIN_PRE -- sh -c 'cat pre.yml | envsubst | sponge pre.yml'
+    - cd ../../..
+
+.configure-aws: &configure-aws
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set region $AWS_DEFAULT_REGION
+    - $(aws ecr get-login --no-include-email)
+
+.setup-aws-kubernetes: &setup-aws-kubernetes
+    - aws eks --region eu-west-1 update-kubeconfig --name kross-test
+    - kubectl get svc
+
+.dry-run: &dry-run
+    - cd _helm/dashboard
+    - helm upgrade --dry-run --namespace dashboard-pre -f values.yaml -f values/pre.yml -f values/route53.yml dashboard-pre .
+    - cd ../..
+
+.deploy-pre: &deploy-pre
+    - cd _helm/dashboard
+    - helm upgrade --atomic --install --create-namespace --cleanup-on-fail --namespace dashboard-pre -f values.yaml -f values/pre.yml -f values/route53.yml dashboard-pre .
+    - cd ../..
+
+stages:
+    - build
+    - deploy
+
+build:
+    stage: build
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+    before_script:
+        - *configure-aws
+    script:
+        - TAG="$CI_COMMIT_SHORT_SHA" docker compose -f docker-compose.yml -f docker-compose.prod.yml build dashboard
+        - TAG="$CI_COMMIT_SHORT_SHA" docker compose -f docker-compose.yml -f docker-compose.prod.yml push dashboard
+
+deploy-pre:
+    stage: deploy
+    dependencies:
+        - build
+    rules:
+        - if: '$CI_COMMIT_TAG'
+          when: never
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+          when: manual
+    before_script:
+        - *configure-aws
+        - *setup-aws-kubernetes
+        - TAG="$CI_COMMIT_SHORT_SHA" docker compose -f docker-compose.yml -f docker-compose.prod.yml pull dashboard
+        - *envsubst-env
+        - *dry-run
+    script:
+        - *deploy-pre

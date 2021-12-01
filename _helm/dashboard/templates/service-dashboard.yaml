@@ -1,0 +1,19 @@
+{{- $name := printf "%s-%s" $.Release.Name "dashboard"}}
+{{- $names := dict "fullnameOverride" $name "nameOverride" $name }}
+{{- $Values := dict "Values" $names }}
+{{- $root := mergeOverwrite (deepCopy $) $Values }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kross-api.fullname" $root }}
+  labels:
+    {{- include "kross-api.labels" $root | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "kross-api.selectorLabels" $root | nindent 4 }}

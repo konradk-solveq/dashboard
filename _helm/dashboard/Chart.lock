@@ -1,0 +1,6 @@
+dependencies:
+- name: certificate
+  repository: file://../certificate
+  version: 0.1.0
+digest: sha256:5f2d770d0a4f55cdb94e63df7003005b3c4e3d8601eeffcb3a924ddb5e9c6ec0
+generated: "2021-04-17T16:52:30.301591+02:00"

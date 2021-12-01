@@ -1,0 +1,4 @@
+{{- range .Values.route53 }}
+{{- include "certificate-lib.issuer" (.) }}
+---
+{{- end }}

@@ -1,0 +1,63 @@
+config:
+  APP_MYSQL_DATABASE: "$APP_MYSQL_DATABASE"
+  APP_MYSQL_HOST: "$APP_MYSQL_HOST"
+  APP_MYSQL_PASSWORD: "$APP_MYSQL_PASSWORD"
+  APP_MYSQL_PORT: "$APP_MYSQL_PORT"
+  APP_MYSQL_USERNAME: "$APP_MYSQL_USERNAME"
+  AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
+  AWS_REGION: "$AWS_REGION"
+  AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
+  BYSS_API_CLIENT_ID: "$BYSS_API_CLIENT_ID"
+  BYSS_API_CLIENT_PASSWORD: "$BYSS_API_CLIENT_PASSWORD"
+  BYSS_API_CLIENT_SECRET: "$BYSS_API_CLIENT_SECRET"
+  BYSS_API_CLIENT_USERNAME: "$BYSS_API_CLIENT_USERNAME"
+  BYSS_API_URL: "$BYSS_API_URL"
+  CUSTOMER_ENP_API_CLIENT_ID: "$CUSTOMER_ENP_API_CLIENT_ID"
+  CUSTOMER_ENP_API_CLIENT_SECRET: "$CUSTOMER_ENP_API_CLIENT_SECRET"
+  CUSTOMER_ENP_API_URL: "$CUSTOMER_ENP_API_URL"
+  ENP_API_CLIENT_ID: "$ENP_API_CLIENT_ID"
+  ENP_API_CLIENT_SECRET: "$ENP_API_CLIENT_SECRET"
+  ENP_API_URL: "$ENP_API_URL"
+  GOOGLE_STATIC_MAPS_API_KEY: "$GOOGLE_STATIC_MAPS_API_KEY"
+  GOOGLE_STATIC_MAPS_SIGNING_KEY: "$GOOGLE_STATIC_MAPS_SIGNING_KEY"
+  KROSS_IMAGES_SERVER: "$KROSS_IMAGES_SERVER"
+  NODE_ENV: "$NODE_ENV"
+  PRIVATE_KEY: "$PRIVATE_KEY"
+  PUBLIC_HOST: "$PUBLIC_HOST"
+  REDIS_HOST: "$REDIS_HOST"
+  S3_BUCKET_INTERNAL: "$S3_BUCKET_INTERNAL"
+  S3_BUCKET_PUBLIC: "$S3_BUCKET_PUBLIC"
+  TOPIC_ARN_CYCLING_MAP: "$TOPIC_ARN_CYCLING_MAP"
+  TOPIC_ARN_DEALERS: "$TOPIC_ARN_DEALERS"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  hosts:
+    - host: dashboard.mykross.kross.pl
+      paths: 
+        - path: /
+          service: dashboard
+  tls: 
+    - hosts:
+        - dashboard.mykross.kross.pl
+      secretName: dashboard-kross-pl-certificate
+
+hosts:
+  dashboard-kross-pl:
+    - dashboard.mykross.kross.pl
+
+dashboard:
+  config:
+    NEXTAUTH_URL: "https://dashboard.mykross.kross.pl"
+    API_URL: "https://api.mykross.kross.pl"
+    NEXT_PUBLIC_URL: "https://dashboard.mykross.kross.pl"
+    PORT: "3000"
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 6

@@ -1,0 +1,5 @@
+{{- range .Values.route53 }}
+{{- $hosts := dict "hosts" (get $.Values.hosts .name) }}
+{{- include "certificate-lib.certificate" (deepCopy . | merge $hosts) }}
+---
+{{- end }}
