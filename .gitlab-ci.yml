@@ -27,7 +27,7 @@ services:
 
 .deploy-pre: &deploy-pre
     - cd _helm/dashboard
-    - helm upgrade --atomic --install --create-namespace --cleanup-on-fail --namespace dashboard-pre -f values.yaml -f values/pre.yml -f values/route53.yml dashboard-pre .
+    - helm upgrade --atomic --install --create-namespace --timeout 10m0s --wait --cleanup-on-fail --namespace dashboard-pre -f values.yaml -f values/pre.yml -f values/route53.yml dashboard-pre .
     - cd ../..
 
 stages:
