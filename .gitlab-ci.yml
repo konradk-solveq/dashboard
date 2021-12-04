@@ -2,6 +2,13 @@ image: registry.gitlab.com/solveq/mykross/backend/docker-kubectl-helm-aws-dopple
 services:
     - docker:dind
 
+workflow:
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+          when: never
+        - if: '$CI_COMMIT_BRANCH'
+
 .envsubst-env: &envsubst-env
     - cd _helm/dashboard
     - cat values.yaml | envsubst | sponge values.yaml
@@ -22,12 +29,12 @@ services:
 
 .dry-run: &dry-run
     - cd _helm/dashboard
-    - helm upgrade --dry-run --namespace dashboard-pre -f values.yaml -f values/pre.yml -f values/route53.yml dashboard-pre .
+    - 'helm upgrade --dry-run --install --create-namespace --namespace dashboard-$ENV -f values.yaml -f values/$ENV.yml -f values/route53.yml dashboard .'
     - cd ../..
 
-.deploy-pre: &deploy-pre
+.deploy-script: &deploy-script
     - cd _helm/dashboard
-    - helm upgrade --atomic --install --create-namespace --cleanup-on-fail --namespace dashboard-pre -f values.yaml -f values/pre.yml -f values/route53.yml dashboard-pre .
+    - 'helm upgrade --atomic --install --create-namespace --timeout 3m0s --wait --cleanup-on-fail --namespace dashboard-$ENV -f values.yaml -f values/$ENV.yml -f values/route53.yml dashboard .'
     - cd ../..
 
 stages:
@@ -38,26 +45,58 @@ build:
     stage: build
     rules:
         - if: '$CI_COMMIT_REF_NAME == "master"'
+          when: always
+        - if: '$CI_COMMIT_REF_NAME != "master"'
+          when: manual
     before_script:
         - *configure-aws
     script:
         - TAG="$CI_COMMIT_SHORT_SHA" docker compose -f docker-compose.yml -f docker-compose.prod.yml build dashboard
         - TAG="$CI_COMMIT_SHORT_SHA" docker compose -f docker-compose.yml -f docker-compose.prod.yml push dashboard
 
-deploy-pre:
+.deploy:
     stage: deploy
     dependencies:
         - build
-    rules:
-        - if: '$CI_COMMIT_TAG'
-          when: never
-        - if: '$CI_COMMIT_REF_NAME == "master"'
-          when: manual
     before_script:
         - *configure-aws
         - *setup-aws-kubernetes
         - TAG="$CI_COMMIT_SHORT_SHA" docker compose -f docker-compose.yml -f docker-compose.prod.yml pull dashboard
+    script:
         - *envsubst-env
         - *dry-run
-    script:
-        - *deploy-pre
+        - *deploy-script
+
+deploy-test:
+    extends:
+        - .deploy
+    rules:
+        - if: '$CI_COMMIT_REF_NAME != "master"'
+          when: manual
+    variables:
+        DOPPLER_TOKEN_MAIN: $DOPPLER_TOKEN_MAIN_PRE
+        DOPPLER_TOKEN_ROUTE53: $DOPPLER_TOKEN_ROUTE53_PRE
+        ENV: pre
+
+deploy-pre:
+    extends:
+        - .deploy
+    rules:
+        - if: '$CI_COMMIT_TAG'
+          when: never
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+    variables:
+        DOPPLER_TOKEN_MAIN: $DOPPLER_TOKEN_MAIN_PRO
+        DOPPLER_TOKEN_ROUTE53: $DOPPLER_TOKEN_ROUTE53_PRO
+        ENV: pre
+
+deploy-pro:
+    extends:
+        - .deploy
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+        - if: '$CI_COMMIT_TAG'
+    variables:
+        DOPPLER_TOKEN_MAIN: $DOPPLER_TOKEN_MAIN_PRO
+        DOPPLER_TOKEN_ROUTE53: $DOPPLER_TOKEN_ROUTE53_PRO
+        ENV: pro
