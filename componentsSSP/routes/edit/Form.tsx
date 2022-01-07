@@ -245,7 +245,7 @@ const Form: React.FC<Props> = (props) => {
                                     }}
                                     key={'img_' + i}
                                 >
-                                    <AspectImage ratio={1} src={e.variants.square[1].url}></AspectImage>
+                                    <AspectImage ratio={1} src={e.variants.square[0].url}></AspectImage>
                                 </Box>
                             ))}
                         </Flex>
