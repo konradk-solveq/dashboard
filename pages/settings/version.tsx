@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Box, Button, Container, Field, Flex, Grid } from 'theme-ui';
+import { Box, Button, Container, Field, Grid } from 'theme-ui';
 import SettingsContainer, { SettingsContext, SettingsPostData } from '../../components/contexts/settings';
 
 const NewValueField: React.FC<{ name: string; label: string; defaultValue: string; setter: (v: string) => void }> = ({
