@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid, Label, Select } from 'theme-ui';
-import { TranslationRow } from './TranslationRow';
+import TranslationRow from './TranslationRow';
 
-export const TranslationTable = ({
+const TranslationTable = ({
     limitAndOffset,
     setLimitsAndOffset,
     uiTranslationCount,
@@ -74,3 +74,4 @@ function calcPages(limit, count): { offset: number; label: string }[] {
         })),
     );
 }
+export default TranslationTable;

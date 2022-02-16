@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Grid, Checkbox, Input, Label } from 'theme-ui';
 
-export const LanguageRow: React.FC<{
+const LanguageRow: React.FC<{
     name: string;
     code: string;
     icon: string;
@@ -32,3 +32,4 @@ export const LanguageRow: React.FC<{
         </Grid>
     );
 };
+export default LanguageRow

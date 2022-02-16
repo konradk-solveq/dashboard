@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Grid, Input, Label } from 'theme-ui';
 
-export const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addUiTranslationAndNotify }) => {
+const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addUiTranslationAndNotify }) => {
     const { code, version, file } = newUiTranslations;
     const disabledAddTranslation = code && version && file ? false : true;
     return (
@@ -34,3 +34,4 @@ export const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValu
         </>
     );
 };
+export default TranslationAddForm;

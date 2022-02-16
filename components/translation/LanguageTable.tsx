@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Button, Grid, Label } from 'theme-ui';
-import { LanguageRow } from './LanguageRow';
+import LanguageRow from './LanguageRow';
 
-export const LanguageTable = ({
+const LanguageTable = ({
     languageState,
     setLanguagesValue,
     updateLanguagesAndNotify,
@@ -65,3 +65,4 @@ export const LanguageTable = ({
         </>
     );
 };
+export default LanguageTable;

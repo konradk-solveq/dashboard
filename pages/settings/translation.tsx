@@ -2,10 +2,10 @@ import { NextPage } from 'next';
 import React, { useContext, useEffect, useState } from 'react';
 import { Container, Heading, Divider, Box } from 'theme-ui';
 import TranslationsContainer, { TranslationsContext, LanguageData } from '../../components/contexts/translation';
-import { LanguageTable } from './translation/LanguageTable';
-import { TranslationAddForm } from './translation/TranslationAddForm';
-import { TranslationTable } from './translation/TranslationTable';
-import { NotificationBox } from './translation/NotificationBox';
+import LanguageTable from '../../components/translation/LanguageTable';
+import TranslationAddForm from '../../components/translation/TranslationAddForm';
+import TranslationTable from '../../components/translation/TranslationTable';
+import NotificationBox from '../../components/translation/NotificationBox';
 import { readFromFile } from '../../helpers/readFromFile';
 
 type LanguageState = Array<LanguageData & { newLanguage?: boolean }>;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from 'theme-ui';
-    
-export const NotificationBox = ({ children }) => {
+
+const NotificationBox = ({ children }) => {
     return (
         <Box
             bg="rgba(255, 99, 71, 0.8)"
@@ -20,3 +20,4 @@ export const NotificationBox = ({ children }) => {
         </Box>
     );
 };
+export default NotificationBox;

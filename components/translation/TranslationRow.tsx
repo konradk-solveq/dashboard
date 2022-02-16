@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Grid, Input, Text } from 'theme-ui';
 
-export const TranslationRow: React.FC<{
+const TranslationRow: React.FC<{
     code: string;
     version: string;
     controlSum: string;
@@ -18,3 +18,4 @@ export const TranslationRow: React.FC<{
         </Grid>
     );
 };
+export default TranslationRow;
