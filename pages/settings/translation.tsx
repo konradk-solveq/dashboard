@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Heading, Divider, Box } from 'theme-ui';
+import { Container, Heading, Divider } from 'theme-ui';
 import TranslationsContainer, { TranslationsContext, LanguageData } from '../../components/contexts/translation';
 import LanguageTable from '../../components/translation/LanguageTable';
 import TranslationAddForm from '../../components/translation/TranslationAddForm';
@@ -95,6 +95,16 @@ const TranslationMenage: React.FC<{}> = () => {
                         setLanguageState,
                     }}
                 ></LanguageTable>
+                <p>
+                    Podczas pracy może wystąpić błąd. Proszę wówczas sprawdzić, czy wykonywane czynności nie naruszają
+                    zasad walidacji.
+                    <ul>
+                        <li>Kod języka musi być poprawny. Posługujemy się ISO 639-1.</li>
+                        <li>Ikona musi być poprawnym kodem svg, minimum to &lt;svg&gt;&lt;/svg&gt;.</li>
+                        <li>Nie można aktywować niekompletnego języka.</li>
+                        <li>Przed usunięciem języka należy usunąć wszystkie tłumaczenia dotyczące tego języka.</li>
+                    </ul>
+                </p>
                 <Divider marginY="60px"></Divider>
                 <Heading m="20px" sx={{ textAlign: 'center' }}>
                     Tłumaczenia
@@ -102,6 +112,15 @@ const TranslationMenage: React.FC<{}> = () => {
                 <TranslationAddForm
                     {...{ newUiTranslations, setNewUiTranslationsValue, addUiTranslationAndNotify }}
                 ></TranslationAddForm>
+                <p>
+                    Podczas pracy może wystąpić błąd. Proszę wówczas sprawdzić, czy wykonywane czynności nie naruszają
+                    zasad walidacji.
+                    <ul>
+                        <li>Kod języka musi być poprawny. Posługujemy się ISO 639-1.</li>
+                        <li>Numer wersji musi być poprawny. Czyli np. 12.0.125.</li>
+                        <li>Plik z tłumaczeniem musi zawierać poprawny obiekt json.</li>
+                    </ul>
+                </p>
                 <TranslationTable
                     {...{
                         limitAndOffset,
