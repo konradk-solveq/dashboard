@@ -10,6 +10,7 @@ services:
             - API_URL=http://app:3000
             - NEXT_PUBLIC_URL=http://localhost:3001
             - PORT=3001
+            - DASHBOARD_VERSION
         ports:
             - 3001:3001
         volumes:

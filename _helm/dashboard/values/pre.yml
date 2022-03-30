@@ -24,3 +24,4 @@ dashboard:
     API_URL: 'https://api.pre.mykross.kross.pl'
     NEXT_PUBLIC_URL: 'https://dashboard.pre.mykross.kross.pl'
     PORT: '3000'
+    DASHBOARD_VERSION: "$DASHBOARD_VERSION"
