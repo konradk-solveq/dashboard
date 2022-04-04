@@ -86,8 +86,8 @@ deploy-pre:
           when: never
         - if: '$CI_COMMIT_REF_NAME == "master"'
     variables:
-        DOPPLER_TOKEN_MAIN: $DOPPLER_TOKEN_MAIN_PRO
-        DOPPLER_TOKEN_ROUTE53: $DOPPLER_TOKEN_ROUTE53_PRO
+        DOPPLER_TOKEN_MAIN: $DOPPLER_TOKEN_MAIN_PRE
+        DOPPLER_TOKEN_ROUTE53: $DOPPLER_TOKEN_ROUTE53_PRE
         ENV: pre
 
 deploy-pro:
