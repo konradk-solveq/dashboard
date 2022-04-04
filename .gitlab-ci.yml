@@ -13,8 +13,8 @@ workflow:
     - cd _helm/dashboard
     - cat values.yaml | envsubst | sponge values.yaml
     - cd values
-    - doppler run -t $DOPPLER_TOKEN_ROUTE53_PRE -- sh -c 'cat route53.yml | envsubst | sponge route53.yml'
-    - doppler run -t $DOPPLER_TOKEN_MAIN_PRE -- sh -c 'cat pre.yml | envsubst | sponge pre.yml'
+    - doppler run -t $DOPPLER_TOKEN_ROUTE53 -- sh -c "cat route53.yml | envsubst | sponge route53.yml"
+    - doppler run -t $DOPPLER_TOKEN_MAIN -- sh -c "cat $ENV.yml | envsubst | sponge $ENV.yml"
     - cd ../../..
 
 .configure-aws: &configure-aws
