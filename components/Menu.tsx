@@ -84,6 +84,7 @@ const Menu: React.FC<{}> = ({ children }) => {
                 <List title="Ustawienia">
                     <Item text="Wersja aplikacji" target="/settings/version" />
                     <Item text="Tłumaczenia" target="/settings/translation" />
+                    <Item text="Powiadomienia" target="/settings/notifications" />
                 </List>
             </Box>
         );

@@ -9,7 +9,7 @@ const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addU
             <Grid gap={2} columns="50px 180px 1fr" marginBottom="10px">
                 <Label>Kod</Label>
                 <Label>Wersja</Label>
-                <Label>Plik z tłmaczeniem UI</Label>
+                <Label>Plik z tłumaczeniem UI</Label>
             </Grid>
             <Grid gap={2} columns="50px 180px 1fr" marginBottom="10px">
                 <Input value={code} onChange={(e) => setNewUiTranslationsValue('code')(e.target.value)}></Input>
