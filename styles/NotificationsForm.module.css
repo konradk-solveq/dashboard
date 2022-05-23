@@ -1,0 +1,19 @@
+.content  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content textarea {
+    min-height: 200px;
+    font-family: inherit;
+    font-size: inherit;
+    resize: none;
+    padding: 2px;
+}
+
+.buttonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
