@@ -19,6 +19,7 @@ If not, follow only instruction for running backend instance and use command
 NEXTAUTH_URL="http://localhost:3001"
 API_URL="http://localhost:3000"
 NEXT_PUBLIC_URL="http://localhost:3001"
+DASHBOARD_VERSION=1.8.0
 ```
 
 2. Run: `npx next dev -p 3001`
