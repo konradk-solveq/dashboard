@@ -3,6 +3,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
 import Select from 'react-select'
 import notificationStyle from '../../styles/NotificationsForm.module.css'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const NotificationsForm: React.FC<{}> = (props) => {  
@@ -25,12 +27,12 @@ const NotificationsForm: React.FC<{}> = (props) => {
           <div>
         <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
               <Label>Tytuł</Label>
-              <Input type="text" {...register('title', { required: true })} />
+              <Input className={notificationStyle.title} type="text" {...register('title', { required: true })} />
               {errors.title && <p>Tytuł jest wymagany.</p>}
           </Grid>
           <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
               <Label >Treść</Label>
-              <textarea type="text" {...register('message', { required: true })}/>
+              <textarea {...register('message', { required: true })}/>
               {errors.message && <p>Treść jest wymagana.</p>}
           </Grid>
 
@@ -74,6 +76,22 @@ const NotificationsForm: React.FC<{}> = (props) => {
                 )}
               />
               {errors.type && <p>{errors.type.message}</p>}
+          </Grid>
+          <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
+          <Label>Data</Label>
+          <Controller
+          control={control}
+          name="date"
+          render={({ field }) => (
+          <DatePicker
+            wrapperClassName="date-picker"
+            placeholderText="Select date"
+            onChange={(date) => field.onChange(date)}
+            selected={field.value}
+          />
+          )}
+        />
+
           </Grid>
 
          <div className={notificationStyle.buttonContainer}>

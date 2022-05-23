@@ -4,16 +4,40 @@
     align-items: center;
 }
 
+.content input[type="text"] {
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    width: 100%;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1.5;
+}
+
+.content input[type="text"]:focus {
+    outline: none !important;
+    border: 2px solid #2E88FC;
+}
+
 .content textarea {
     min-height: 200px;
     font-family: inherit;
     font-size: inherit;
     resize: none;
     padding: 2px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
 }
+
+.content textarea:focus {
+    outline: none !important;
+    border: 2px solid #2E88FC;
+} 
+
 
 .buttonContainer {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
