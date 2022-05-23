@@ -1,28 +1,18 @@
+import React, { useState } from 'react';
 import { NextPage } from 'next';
-import { Container, Heading, Divider, Flex } from 'theme-ui';
-import NotificationsForm from '../../components/notifications/NotificationsForm';
+import { useRouter } from "next/router";
+import { Container, Heading, Divider, Flex, Button } from 'theme-ui';
 
-
-// Dodanie formularza umożliwiającego dodawanie powiadomień, które będą wyświetlane po stronie aplikacji mobilnej:
-
-// content (tablica obiektów), który pozwala na dodanie wielu wersji językowych, np. poprzez dynamiczne dodawanie wierszy:
-
-// title: string - który będzie tytułem wyświetlanego komunikatu
-
-// text: string - treść powiadomienia
-
-// language: string //wybierane na podstawie listy dostępnych języków zwracanych przez backend
-
-// expirationDate?: Date - data, po której powiadomienie nie jest zwracane
-
-// type: ‘documents’ | ‘info’ //przykładowe typy
-
-// fallbackLanguage?: string // to pole miałoby decydować czy w przypadku braku języka w 
-// danej wersji językowej ma być zwracany content wskazanej wersji jezykowej - 
-// do zastanowienia, z uwagi na dużo większy narzut prac
+ 
 
 const NotificationMenager: React.FC<{}> = () => {
-    // props itp
+    const router = useRouter();
+
+    const handleClick = e => {
+    e.preventDefault();
+    router.push(`../notifications/NotificationsAdd`)
+    }
+
     return (
         <Container>
             <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px',}}>
@@ -33,8 +23,7 @@ const NotificationMenager: React.FC<{}> = () => {
                 alignItems: 'center'}}>
                     Powiadomienia
                 </Heading>
-
-                <NotificationsForm />
+                <Button onClick={handleClick}>Dodaj Powiadomienie</Button>
 
             </Container>
         </Container>
