@@ -2,20 +2,17 @@ import React,{ useEffect, useState }  from 'react';
 import { NextPage } from 'next';
 import { Container, Heading} from 'theme-ui';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
+import { LanguageType } from '../../components/typings/Notifications';
 
 
 const NotificationsAdd: React.FC<{}> = () => {
-    const [availableLanguages, setAvailableLanguages] = useState([
-        {
-            name: '',
-            displayName: '',
-        },
-    ]);
+    const [availableLanguages, setAvailableLanguages] = useState<LanguageType[] | 
+        undefined>();
     
     const getAvailableLanguages = async () => {
         const data = await fetch(`/api/application/config`);
         const result = await data.json();
-        return setAvailableLanguages(result.langs);
+        setAvailableLanguages(result.langs);
     };
     
     useEffect(() => {

@@ -1,27 +1,37 @@
-import React from 'react';
+import React,{useState} from 'react';
+import { useRouter } from "next/router";
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
 import Select from 'react-select'
 import notificationStyle from '../../styles/NotificationsForm.module.css'
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { LanguageType } from '../../components/typings/Notifications';
+import { query } from 'express';
 
+const getAvailableLanguages = (langTypes?: LanguageType[]) => {
+  return langTypes?.map((lang) => ({value: lang.name, label: lang.displayName}))
+}
 
-const NotificationsForm: React.FC<{}> = (props) => {  
-  const typeOptions = [
-      { value: "documents", label: "Dokument" },
-      { value: "info", label: "Info" },
-      { value: "noType", label: "Inny" }
-    ]
-  
-  const langOptions = [
-      { value: "pl-PL", label: "Polski" },
-      { value: "de-DE", label: "Niemiecki" },
-      { value: "en-EN", label: "Angielski" }
-    ]
+interface IProps {availableLanguages?: LanguageType[]}
 
+const NotificationsForm: React.FC<IProps> = ({availableLanguages = []}) => {
   const { register, handleSubmit,formState: { errors }, control } = useForm()
-  const onSubmit = data => console.log(data);
+  
+  const langOptions = getAvailableLanguages([...availableLanguages])
+  const router = useRouter();
+
+  const handleClick = data => {
+    router.push(
+      {pathname: '../notifications/NotificationsEdit',
+       query: { title: data.title, text: data.message, language: data.language.value},
+      },
+      '../notifications/NotificationsEdit'
+      )
+    console.log({title: data.title, text: data.message, language: data.language.value, langOptions: langOptions});
+    
+  }
+
+
+  const onSubmit = data => handleClick(data);
   return (
       <form className={notificationStyle.content} onSubmit={handleSubmit(onSubmit)}>
           <div>
@@ -44,56 +54,11 @@ const NotificationsForm: React.FC<{}> = (props) => {
               rules={{ required: "Język jest wymagany."}}
               name="language"
               render={({ field }) => (
-                  <Select options={langOptions} {...field}/>
+                  <Select instanceId="language" placeholder="Wybierz..." options={langOptions} {...field}/>
                 )}
               /> 
               {errors.language && <p>{errors.language.message}</p>}
           </Grid>
-          <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
-                <Label>Język domyślny</Label>
-                <Controller
-                control={control}
-                defaultValue={null}
-                rules={{ required: "Język domyślny jest wymagany." }}
-                name="fallbackLanguage"
-                render={({ field }) => (
-                    <Select options={langOptions} {...field}/>
-                  )}  
-                  />
-                {errors.fallbackLanguage && <p>{errors.fallbackLanguage.message}</p>}
-
-            </Grid>  
-          
-          <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
-              <Label>Typ</Label>
-              <Controller
-              control={control}
-              defaultValue={null}
-              rules={{ required: "Typ domyślny jest wymagany." }}
-              name="type"
-              render={({ field }) => (
-                  <Select options={typeOptions} {...field}/>
-                )}
-              />
-              {errors.type && <p>{errors.type.message}</p>}
-          </Grid>
-          <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
-          <Label>Data</Label>
-          <Controller
-          control={control}
-          name="date"
-          render={({ field }) => (
-          <DatePicker
-            wrapperClassName="date-picker"
-            placeholderText="Select date"
-            onChange={(date) => field.onChange(date)}
-            selected={field.value}
-          />
-          )}
-        />
-
-          </Grid>
-
          <div className={notificationStyle.buttonContainer}>
            {/* Redirect to notifications edit after clicking and submit the data to fields */}
          <Button type="submit">
