@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from "next/router";
-import { Container, Heading, Divider, Flex, Button } from 'theme-ui';
-
+import { Container, Heading,Button } from 'theme-ui';
  
 
 const NotificationMenager: React.FC<{}> = () => {
@@ -34,9 +33,7 @@ const NotificationMenager: React.FC<{}> = () => {
 const NotificationsPage: NextPage<{}> = (props) => {
     return (
         <>
-            {/* Notifications Container - func/API */}
                 <NotificationMenager />
-            {/* Notifications Container - func/API */}
         </>
     );
 };
