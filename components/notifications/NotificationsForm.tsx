@@ -60,7 +60,7 @@ const NotificationsForm: React.FC<IProps> = ({availableLanguages = []}) => {
               {errors.language && <p>{errors.language.message}</p>}
           </Grid>
          <div className={notificationStyle.buttonContainer}>
-           {/* Redirect to notifications edit after clicking and submit the data to fields */}
+
          <Button type="submit">
               Dodaj powiadomienie
           </Button>
