@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
@@ -9,9 +9,11 @@ import { getAvailableLanguages } from '../../components/notifications/Notificati
 
 interface IProps {
     availableLanguages?: LanguageType[];
+    show: false;
+    setShow: [];
 }
 
-const NotificationsForm: React.FC<IProps> = ({ availableLanguages = [] }) => {
+const NotificationsForm: React.FC<IProps> = ({ availableLanguages = [], show, setShow = [] }) => {
     const {
         register,
         handleSubmit,
@@ -31,23 +33,33 @@ const NotificationsForm: React.FC<IProps> = ({ availableLanguages = [] }) => {
             '../notifications/NotificationsEdit',
         );
     };
+    console.log(show);
+
+    const handleShow = () => setShow(!show);
 
     const onSubmit = (data) => handleClick(data);
     return (
-        <form className={notificationStyle.content} onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
+        <form
+            className={notificationStyle.content}
+            onSubmit={handleSubmit(onSubmit)}
+            style={{ display: show ? 'flex' : 'none' }}
+        >
+            <div className={notificationStyle.contentblock}>
+                <div className={notificationStyle.close} onClick={handleShow}>
+                    {'\u2715'}
+                </div>
+                <Grid columns="50px 380px 1fr" marginBottom="10px">
                     <Label>Tytuł</Label>
                     <Input className={notificationStyle.title} type="text" {...register('title', { required: true })} />
                     {errors.title && <p>Tytuł jest wymagany.</p>}
                 </Grid>
-                <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
+                <Grid columns="50px 380px 1fr" marginBottom="10px">
                     <Label>Treść</Label>
                     <textarea {...register('message', { required: true })} />
                     {errors.message && <p>Treść jest wymagana.</p>}
                 </Grid>
 
-                <Grid gap={4} columns="50px 380px 1fr" marginBottom="10px">
+                <Grid columns="50px 380px 1fr" marginBottom="10px">
                     <Label>Język</Label>
                     <Controller
                         control={control}

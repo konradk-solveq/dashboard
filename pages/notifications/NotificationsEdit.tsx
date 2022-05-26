@@ -1,15 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Container, Heading, Grid, Label } from 'theme-ui';
+import { Container, Heading, Grid, Label, Button } from 'theme-ui';
 import NotificationsContainer, { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
+import NotificationsForm from '../../components/notifications/NotificationsForm';
 
 const NotificationsEdit: React.FC<{}> = () => {
     const router = useRouter();
-    console.log(router.query);
+    const [show, setShow] = useState(router.query.newNotificationShow);
+
     const { availableLanguages } = useContext(NotificationsContext);
-    // first create template to display
+    const handleOpen = () => {
+        setShow(!show);
+    };
 
     return (
         <Container>
@@ -23,7 +27,7 @@ const NotificationsEdit: React.FC<{}> = () => {
                         alignItems: 'center',
                     }}
                 >
-                    Strona z wersjami językowymi powiadomienia
+                    Wersje językowe powiadomienia
                 </Heading>
                 <Container>
                     <Grid gap={2} columns="100px 180px 2fr" marginBottom="10px">
@@ -32,6 +36,20 @@ const NotificationsEdit: React.FC<{}> = () => {
                         <Label>Treść</Label>
                     </Grid>
                 </Container>
+                <Container
+                    sx={{
+                        maxWidth: '1200px',
+                        marginTop: '30px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    <Button onClick={handleOpen} sx={{ textAlign: 'center', fontSize: '1.3em' }}>
+                        Dodaj kolejny język
+                    </Button>
+                </Container>
+                <NotificationsForm show={show} setShow={setShow} availableLanguages={availableLanguages} />
                 <NotificationsGroupForm availableLanguages={availableLanguages} />
             </Container>
         </Container>
