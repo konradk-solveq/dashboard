@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
 import Select from 'react-select';
@@ -9,47 +8,47 @@ import { getAvailableLanguages } from '../../components/notifications/Notificati
 
 interface IProps {
     availableLanguages?: LanguageType[];
-    show: false;
-    setShow: [];
+    closeHandler: () => void;
+    newNotificationHandler: () => void;
+    preloadedValues: {};
+    changeNotification: () => void;
 }
 
-const NotificationsForm: React.FC<IProps> = ({ availableLanguages = [], show, setShow = [] }) => {
+const NotificationsForm: React.FC<IProps> = ({
+    availableLanguages = [],
+    closeHandler,
+    newNotificationHandler,
+    preloadedValues,
+    changeNotification,
+}) => {
+    const langOptions = getAvailableLanguages([...availableLanguages]);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
         control,
-    } = useForm();
-
-    const langOptions = getAvailableLanguages([...availableLanguages]);
-    const router = useRouter();
+        reset,
+    } = useForm({ shouldUnregister: true, defaultValues: preloadedValues });
 
     const handleClick = (data) => {
-        router.push(
-            {
-                pathname: '../notifications/NotificationsEdit',
-                query: { title: data.title, text: data.message, language: data.language.value },
-            },
-            '../notifications/NotificationsEdit',
-        );
+        preloadedValues ? changeNotification(data, preloadedValues.id) : newNotificationHandler(data);
+        reset(data);
     };
-    console.log(show);
 
-    const handleShow = () => setShow(!show);
+    const handleShow = () => closeHandler();
 
     const onSubmit = (data) => handleClick(data);
+
     return (
-        <form
-            className={notificationStyle.content}
-            onSubmit={handleSubmit(onSubmit)}
-            style={{ display: show ? 'flex' : 'none' }}
-        >
+        <form className={notificationStyle.content} onSubmit={handleSubmit(onSubmit)}>
             <div className={notificationStyle.contentblock}>
                 <div className={notificationStyle.close} onClick={handleShow}>
                     {'\u2715'}
                 </div>
                 <Grid columns="50px 380px 1fr" marginBottom="10px">
                     <Label>Tytuł</Label>
+
                     <Input className={notificationStyle.title} type="text" {...register('title', { required: true })} />
                     {errors.title && <p>Tytuł jest wymagany.</p>}
                 </Grid>
@@ -63,7 +62,6 @@ const NotificationsForm: React.FC<IProps> = ({ availableLanguages = [], show, se
                     <Label>Język</Label>
                     <Controller
                         control={control}
-                        defaultValue={null}
                         rules={{ required: 'Język jest wymagany.' }}
                         name="language"
                         render={({ field }) => (
@@ -73,7 +71,7 @@ const NotificationsForm: React.FC<IProps> = ({ availableLanguages = [], show, se
                     {errors.language && <p>{errors.language.message}</p>}
                 </Grid>
                 <div className={notificationStyle.buttonContainer}>
-                    <Button type="submit">Dodaj powiadomienie</Button>
+                    <Button type="submit">Zapisz</Button>
                 </div>
             </div>
         </form>
