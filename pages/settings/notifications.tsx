@@ -5,11 +5,10 @@ import { Container, Heading, Button } from 'theme-ui';
 
 const NotificationMenager: React.FC<{}> = () => {
     const router = useRouter();
-    const newNotificationShow = true;
 
     const handleClick = (e) => {
         e.preventDefault();
-        router.push({ pathname: '../notifications/NotificationsEdit', query: { newNotificationShow } });
+        router.push({ pathname: '../notifications/NotificationsEdit' });
     };
 
     return (
