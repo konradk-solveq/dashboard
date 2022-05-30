@@ -1,0 +1,39 @@
+.container {
+    margin-bottom: 10px !important;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.language {
+    width: 40px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-right: 50px;
+}
+.title {
+    width: 180px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-right: auto;
+    word-break: break-all;
+}
+.text {
+    width: 400px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    word-break: break-all;
+}
+.button {
+    width: 120px;
+    cursor: pointer;
+}
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}

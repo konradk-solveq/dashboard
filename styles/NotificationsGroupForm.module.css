@@ -49,6 +49,7 @@
 
 .buttonContainer Button {
     font-size: 1.3em;
+    cursor: pointer;
 }
 
 input[type='checkbox'].switch_1 {
