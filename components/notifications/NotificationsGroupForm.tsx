@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Grid, Input, Label, Container } from 'theme-ui';
-import Select, { useStateManager } from 'react-select';
-import { useRouter } from 'next/router';
+import { Button, Label, Container } from 'theme-ui';
+import Select from 'react-select';
 import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -30,24 +29,24 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         { value: 'info', label: 'Info' },
         { value: 'noType', label: 'Inny' },
     ];
-    const [editValues, setEditValues] = useState(null);
 
-    useEffect(() => {
-        setEditValues(preloadedGroupValues);
-    }, [preloadedGroupValues]);
     const {
         register,
         handleSubmit,
         formState: { errors },
         control,
-    } = useForm({ shouldUnregister: true, defaultValues: editValues });
+        reset,
+    } = useForm({ shouldUnregister: true, defaultValues: preloadedGroupValues });
     const langOptions = getAvailableLanguages([...availableLanguages]);
 
     const handleClick = (data) => {
         const langValidation = notifications.find((el) => el.language === data.fallbackLanguage.value);
         langValidation
-            ? handleNotificationGroup(data, notifications)
+            ? preloadedGroupValues
+                ? editNotificationGroup(data, preloadedGroupValues.id, notifications)
+                : handleNotificationGroup(data, notifications)
             : alert('Proszę dodaj powiadomienie dla języka domyślnego.');
+        reset(data);
     };
 
     const onSubmit = (data) => handleClick(data);
@@ -126,7 +125,6 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                     </Container>
                 </div>
                 <Container className={notificationGroupStyle.buttonContainer}>
-                    {/* Compile data and send */}
                     <div>
                         <Label>Wersja robocza</Label>
                         <input
@@ -136,7 +134,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                             {...register('draft', {})}
                         />
                     </div>
-                    <Button type="submit">Dodaj powiadomienie</Button>
+                    <Button type="submit">Zapisz</Button>
                 </Container>
             </div>
         </form>

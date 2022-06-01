@@ -12,13 +12,15 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
 }) => {
     const { availableLanguages } = useContext(NotificationsContext);
     const [modalShow, setModalShow] = useState(false);
+    const [formShow, setFormShow] = useState(false);
     const [preloadedValues, setPreloadedValues] = useState(null);
-    const [preloadedGroupValues, setPreloadedGroupValues] = useState(null);
+    const [preloadedGroupValues, setPreloadedGroupValues] = useState(editValues);
     const [notifications, setNotifications] = useState([]);
+    const [displayEmpty, setDisplayEmpty] = useState(false);
 
     useEffect(() => {
         if (editValues === null) {
-            return console.log('empty');
+            setFormShow(true);
         } else {
             const editedGroup = {
                 id: editValues.id,
@@ -31,12 +33,16 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                 type: { value: editValues.type.value, label: editValues.type.label },
                 draft: editValues.draft,
             };
-            console.log('edited group', editedGroup);
 
-            setPreloadedGroupValues({ ...editedGroup });
             setNotifications(editValues.notifications);
+            setPreloadedGroupValues(editedGroup);
+            setFormShow(true);
         }
     }, [editValues]);
+
+    useEffect(() => {
+        notifications.length > 0 ? setDisplayEmpty(!displayEmpty) : setDisplayEmpty(!displayEmpty);
+    }, [notifications]);
 
     const newNotificationHandler = (data) => {
         setModalShow(!modalShow);
@@ -58,6 +64,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     const handleEdit = (idProperty) => {
         const object = notifications.find((x) => x.id === idProperty);
         const newPreloadedValue = {
+            key: object.id,
             id: object.id,
             language: { value: object.language, label: object.languageLabel },
             title: object.title,
@@ -69,6 +76,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
 
     const changeNotification = (editedNotification, preId) => {
         const edited = {
+            key: preId,
             id: preId,
             language: editedNotification.language.value,
             languageLabel: editedNotification.language.label,
@@ -86,8 +94,6 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         setNotifications(editedArr);
         setModalShow(!modalShow);
     };
-
-    const editGroupNotification = () => {};
 
     const handleDelete = (idProperty) => {
         const removedItemArr = notifications.filter((el) => el.id !== idProperty);
@@ -114,19 +120,27 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                         <Label>Tytuł</Label>
                         <Label>Treść</Label>
                     </Grid>
-                    {notifications.map((notification) => {
-                        return (
-                            <NotificationsGroupRow
-                                id={notification.id}
-                                key={notification.id}
-                                language={notification.language}
-                                title={notification.title}
-                                text={notification.text}
-                                editHandler={handleEdit}
-                                deleteHandler={handleDelete}
-                            />
-                        );
-                    })}
+                    {displayEmpty ? (
+                        <Container sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555' }}>
+                            Brak powiadomień
+                        </Container>
+                    ) : (
+                        <Container>
+                            {notifications.map((notification) => {
+                                return (
+                                    <NotificationsGroupRow
+                                        id={notification.id}
+                                        key={notification.id}
+                                        language={notification.language}
+                                        title={notification.title}
+                                        text={notification.text}
+                                        editHandler={handleEdit}
+                                        deleteHandler={handleDelete}
+                                    />
+                                );
+                            })}
+                        </Container>
+                    )}
                 </Container>
                 <Container
                     sx={{
@@ -151,13 +165,15 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                         changeNotification={changeNotification}
                     />
                 )}
-                <NotificationsGroupForm
-                    notifications={notifications}
-                    availableLanguages={availableLanguages}
-                    preloadedGroupValues={preloadedGroupValues}
-                    handleNotificationGroup={handleNotificationGroup}
-                    editNotificationGroup={editNotificationGroup}
-                />
+                {formShow && (
+                    <NotificationsGroupForm
+                        notifications={notifications}
+                        availableLanguages={availableLanguages}
+                        preloadedGroupValues={preloadedGroupValues}
+                        handleNotificationGroup={handleNotificationGroup}
+                        editNotificationGroup={editNotificationGroup}
+                    />
+                )}
             </Container>
         </Container>
     );
