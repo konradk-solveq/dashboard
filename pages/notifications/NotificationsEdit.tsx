@@ -1,36 +1,42 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { NextPage } from 'next';
 import { Container, Heading, Grid, Label, Button } from 'theme-ui';
 import NotificationsContainer, { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
-import { number } from 'prop-types';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
 
-interface IProps {
-    notification: string;
-    newNotificationHandler: () => void;
-    id: string;
-    language: string;
-    languageLabel: string;
-    title: string;
-    message: string;
-}
-
-const NotificationsEdit: React.FC<IProps> = (props: IProps) => {
+const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues }> = ({
+    handleNotificationGroup,
+    editNotificationGroup,
+    editValues,
+}) => {
     const { availableLanguages } = useContext(NotificationsContext);
-
     const [modalShow, setModalShow] = useState(false);
-
-    const [preloadedValues, setPreloadedValues] = useState({
-        id: '',
-        language: '',
-        languageLabel: '',
-        title: '',
-        message: '',
-    });
-
+    const [preloadedValues, setPreloadedValues] = useState(null);
+    const [preloadedGroupValues, setPreloadedGroupValues] = useState(null);
     const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        if (editValues === null) {
+            return console.log('empty');
+        } else {
+            const editedGroup = {
+                id: editValues.id,
+                fallbackLanguage: {
+                    value: editValues.fallbackLanguage.value,
+                    label: editValues.fallbackLanguage.label,
+                },
+                showDate: editValues.showDate,
+                expDate: editValues.expDate,
+                type: { value: editValues.type.value, label: editValues.type.label },
+                draft: editValues.draft,
+            };
+            console.log('edited group', editedGroup);
+
+            setPreloadedGroupValues({ ...editedGroup });
+            setNotifications(editValues.notifications);
+        }
+    }, [editValues]);
 
     const newNotificationHandler = (data) => {
         setModalShow(!modalShow);
@@ -80,6 +86,8 @@ const NotificationsEdit: React.FC<IProps> = (props: IProps) => {
         setNotifications(editedArr);
         setModalShow(!modalShow);
     };
+
+    const editGroupNotification = () => {};
 
     const handleDelete = (idProperty) => {
         const removedItemArr = notifications.filter((el) => el.id !== idProperty);
@@ -143,20 +151,16 @@ const NotificationsEdit: React.FC<IProps> = (props: IProps) => {
                         changeNotification={changeNotification}
                     />
                 )}
-                <NotificationsGroupForm availableLanguages={availableLanguages} />
+                <NotificationsGroupForm
+                    notifications={notifications}
+                    availableLanguages={availableLanguages}
+                    preloadedGroupValues={preloadedGroupValues}
+                    handleNotificationGroup={handleNotificationGroup}
+                    editNotificationGroup={editNotificationGroup}
+                />
             </Container>
         </Container>
     );
 };
 
-const NotificationsEditPage: NextPage<IProps> = (props) => {
-    return (
-        <>
-            <NotificationsContainer>
-                <NotificationsEdit />
-            </NotificationsContainer>
-        </>
-    );
-};
-
-export default NotificationsEditPage;
+export default NotificationsEdit;

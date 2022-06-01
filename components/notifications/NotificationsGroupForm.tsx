@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label, Container } from 'theme-ui';
-import Select from 'react-select';
+import Select, { useStateManager } from 'react-select';
+import { useRouter } from 'next/router';
 import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,23 +11,46 @@ import { getAvailableLanguages } from '../../components/notifications/Notificati
 
 interface IProps {
     availableLanguages?: LanguageType[];
+    notifications: [];
+    preloadedGroupValues: {};
+    notificationGroup: {};
+    handleNotificationGroup: () => void;
+    editNotificationGroup: () => void;
 }
 
-const NotificationsGroupForm: React.FC<IProps> = ({ availableLanguages = [] }) => {
+const NotificationsGroupForm: React.FC<IProps> = ({
+    availableLanguages = [],
+    notifications,
+    preloadedGroupValues,
+    handleNotificationGroup,
+    editNotificationGroup,
+}) => {
     const typeOptions = [
         { value: 'documents', label: 'Dokument' },
         { value: 'info', label: 'Info' },
         { value: 'noType', label: 'Inny' },
     ];
+    const [editValues, setEditValues] = useState(null);
+
+    useEffect(() => {
+        setEditValues(preloadedGroupValues);
+    }, [preloadedGroupValues]);
     const {
         register,
         handleSubmit,
         formState: { errors },
         control,
-    } = useForm();
+    } = useForm({ shouldUnregister: true, defaultValues: editValues });
     const langOptions = getAvailableLanguages([...availableLanguages]);
 
-    const onSubmit = (data) => console.log(data);
+    const handleClick = (data) => {
+        const langValidation = notifications.find((el) => el.language === data.fallbackLanguage.value);
+        langValidation
+            ? handleNotificationGroup(data, notifications)
+            : alert('Proszę dodaj powiadomienie dla języka domyślnego.');
+    };
+
+    const onSubmit = (data) => handleClick(data);
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -35,7 +59,6 @@ const NotificationsGroupForm: React.FC<IProps> = ({ availableLanguages = [] }) =
                         <Label>Język domyślny</Label>
                         <Controller
                             control={control}
-                            defaultValue={null}
                             rules={{ required: 'Język domyślny jest wymagany.' }}
                             name="fallbackLanguage"
                             render={({ field }) => (
@@ -55,7 +78,6 @@ const NotificationsGroupForm: React.FC<IProps> = ({ availableLanguages = [] }) =
                         <Label>Typ</Label>
                         <Controller
                             control={control}
-                            defaultValue={null}
                             rules={{ required: 'Typ jest wymagany.' }}
                             name="type"
                             render={({ field }) => (
@@ -91,7 +113,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({ availableLanguages = [] }) =
                         <Label>Data wygaśnięcia powiadomienia</Label>
                         <Controller
                             control={control}
-                            name="date"
+                            name="expDate"
                             render={({ field }) => (
                                 <DatePicker
                                     wrapperClassName="date-picker"
