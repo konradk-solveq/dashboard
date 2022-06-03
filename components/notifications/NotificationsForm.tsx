@@ -6,7 +6,6 @@ import notificationStyle from '../../styles/NotificationsForm.module.css';
 
 interface IProps {
     langOptions: {};
-    typeOptions: {};
     closeHandler: () => void;
     newNotificationHandler: () => void;
     preloadedValues: {};
@@ -14,7 +13,6 @@ interface IProps {
 }
 
 const NotificationsForm: React.FC<IProps> = ({
-    typeOptions,
     langOptions,
     closeHandler,
     newNotificationHandler,

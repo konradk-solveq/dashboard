@@ -44,7 +44,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     }, [editValues]);
 
     useEffect(() => {
-        notifications.length > 0 ? setDisplayEmpty(!displayEmpty) : setDisplayEmpty(!displayEmpty);
+        notifications.length > 0 ? setDisplayEmpty(false) : setDisplayEmpty(true);
     }, [notifications]);
 
     const newNotificationHandler = (data) => {
