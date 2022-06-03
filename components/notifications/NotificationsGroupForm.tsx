@@ -14,6 +14,7 @@ interface IProps {
     notificationGroup: {};
     handleNotificationGroup: () => void;
     editNotificationGroup: () => void;
+    handleExit: () => void;
 }
 
 const NotificationsGroupForm: React.FC<IProps> = ({
@@ -23,6 +24,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
     preloadedGroupValues,
     handleNotificationGroup,
     editNotificationGroup,
+    handleExit,
 }) => {
     const {
         register,
@@ -42,6 +44,8 @@ const NotificationsGroupForm: React.FC<IProps> = ({
             : setAlert(true);
         reset(data);
     };
+
+    const handleExitClick = () => handleExit();
 
     const onSubmit = (data) => handleClick(data);
     return (
@@ -134,7 +138,12 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                             {...register('draft', {})}
                         />
                     </div>
-                    <Button type="submit">Zapisz</Button>
+                    <div>
+                        <Button onClick={handleExitClick}>Wyjdź</Button>
+                        <Button type="submit" sx={{ backgroundColor: 'green', ml: '20px' }}>
+                            Zapisz
+                        </Button>
+                    </div>
                 </Container>
             </div>
         </form>

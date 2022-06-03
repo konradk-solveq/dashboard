@@ -94,6 +94,11 @@ const NotificationMenager: React.FC<IProps> = ({}) => {
         setAddFormShow(!addFormShow);
     };
 
+    const handleExit = () => {
+        setEditValues(null);
+        setAddFormShow(!addFormShow);
+    };
+
     return (
         <Container>
             <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
@@ -102,6 +107,7 @@ const NotificationMenager: React.FC<IProps> = ({}) => {
                         handleNotificationGroup={handleNotificationGroup}
                         editNotificationGroup={editNotificationGroup}
                         editValues={editValues}
+                        handleExit={handleExit}
                     />
                 ) : (
                     <>

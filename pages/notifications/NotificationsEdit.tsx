@@ -6,10 +6,11 @@ import NotificationsForm from '../../components/notifications/NotificationsForm'
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
 import { getAvailableLanguages, typeOptions } from '../../components/notifications/NotificationsUtils';
 
-const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues }> = ({
+const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues; handleExit }> = ({
     handleNotificationGroup,
     editNotificationGroup,
     editValues,
+    handleExit,
 }) => {
     const { availableLanguages } = useContext(NotificationsContext);
     const [modalShow, setModalShow] = useState(false);
@@ -178,6 +179,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                         preloadedGroupValues={preloadedGroupValues}
                         handleNotificationGroup={handleNotificationGroup}
                         editNotificationGroup={editNotificationGroup}
+                        handleExit={handleExit}
                     />
                 )}
             </Container>
