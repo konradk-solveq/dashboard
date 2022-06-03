@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
 import Select from 'react-select';
 import notificationStyle from '../../styles/NotificationsForm.module.css';
-import { LanguageType } from '../../components/typings/Notifications';
-import { getAvailableLanguages } from '../../components/notifications/NotificationsApi';
 
 interface IProps {
-    availableLanguages?: LanguageType[];
+    langOptions: {};
+    typeOptions: {};
     closeHandler: () => void;
     newNotificationHandler: () => void;
     preloadedValues: {};
@@ -15,14 +14,13 @@ interface IProps {
 }
 
 const NotificationsForm: React.FC<IProps> = ({
-    availableLanguages = [],
+    typeOptions,
+    langOptions,
     closeHandler,
     newNotificationHandler,
     preloadedValues,
     changeNotification,
 }) => {
-    const langOptions = getAvailableLanguages([...availableLanguages]);
-
     const {
         register,
         handleSubmit,

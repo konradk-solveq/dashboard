@@ -7,10 +7,6 @@ interface IProps {
 
 export const NotificationsContext = createContext<IProps>(null!);
 
-export const getAvailableLanguages = (langTypes?: LanguageType[]) => {
-    return langTypes?.map((lang) => ({ value: lang.name, label: lang.displayName }));
-};
-
 const NotificationsContainer: React.FC<{}> = ({ children }) => {
     const [availableLanguages, setAvailableLanguages] = useState<LanguageType[] | undefined>();
 

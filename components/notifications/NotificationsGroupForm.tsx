@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Label, Container } from 'theme-ui';
+import { Button, Label, Container, Alert, Close } from 'theme-ui';
 import Select from 'react-select';
 import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { LanguageType } from '../../components/typings/Notifications';
-import { getAvailableLanguages } from '../../components/notifications/NotificationsApi';
 
 interface IProps {
-    availableLanguages?: LanguageType[];
+    langOptions: {};
+    typeOptions: {};
     notifications: [];
     preloadedGroupValues: {};
     notificationGroup: {};
@@ -18,18 +17,13 @@ interface IProps {
 }
 
 const NotificationsGroupForm: React.FC<IProps> = ({
-    availableLanguages = [],
+    typeOptions,
+    langOptions,
     notifications,
     preloadedGroupValues,
     handleNotificationGroup,
     editNotificationGroup,
 }) => {
-    const typeOptions = [
-        { value: 'documents', label: 'Dokument' },
-        { value: 'info', label: 'Info' },
-        { value: 'noType', label: 'Inny' },
-    ];
-
     const {
         register,
         handleSubmit,
@@ -37,7 +31,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         control,
         reset,
     } = useForm({ shouldUnregister: true, defaultValues: preloadedGroupValues });
-    const langOptions = getAvailableLanguages([...availableLanguages]);
+    const [alert, setAlert] = useState(false);
 
     const handleClick = (data) => {
         const langValidation = notifications.find((el) => el.language === data.fallbackLanguage.value);
@@ -45,7 +39,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
             ? preloadedGroupValues
                 ? editNotificationGroup(data, preloadedGroupValues.id, notifications)
                 : handleNotificationGroup(data, notifications)
-            : alert('Proszę dodaj powiadomienie dla języka domyślnego.');
+            : setAlert(true);
         reset(data);
     };
 
@@ -53,6 +47,12 @@ const NotificationsGroupForm: React.FC<IProps> = ({
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
+                {alert && (
+                    <Alert sx={{ mt: '30px' }}>
+                        Proszę dodaj powiadomienie dla języka domyślnego.
+                        <Close sx={{ ml: 'auto', cursor: 'pointer' }} onClick={() => setAlert(false)} />
+                    </Alert>
+                )}
                 <div className={notificationGroupStyle.content}>
                     <Container className={notificationGroupStyle.container}>
                         <Label>Język domyślny</Label>

@@ -4,6 +4,7 @@ import NotificationsContainer, { NotificationsContext } from '../../components/n
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
+import { getAvailableLanguages, typeOptions } from '../../components/notifications/NotificationsUtils';
 
 const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues }> = ({
     handleNotificationGroup,
@@ -17,6 +18,8 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     const [preloadedGroupValues, setPreloadedGroupValues] = useState(editValues);
     const [notifications, setNotifications] = useState([]);
     const [displayEmpty, setDisplayEmpty] = useState(false);
+
+    const langOptions = getAvailableLanguages([...availableLanguages]);
 
     useEffect(() => {
         if (editValues === null) {
@@ -159,7 +162,8 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                     <NotificationsForm
                         show={modalShow}
                         closeHandler={closeHandler}
-                        availableLanguages={availableLanguages}
+                        langOptions={langOptions}
+                        typeOptions={typeOptions}
                         newNotificationHandler={newNotificationHandler}
                         preloadedValues={preloadedValues}
                         changeNotification={changeNotification}
@@ -168,6 +172,8 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                 {formShow && (
                     <NotificationsGroupForm
                         notifications={notifications}
+                        langOptions={langOptions}
+                        typeOptions={typeOptions}
                         availableLanguages={availableLanguages}
                         preloadedGroupValues={preloadedGroupValues}
                         handleNotificationGroup={handleNotificationGroup}
