@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Container, Heading, Grid, Label, Button } from 'theme-ui';
-import NotificationsContainer, { NotificationsContext } from '../../components/notifications/NotificationsApi';
+import { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';

@@ -168,7 +168,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
     );
 };
 
-const NotificationsPage: NextPage<IProps> = ({}) => {
+const NotificationsPage: NextPage<{}> = ({}) => {
     return (
         <>
             <NotificationsContainer>
