@@ -6,7 +6,7 @@ import notificationStyle from '../../styles/NotificationsForm.module.css';
 
 interface IProps {
     langOptions: {};
-    closeHandler: () => void;
+    handleOpen: () => void;
     newNotificationHandler: () => void;
     preloadedValues: {};
     changeNotification: () => void;
@@ -14,7 +14,7 @@ interface IProps {
 
 const NotificationsForm: React.FC<IProps> = ({
     langOptions,
-    closeHandler,
+    handleOpen,
     newNotificationHandler,
     preloadedValues,
     changeNotification,
@@ -32,14 +32,12 @@ const NotificationsForm: React.FC<IProps> = ({
         reset(data);
     };
 
-    const handleShow = () => closeHandler();
-
     const onSubmit = (data) => handleClick(data);
 
     return (
         <form className={notificationStyle.content} onSubmit={handleSubmit(onSubmit)}>
             <div className={notificationStyle.contentblock}>
-                <div className={notificationStyle.close} onClick={handleShow}>
+                <div className={notificationStyle.close} onClick={handleOpen}>
                     {'\u2715'}
                 </div>
                 <Grid columns="50px 380px 1fr" marginBottom="10px">

@@ -5,12 +5,7 @@ import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
 
-interface IProps {
-    handleNotificationGroup: () => void;
-    editNotificationGroup: () => void;
-}
-
-const NotificationMenager: React.FC<IProps> = ({}) => {
+const NotificationMenager: React.FC<{}> = ({}) => {
     const [addFormShow, setAddFormShow] = useState(false);
     const [notificationsList, setNotificationsList] = useState([]);
     const [editValues, setEditValues] = useState(null);

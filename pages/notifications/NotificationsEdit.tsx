@@ -59,14 +59,13 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         };
         setNotifications([...notifications, newNotification]);
     };
-    const closeHandler = () => handleOpen();
 
     const handleOpen = () => {
         setPreloadedValues('');
         setModalShow(!modalShow);
     };
     const handleEdit = (idProperty) => {
-        const object = notifications.find((x) => x.id === idProperty);
+        const object = findId(idProperty);
         const newPreloadedValue = {
             key: object.id,
             id: object.id,
@@ -99,10 +98,11 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         setModalShow(!modalShow);
     };
 
-    const handleDelete = (idProperty) => {
-        const removedItemArr = notifications.filter((el) => el.id !== idProperty);
-        setNotifications(removedItemArr);
-    };
+    const handleDelete = (idProperty) => setNotifications(filterId(idProperty));
+
+    const findId = (idElement) => notifications.find((x) => x.id === idElement);
+
+    const filterId = (idElement) => notifications.filter((el) => el.id !== idElement);
 
     return (
         <Container>
@@ -162,7 +162,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                 {modalShow && (
                     <NotificationsForm
                         show={modalShow}
-                        closeHandler={closeHandler}
+                        handleOpen={handleOpen}
                         langOptions={langOptions}
                         typeOptions={typeOptions}
                         newNotificationHandler={newNotificationHandler}
