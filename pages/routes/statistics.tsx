@@ -166,7 +166,6 @@ export default function Page({}) {
             if (cd.images.length > 1) imgTempData.push(cd);
         }
         setFilteredChartData(tempChartData);
-        console.log('%c imgTempData:', 'background: #ffcc00; color: #003300', imgTempData);
     }, [chartData, startDate, endDate]);
 
     const handleScrolLeft = (end: boolean = false) => {
