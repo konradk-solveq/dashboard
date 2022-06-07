@@ -36,12 +36,23 @@ const NotificationsGroupForm: React.FC<IProps> = ({
     const [alert, setAlert] = useState(false);
 
     const handleClick = (data) => {
-        const langValidation = notifications.find((el) => el.language === data.fallbackLanguage.value);
-        langValidation
-            ? preloadedGroupValues
-                ? editNotificationGroup(data, preloadedGroupValues.id, notifications)
-                : handleNotificationGroup(data, notifications)
-            : setAlert(true);
+        const mainNotification = notifications.find((el) => el.language === data.fallbackLanguage.value);
+
+        if (!mainNotification) {
+            setAlert(true);
+            return;
+        }
+
+        const object = {
+            type: data.type.value,
+            name: mainNotification?.data.title,
+            contents: notifications,
+            showDate: data.showDate,
+            expirationDate: data.expDate,
+            draft: data.draft,
+            fallbackLanguage: data.fallbackLanguage.value,
+        };
+        preloadedGroupValues ? editNotificationGroup(object, preloadedGroupValues.id) : handleNotificationGroup(object);
         reset(data);
     };
 

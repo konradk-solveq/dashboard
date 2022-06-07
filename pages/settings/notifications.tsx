@@ -1,87 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
 import { Container, Heading, Button, Alert } from 'theme-ui';
 import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
+import { NotificationsContext } from '../../components/notifications/NotificationsApi';
+import { getNotifications } from '../../components/notifications/NotificationsUtils';
 
 const NotificationMenager: React.FC<{}> = ({}) => {
+    const { notifications } = useContext(NotificationsContext);
     const [addFormShow, setAddFormShow] = useState(false);
-    const [notificationsList, setNotificationsList] = useState([]);
+    const [preloadedNotifications, setPreloadedNotifications] = useState({});
     const [editValues, setEditValues] = useState(null);
     const [deletePopUp, setDeletePopUp] = useState(false);
     const [deleteId, setDeleteId] = useState();
-    const [displayEmpty, setDisplayEmpty] = useState(false);
-
-    const handlePostNotifications = () => {
-        notificationsList.length > 0
-            ? console.log('send notifications to BE', notificationsList)
-            : setDisplayEmpty(!displayEmpty);
-    };
 
     useEffect(() => {
-        handlePostNotifications();
-    }, [notificationsList]);
-
-    const handleNotificationGroup = (data, notifications) => {
-        const notificationGroupId = Date.now();
-        const groupTitle = notifications.find((el) => el.language === data.fallbackLanguage.value);
-        setAddFormShow(!addFormShow);
-
-        const newNotificationgroup = {
-            key: notificationGroupId,
-            id: notificationGroupId,
-            fallbackLanguage: { value: data.fallbackLanguage.value, label: data.fallbackLanguage.label },
-            type: { value: data.type.value, label: data.type.label },
-            expDate: data.expDate,
-            showDate: data.showDate,
-            notifications: notifications,
-            groupTitle: groupTitle.title,
-            draft: data.draft,
-        };
-        setNotificationsList([...notificationsList, newNotificationgroup]);
-    };
+        notifications && setPreloadedNotifications(getNotifications(notifications));
+    }, [notifications]);
 
     function editHandler(idProperty) {
-        const object = notificationsList.find((x) => x.id === idProperty);
+        const object = preloadedNotifications.find((x) => x.id === idProperty);
         setEditValues(object);
         setAddFormShow(!addFormShow);
     }
 
-    const editNotificationGroup = (data, idProperty, notifications) => {
-        setAddFormShow(!addFormShow);
-        const groupTitle = notifications.find((el) => el.language === data.fallbackLanguage.value);
-        const edited = {
-            key: idProperty,
-            id: idProperty,
-            fallbackLanguage: { value: data.fallbackLanguage.value, label: data.fallbackLanguage.label },
-            type: { value: data.type.value, label: data.type.label },
-            expDate: data.expDate,
-            showDate: data.showDate,
-            notifications: notifications,
-            groupTitle: groupTitle.title,
-            draft: data.draft,
-        };
-
-        const editedArr = notificationsList.map((el) => {
-            if (el.id === idProperty) {
-                return edited;
-            }
-            return el;
-        });
-        setNotificationsList(editedArr);
-    };
     function deleteHandler(idProperty) {
-        const object = notificationsList.find((x) => x.id === idProperty);
+        const object = preloadedNotifications.find((x) => x.id === idProperty);
         setDeleteId(object.id);
         setDeletePopUp(!deletePopUp);
     }
-
-    const confirmDelete = () => {
-        const removedItemArr = notificationsList.filter((el) => el.id !== deleteId);
-        setNotificationsList(removedItemArr);
-        setDeletePopUp(!deletePopUp);
-    };
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -92,6 +40,23 @@ const NotificationMenager: React.FC<{}> = ({}) => {
     const handleExit = () => {
         setEditValues(null);
         setAddFormShow(!addFormShow);
+    };
+
+    const handleNotificationGroup = (notificationGroup) => {
+        console.log('Nowe grupa powiadomień dodana');
+        console.log('Dane grupy powiadomień', notificationGroup);
+        setAddFormShow(!addFormShow);
+    };
+
+    const editNotificationGroup = (notificationGroup, idProperty) => {
+        console.log('Zmiany zostały zapisane dla grupy powiadomień o ID', idProperty);
+        console.log('Dane grupy powiadomień', notificationGroup);
+        setAddFormShow(!addFormShow);
+    };
+
+    const confirmDelete = () => {
+        console.log('Grupa powiadomień o ID zostanie usunięte, ID:', deleteId);
+        setDeletePopUp(!deletePopUp);
     };
 
     return (
@@ -142,9 +107,9 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             </Button>
                         </Heading>
 
-                        {notificationsList.length > 0 ? (
+                        {preloadedNotifications?.length > 0 ? (
                             <Container>
-                                {notificationsList.map((notification) => {
+                                {preloadedNotifications.map((notification) => {
                                     return (
                                         <NotificationsRow
                                             id={notification.id}

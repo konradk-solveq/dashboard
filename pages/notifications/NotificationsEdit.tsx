@@ -5,6 +5,7 @@ import NotificationsGroupForm from '../../components/notifications/Notifications
 import NotificationsForm from '../../components/notifications/NotificationsForm';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
 import { getAvailableLanguages, typeOptions } from '../../components/notifications/NotificationsUtils';
+import { parseISO } from 'date-fns';
 
 const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues; handleExit }> = ({
     handleNotificationGroup,
@@ -28,16 +29,12 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         } else {
             const editedGroup = {
                 id: editValues.id,
-                fallbackLanguage: {
-                    value: editValues.fallbackLanguage.value,
-                    label: editValues.fallbackLanguage.label,
-                },
-                showDate: editValues.showDate,
-                expDate: editValues.expDate,
-                type: { value: editValues.type.value, label: editValues.type.label },
+                fallbackLanguage: displayLanguageLabel(editValues),
+                showDate: new Date(parseISO(editValues.showDate)),
+                expDate: new Date(parseISO(editValues.expirationDate)),
+                type: displayTypeLabel(editValues),
                 draft: editValues.draft,
             };
-
             setNotifications(editValues.notifications);
             setPreloadedGroupValues(editedGroup);
             setFormShow(true);
@@ -53,9 +50,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         const newNotification = {
             id: Date.now(),
             language: data.language.value,
-            languageLabel: data.language.label,
-            title: data.title,
-            text: data.message,
+            data: { title: data.title, text: data.message },
         };
         setNotifications([...notifications, newNotification]);
     };
@@ -66,12 +61,13 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     };
     const handleEdit = (idProperty) => {
         const object = findId(idProperty);
+        console.log(object);
+
         const newPreloadedValue = {
-            key: object.id,
             id: object.id,
-            language: { value: object.language, label: object.languageLabel },
-            title: object.title,
-            message: object.text,
+            language: displayLanguageLabel(object),
+            title: object.data.title,
+            message: object.data.text,
         };
         setPreloadedValues(newPreloadedValue);
         setModalShow(!modalShow);
@@ -79,12 +75,10 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
 
     const changeNotification = (editedNotification, preId) => {
         const edited = {
-            key: preId,
             id: preId,
             language: editedNotification.language.value,
             languageLabel: editedNotification.language.label,
-            title: editedNotification.title,
-            text: editedNotification.message,
+            data: { title: editedNotification.title, text: editedNotification.message },
         };
 
         const editedArr = notifications.map((el) => {
@@ -103,6 +97,11 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     const findId = (idElement) => notifications.find((x) => x.id === idElement);
 
     const filterId = (idElement) => notifications.filter((el) => el.id !== idElement);
+
+    const displayLanguageLabel = (property) =>
+        langOptions.find((lang) => lang.value === property.fallbackLanguage || property.language);
+
+    const displayTypeLabel = (property) => typeOptions.find((type) => type.value === property.type);
 
     return (
         <Container>
@@ -136,8 +135,8 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
                                         id={notification.id}
                                         key={notification.id}
                                         language={notification.language}
-                                        title={notification.title}
-                                        text={notification.text}
+                                        title={notification.data.title}
+                                        text={notification.data.text}
                                         editHandler={handleEdit}
                                         deleteHandler={handleDelete}
                                     />
