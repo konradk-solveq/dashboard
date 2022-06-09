@@ -1,26 +1,33 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Grid, Label, Button, Box } from 'theme-ui';
+import { Grid, Button, Box, Select, Input, Flex, Text } from 'theme-ui';
+import styled from '@emotion/styled';
 
 import { readFromFile } from '../../../helpers/readFromFile';
 import { FormValues } from '../../typings/PublicationSection';
 import DocumentUploadProgress from './DocumentUploadProgress';
 import { DocumentUploadContext } from '../../../components/contexts/publication/DocumentUpload';
 import UploadFormFields from './UploadFormFields';
+import { errorHandler } from '../../contexts/translation';
+
+const Label = styled.label`
+    margin: 0 auto;
+`;
 
 const LegalUpdateForm: React.FC = () => {
-    const {
-        defaultFormValues,
-        message,
-        setMessage,
-        isLoading,
-        setIsLoading,
-        availableLanguages,
-        postLegalDocument,
-        errorHandler,
-    } = useContext(DocumentUploadContext);
+    const [message, setMessage] = useState<String>('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const { control, handleSubmit, register } = useForm<FormValues>({
+    const { defaultFormValues, availableLanguages, postLegalDocument } = useContext(DocumentUploadContext);
+
+    const {
+        control,
+        handleSubmit,
+        register,
+        reset,
+        getValues,
+        formState: { errors },
+    } = useForm<FormValues>({
         defaultValues: defaultFormValues as FormValues,
     });
 
@@ -29,41 +36,66 @@ const LegalUpdateForm: React.FC = () => {
         name: 'documents',
     });
 
-    const onSubmit = (formData: FormValues) => {
+    const onSubmit = async (formData: FormValues) => {
+        setMessage('');
         remove();
         append(defaultFormValues.documents[0] as object);
-        setMessage([]);
         setIsLoading(true);
-        formData.documents.forEach(async (document) => {
-            const objToUpload = {
-                name: document.documentName,
-                type: document.documentType,
-                contents: [
-                    {
-                        language: document.language,
-                        data: await readFromFile(document.file[0]),
-                        actions: await readFromFile(document.actions[0]),
-                    },
-                ],
-            };
-            try {
-                const response = await postLegalDocument(objToUpload);
-                errorHandler(response);
-                setMessage((prev) => [...prev, `Dokument ${document.documentName} został pomyślnie wysłany!`]);
-            } catch (error) {
-                setMessage((prev) => [...prev, `Dokument ${document.documentName} nie został wysłany! ${error}`]);
-            }
+
+        const data = await Promise.all(
+            formData.documents.map(async (document) => {
+                return {
+                    language: document.language,
+                    data: await readFromFile(document.file[0]),
+                    actions: await readFromFile(document.actions[0]),
+                };
+            }),
+        ).catch((error) => {
+            setIsLoading(true);
+            setMessage('Nie udało się załadować danych z pliku');
         });
+        const objToUpload = {
+            name: formData.documentName,
+            type: formData.documentType,
+            contents: data,
+        };
+
+        try {
+            const response: unknown = await postLegalDocument(objToUpload);
+            errorHandler(response as Response);
+            setMessage('Pomyślnie wysłano dokument.');
+        } catch (error) {
+            setMessage(`Dokument nie został wysłany: ${error.message}`);
+        }
+        reset();
     };
 
-    return isLoading ? (
-        <DocumentUploadProgress message={message} setIsLoading={setIsLoading} fields={fields} />
-    ) : (
+    if (isLoading) {
+        return <DocumentUploadProgress message={message} setIsLoading={setIsLoading} />;
+    }
+    return (
         <Box as="form" sx={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit(onSubmit)}>
-            <Grid gap={2} columns="0.3fr 0.5fr 1fr 1fr 1fr 0.25fr" marginBottom="10px">
-                <Label>Kod Językowy</Label>
+            <Flex
+                sx={{
+                    alignItems: 'center',
+                    width: '50%',
+                    alignSelf: 'center',
+                    flexDirection: 'column',
+                    marginBottom: '25px',
+                    gap: '8px',
+                }}
+            >
                 <Label>Rodzaj Dokumentu</Label>
+                <Select {...register(`documentType`)} sx={{ width: '200px', textAlign: 'center' }}>
+                    <option value="terms">Regulamin</option>
+                    <option value="policy">Polityka Prywatności</option>
+                </Select>
                 <Label>Nazwa Dokumentu</Label>
+
+                <Input sx={{ textAlign: 'center' }} {...register(`documentName`)} type="text" required />
+            </Flex>
+            <Grid gap={2} columns="0.5fr 1fr 1fr 0.25fr" marginBottom="10px" sx={{ justifyItems: 'center' }}>
+                <Label>Kod Językowy</Label>
                 <Label>Plik z dokumentem</Label>
                 <Label>Plik z akcjami</Label>
             </Grid>
@@ -73,15 +105,23 @@ const LegalUpdateForm: React.FC = () => {
                 register={register}
                 remove={remove}
                 availableLanguages={availableLanguages}
+                getValues={getValues}
+                errors={errors}
             />
+            {errors?.documents && (
+                <Text sx={{ textAlign: 'center', margin: '25px 0 35px', fontSize: '1.5rem' }}>
+                    Języki nie mogą się powtarzać!
+                </Text>
+            )}
+
             <Button
                 type="button"
-                bg={fields.length >= 6 ? 'grey' : 'default'}
+                bg={fields.length >= availableLanguages?.length ? 'grey' : 'default'}
                 onClick={() => append(defaultFormValues.documents[0] as object)}
                 sx={{ margin: '0 auto' }}
-                disabled={fields.length >= 6 ? true : false}
+                disabled={fields.length >= availableLanguages?.length ? true : false}
             >
-                Dodaj kolejny plik
+                Dodaj kolejny język
             </Button>
             <br />
             <Button type="submit" sx={{ margin: '0 auto' }}>

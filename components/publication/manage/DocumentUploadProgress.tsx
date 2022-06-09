@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Progress, Button } from 'theme-ui';
+import { Box, Spinner, Button } from 'theme-ui';
 import { DocumentUploadProgressProps } from '../../typings/PublicationSection';
 
-const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message, fields, setIsLoading }) => {
+const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message, setIsLoading }) => {
     return (
         <Box
             sx={{
@@ -13,11 +13,16 @@ const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message
                 height: '80%',
             }}
         >
-            <Progress value={message?.length / fields?.length} sx={{ color: 'red', marginTop: '50px' }} />
-            <Box sx={{ marginX: 'auto', marginTop: '50px', fontSize: '1.5rem', marginBottom: '50px' }}>
-                {message && message?.map((item, index) => <p key={index}>{item}</p>)}
-            </Box>
-            <Button onClick={() => setIsLoading(false)}>Dodaj więcej dokumentów</Button>
+            {message ? (
+                <>
+                    <Box sx={{ marginX: 'auto', marginTop: '50px', fontSize: '1.5rem', marginBottom: '50px' }}>
+                        {message}
+                    </Box>
+                    <Button onClick={() => setIsLoading(false)}>Dodaj więcej dokumentów</Button>
+                </>
+            ) : (
+                <Spinner />
+            )}
         </Box>
     );
 };

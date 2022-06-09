@@ -8,12 +8,12 @@ export default apiHandler({
 
 async function getHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApiResponse) {
     const { axios } = req.locals;
-    const { data } = await axios.get(`/publication/manage/document`);
+    const { data } = await axios.get(`/publications/manage/documents`);
     return res.status(200).json(data);
 }
 async function postHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApiResponse) {
     const { axios } = req.locals;
     const { body } = req;
-    const { data } = await axios.post(`/publication/manage/document`, body);
+    const { data } = await axios.post(`/publications/manage/documents`, body);
     return res.status(200).json(data);
 }

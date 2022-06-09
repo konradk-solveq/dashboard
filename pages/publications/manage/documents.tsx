@@ -1,17 +1,18 @@
 import { NextPage } from 'next';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Container, Heading } from 'theme-ui';
 import DocumentUploadContainer, {
     DocumentUploadContext,
 } from '../../../components/contexts/publication/DocumentUpload';
 
 import UploadDocumentForm from '../../../components/publication/manage/UploadDocumentForm';
+import { AvailableLanguages } from '../../../components/typings/PublicationSection';
 
 const DocumentUpload: React.FC = () => {
-    const { getAvailableLanguages } = useContext(DocumentUploadContext);
+    const { getAvailableLanguages, setAvailableLanguages } = useContext(DocumentUploadContext);
 
     useEffect(() => {
-        getAvailableLanguages();
+        getAvailableLanguages(setAvailableLanguages);
     }, []);
 
     return (

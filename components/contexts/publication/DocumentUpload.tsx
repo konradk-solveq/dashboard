@@ -1,32 +1,17 @@
-import { createContext, useState } from 'react';
-import { FormValues } from '../../typings/PublicationSection';
+import React, { createContext, useState } from 'react';
 
-type DocumentUploadContextProps = {
-    defaultFormValues: FormValues;
-    isLoading: boolean;
-    message: string[];
-    setMessage: React.Dispatch<React.SetStateAction<any>>;
-    setIsLoading: React.Dispatch<React.SetStateAction<any>>;
-    setAvailableLanguages: React.Dispatch<React.SetStateAction<any>>;
-    availableLanguages: {
-        name: string;
-        displayName: string;
-    }[];
-    errorHandler(response: any): void;
-    postLegalDocument(data: object): void;
-    getAvailableLanguages(): void;
-};
+import { FormValues, DocumentUploadContextProps, AvailableLanguages } from '../../typings/PublicationSection';
 
 const defaultFormValues: FormValues = {
+    documentName: '',
+    documentType: '',
     documents: [
         {
             language: 'pl',
-            documentType: 'terms',
-            documentName: '',
             file: null,
             actions: [
                 {
-                    type: 'internal_uri/deeplink',
+                    type: 'internal_uri',
                     value: '',
                     text: '',
                     match: '',
@@ -37,48 +22,36 @@ const defaultFormValues: FormValues = {
 };
 
 const postLegalDocument = async (data: object) =>
-    await fetch(`/api/publication/manage/document`, {
+    await fetch(`/api/publications/manage/documents`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: { 'content-type': 'application/json' },
     });
-function errorHandler({ status, statusText }) {
-    if (status >= 400) {
-        throw new Error(statusText);
-    }
-}
 
 export const DocumentUploadContext = createContext<DocumentUploadContextProps>(null!);
 
-const DocumentUploadContainer: React.FC<{}> = ({ children }) => {
-    const [message, setMessage] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [availableLanguages, setAvailableLanguages] = useState([
+const getAvailableLanguages = async (setter: React.Dispatch<React.SetStateAction<AvailableLanguages[]>>) => {
+    const data = await fetch(`/api/application/config`);
+    const result = await data.json();
+    return setter(result.langs);
+};
+
+const DocumentUploadContainer: React.FC = ({ children }) => {
+    const [availableLanguages, setAvailableLanguages] = useState<AvailableLanguages[]>([
         {
             name: '',
             displayName: '',
         },
     ]);
 
-    const getAvailableLanguages = async () => {
-        const data = await fetch(`/api/application/config`);
-        const result = await data.json();
-        return setAvailableLanguages(result.langs);
-    };
-
     return (
         <DocumentUploadContext.Provider
             value={{
                 defaultFormValues,
-                message,
-                setMessage,
-                isLoading,
-                setIsLoading,
                 availableLanguages,
                 setAvailableLanguages,
                 getAvailableLanguages,
                 postLegalDocument,
-                errorHandler,
             }}
         >
             {children}
