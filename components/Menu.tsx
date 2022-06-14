@@ -82,12 +82,13 @@ const Menu: React.FC<{}> = ({ children }) => {
 
                 <Splitter />
                 <List title="Publikacje">
+                    <Item text="Zarządzaj Publikacjami" target="/publications/manage" />
                     <Item text="Wgraj Dokumenty" target="/publications/manage/documents" />
                 </List>
 
                 <Splitter />
                 <List title="Ustawienia">
-                    <Item text="Wersja aplikacji" target="/settings/version" />
+                    <Item text="Wersja Aplikacji" target="/settings/version" />
                     <Item text="Tłumaczenia" target="/settings/translation" />
                 </List>
             </Box>

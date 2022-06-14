@@ -1,8 +1,8 @@
 import React, { createContext, useState } from 'react';
 
-import { FormValues, DocumentUploadContextProps, AvailableLanguages } from '../../typings/PublicationSection';
+import { UploadFormValues, DocumentUploadContextProps, AvailableLanguages } from '../../typings/PublicationSection';
 
-const defaultFormValues: FormValues = {
+const defaultFormValues: UploadFormValues = {
     documentName: '',
     documentType: '',
     documents: [

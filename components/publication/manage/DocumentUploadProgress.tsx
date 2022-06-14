@@ -21,7 +21,7 @@ const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message
                     <Button onClick={() => setIsLoading(false)}>Dodaj więcej dokumentów</Button>
                 </>
             ) : (
-                <Spinner />
+                <Spinner mt="80px" />
             )}
         </Box>
     );

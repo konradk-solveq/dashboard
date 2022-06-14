@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Grid, Button, Box, Select, Input, Flex, Text } from 'theme-ui';
+import { Grid, Button, Box, Select, Input, Flex, Text, Paragraph } from 'theme-ui';
 import styled from '@emotion/styled';
 
 import { readFromFile } from '../../../helpers/readFromFile';
-import { FormValues } from '../../typings/PublicationSection';
+import { UploadFormProps, UploadFormValues } from '../../typings/PublicationSection';
 import DocumentUploadProgress from './DocumentUploadProgress';
 import { DocumentUploadContext } from '../../../components/contexts/publication/DocumentUpload';
 import UploadFormFields from './UploadFormFields';
@@ -14,9 +14,9 @@ const Label = styled.label`
     margin: 0 auto;
 `;
 
-const LegalUpdateForm: React.FC = () => {
+const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
     const [message, setMessage] = useState<String>('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<Boolean>(false);
 
     const { defaultFormValues, availableLanguages, postLegalDocument } = useContext(DocumentUploadContext);
 
@@ -27,8 +27,8 @@ const LegalUpdateForm: React.FC = () => {
         reset,
         getValues,
         formState: { errors },
-    } = useForm<FormValues>({
-        defaultValues: defaultFormValues as FormValues,
+    } = useForm<UploadFormValues>({
+        defaultValues: defaultFormValues as UploadFormValues,
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -36,7 +36,7 @@ const LegalUpdateForm: React.FC = () => {
         name: 'documents',
     });
 
-    const onSubmit = async (formData: FormValues) => {
+    const onSubmit = async (formData: UploadFormValues) => {
         setMessage('');
         remove();
         append(defaultFormValues.documents[0] as object);
@@ -72,6 +72,14 @@ const LegalUpdateForm: React.FC = () => {
 
     if (isLoading) {
         return <DocumentUploadProgress message={message} setIsLoading={setIsLoading} />;
+    } else if (loadingError) {
+        return (
+            <Flex sx={{ flexDirection: 'column', height: '80%', justifyContent: 'center', alignItems: 'center' }}>
+                <Paragraph mb="80px" sx={{ fontSize: '1.2rem' }}>
+                    Nie udało połączyć się z serwerem
+                </Paragraph>
+            </Flex>
+        );
     }
     return (
         <Box as="form" sx={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit(onSubmit)}>
@@ -131,4 +139,4 @@ const LegalUpdateForm: React.FC = () => {
     );
 };
 
-export default LegalUpdateForm;
+export default UploadDocumentForm;
