@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
-import { Container, Heading, Button, Alert } from 'theme-ui';
+import { Container, Heading, Button, Alert, Divider } from 'theme-ui';
 import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
 import { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import { getNotifications } from '../../components/notifications/NotificationsUtils';
+import NotificationsSortBar from '../../components/notifications/NotificationsSortBar';
+import NotificationsPagination from '../../components/notifications/NotificationsPagination';
 
 const NotificationMenager: React.FC<{}> = ({}) => {
-    const { notifications } = useContext(NotificationsContext);
+    const { notifications, postNotifications, deleteNotifications, retrieveNotifications } =
+        useContext(NotificationsContext);
     const [addFormShow, setAddFormShow] = useState(false);
     const [preloadedNotifications, setPreloadedNotifications] = useState({});
     const [editValues, setEditValues] = useState(null);
@@ -43,8 +46,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
     };
 
     const handleNotificationGroup = (notificationGroup) => {
-        console.log('Nowe grupa powiadomień dodana');
-        console.log('Dane grupy powiadomień', notificationGroup);
+        postNotifications(notificationGroup);
         setAddFormShow(!addFormShow);
     };
 
@@ -55,8 +57,9 @@ const NotificationMenager: React.FC<{}> = ({}) => {
     };
 
     const confirmDelete = () => {
-        console.log('Grupa powiadomień o ID zostanie usunięte, ID:', deleteId);
+        deleteNotifications(deleteId);
         setDeletePopUp(!deletePopUp);
+        retrieveNotifications();
     };
 
     return (
@@ -107,8 +110,12 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             </Button>
                         </Heading>
 
+                        <NotificationsSortBar />
+
+                        <Heading m="20px">Lista Powiadomień</Heading>
+
                         {preloadedNotifications?.length > 0 ? (
-                            <Container>
+                            <Container sx={{ minHeight: '300px' }}>
                                 {preloadedNotifications.map((notification) => {
                                     return (
                                         <NotificationsRow
@@ -122,10 +129,22 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                                 })}
                             </Container>
                         ) : (
-                            <Container sx={{ textAlign: 'center', fontSize: '2em', color: '#555' }}>
+                            <Container
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                    fontSize: '2em',
+                                    color: '#555',
+                                    minHeight: '300px',
+                                }}
+                            >
                                 Brak powiadomień
                             </Container>
                         )}
+
+                        <NotificationsPagination />
                     </>
                 )}
             </Container>
