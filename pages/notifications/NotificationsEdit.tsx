@@ -4,8 +4,13 @@ import { NotificationsContext } from '../../components/notifications/Notificatio
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
-import { getAvailableLanguages, typeOptions } from '../../components/notifications/NotificationsUtils';
-import { parseISO } from 'date-fns';
+import {
+    getAvailableLanguages,
+    typeOptions,
+    langOffline,
+    editedObject,
+    displayLanguageLabel,
+} from '../../components/notifications/NotificationsUtils';
 
 const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues; handleExit }> = ({
     handleNotificationGroup,
@@ -27,14 +32,14 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         if (editValues === null) {
             setFormShow(true);
         } else {
-            const editedGroup = {
-                id: editValues.id,
-                fallbackLanguage: displayLanguageLabel(editValues),
-                showDate: new Date(parseISO(editValues.showDate)),
-                expDate: new Date(parseISO(editValues.expirationDate)),
-                type: displayTypeLabel(editValues),
-                draft: editValues.draft,
-            };
+            let undefinedDate = false;
+            if (editValues.expirationDate === null) {
+                undefinedDate = true;
+            }
+
+            const editedGroup = editedObject(editValues, langOptions, typeOptions, undefinedDate);
+            console.log(editValues);
+
             setNotifications(editValues.notifications);
             setPreloadedGroupValues(editedGroup);
             setFormShow(true);
@@ -42,7 +47,9 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     }, [editValues]);
 
     useEffect(() => {
-        notifications.length > 0 ? setDisplayEmpty(false) : setDisplayEmpty(true);
+        console.log(notifications);
+
+        notifications?.length > 0 ? setDisplayEmpty(false) : setDisplayEmpty(true);
     }, [notifications]);
 
     const newNotificationHandler = (data) => {
@@ -61,11 +68,9 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     };
     const handleEdit = (idProperty) => {
         const object = findId(idProperty);
-        console.log(object);
-
         const newPreloadedValue = {
             id: object.id,
-            language: displayLanguageLabel(object),
+            language: displayLanguageLabel(langOptions, object),
             title: object.data.title,
             message: object.data.text,
         };
@@ -97,11 +102,6 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
     const findId = (idElement) => notifications.find((x) => x.id === idElement);
 
     const filterId = (idElement) => notifications.filter((el) => el.id !== idElement);
-
-    const displayLanguageLabel = (property) =>
-        langOptions.find((lang) => lang.value === property.fallbackLanguage || property.language);
-
-    const displayTypeLabel = (property) => typeOptions.find((type) => type.value === property.type);
 
     return (
         <Container>

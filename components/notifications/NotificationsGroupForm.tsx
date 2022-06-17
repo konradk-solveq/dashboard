@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button, Label, Container, Alert, Close } from 'theme-ui';
 import Select from 'react-select';
 import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.css';
+import { notificationObject } from './NotificationsUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -37,21 +38,21 @@ const NotificationsGroupForm: React.FC<IProps> = ({
 
     const handleClick = (data) => {
         const mainNotification = notifications.find((el) => el.language === data.fallbackLanguage.value);
-
         if (!mainNotification) {
             setAlert(true);
             return;
         }
-
-        const object = {
-            type: data.type.value,
-            name: mainNotification?.data.title,
-            contents: notifications,
-            showDate: data.showDate,
-            expirationDate: data.expDate,
-            draft: data.draft,
-            fallbackLanguage: data.fallbackLanguage.value,
-        };
+        const object = notificationObject(
+            {
+                draft: data.draft,
+                expirationDate: data.expDate,
+                fallbackLanguage: data.fallbackLanguage.value,
+                showDate: data.showDate,
+                type: data.type.value,
+            },
+            mainNotification,
+            notifications,
+        );
         preloadedGroupValues ? editNotificationGroup(object, preloadedGroupValues.id) : handleNotificationGroup(object);
         reset(data);
     };
