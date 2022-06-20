@@ -12,7 +12,18 @@ import {
     displayLanguageLabel,
 } from '../../components/notifications/NotificationsUtils';
 
-const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGroup; editValues; handleExit }> = ({
+import { LabelTypes, NotificationObjectType } from '../../components/typings/Notifications';
+
+interface IProps {
+    langOptions: LabelTypes[];
+    handleNotificationGroup: (object: object) => void;
+    editNotificationGroup: (object: object, id: number) => void;
+    editValues: any;
+    handleExit;
+    handleOpen: () => void;
+}
+
+const NotificationsEdit: React.FC<IProps> = ({
     handleNotificationGroup,
     editNotificationGroup,
     editValues,
@@ -66,7 +77,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         setPreloadedValues('');
         setModalShow(!modalShow);
     };
-    const handleEdit = (idProperty) => {
+    const handleEdit = (idProperty: number) => {
         const object = findId(idProperty);
         const newPreloadedValue = {
             id: object.id,
@@ -78,7 +89,7 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         setModalShow(!modalShow);
     };
 
-    const changeNotification = (editedNotification, preId) => {
+    const changeNotification = (editedNotification, preId: number) => {
         const edited = {
             id: preId,
             language: editedNotification.language.value,
@@ -97,11 +108,11 @@ const NotificationsEdit: React.FC<{ handleNotificationGroup; editNotificationGro
         setModalShow(!modalShow);
     };
 
-    const handleDelete = (idProperty) => setNotifications(filterId(idProperty));
+    const handleDelete = (idProperty: number) => setNotifications(filterId(idProperty));
 
-    const findId = (idElement) => notifications.find((x) => x.id === idElement);
+    const findId = (idElement: number) => notifications.find((x) => x.id === idElement);
 
-    const filterId = (idElement) => notifications.filter((el) => el.id !== idElement);
+    const filterId = (idElement: number) => notifications.filter((el) => el.id !== idElement);
 
     return (
         <Container>

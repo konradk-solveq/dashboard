@@ -1,10 +1,19 @@
 import { parseISO } from 'date-fns';
+import {
+    LanguageType,
+    NotificationsType,
+    LabelTypes,
+    NotificationObjectType,
+    contentType,
+    notificationDataType,
+    LabelWithUndefined,
+} from '../typings/Notifications';
 
 export const getAvailableLanguages = (langTypes?: LanguageType[]) => {
     return langTypes?.map((lang) => ({ value: lang.name, label: lang.displayName }));
 };
 
-export const getNotifications = (notificationsTypes: NoticationsType[]) => {
+export const getNotifications = (notificationsTypes: NotificationsType[]) => {
     return notificationsTypes.map((el) => ({
         id: el.id,
         fallbackLanguage: el.fallbackLanguage,
@@ -17,25 +26,32 @@ export const getNotifications = (notificationsTypes: NoticationsType[]) => {
     }));
 };
 
-export const typeOptions = [
+export const typeOptions: LabelTypes[] = [
     { value: 'documents', label: 'Dokument' },
     { value: 'info', label: 'Info' },
     { value: 'promo', label: 'Promocja' },
 ];
 
-export const sortingByOrder = [
+export const sortingTypesDisplay: LabelWithUndefined[] = [
+    { value: 'documents', label: 'Dokument' },
+    { value: 'info', label: 'Info' },
+    { value: 'promo', label: 'Promocja' },
+    { label: 'Wszystkie' },
+];
+
+export const sortingByOrder: LabelTypes[] = [
     { value: 'DESC', label: 'Malejąco' },
     { value: 'ASC', label: 'Rosnąco' },
 ];
 
-export const sortingByOrderType = [
+export const sortingByOrderType: LabelTypes[] = [
     { value: 'name', label: 'Nazwa' },
     { value: 'showDate', label: 'Data Pokazania' },
     { value: 'expirationDate', label: 'Data Wygaśnięcia' },
     { value: 'type', label: 'Typ' },
 ];
 
-export const langOffline = [
+export const langOffline: LabelTypes[] = [
     { value: 'pl', label: 'Polski' },
     { value: 'en', label: 'Angielski' },
     { value: 'cs', label: 'Czeski' },
@@ -43,38 +59,17 @@ export const langOffline = [
     { value: 'sl', label: 'Słoweński' },
 ];
 
-type notificationObjectType = {
-    type: 'promo' | 'info' | 'documents';
-    name: string;
-    contents: contentType[];
-    showDate: Date;
-    expirationDate: Date;
-    draft: boolean;
-    fallbackLanguage: string;
+export let defaultFormValues = {
+    type: { label: 'Wszystkie' },
+    sortOrder: { value: 'ASC', label: 'Rosnąco' },
+    sortTypeOrder: { value: 'name', label: 'Nazwa' },
 };
-
-type contentType = {
-    language: string;
-    data: { title: string; text: string };
-    actions?: actionsType[];
-};
-
-type actionsType = {
-    type: notificationActionType;
-    value: string;
-    text: string;
-    match: string;
-};
-
-type notificationActionType = 'internal_uri' | 'external_uri' | 'email';
-
-type notificationDataType = Omit<notificationObjectType, 'name' | 'contents'>;
 
 export const notificationObject = (
     data: notificationDataType,
     notification: contentType,
     notifications: contentType[],
-): notificationObjectType => {
+): NotificationObjectType => {
     const object = {
         type: data.type,
         name: notification.data.title,

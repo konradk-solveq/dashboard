@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Button, Label, Container, Alert, Close } from 'theme-ui';
 import Select from 'react-select';
 import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.css';
 import { notificationObject } from './NotificationsUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import {
+    LanguageType,
+    LabelTypes,
+    SingleNotification,
+    NotificationObjectType,
+    GroupFormValues,
+} from '../typings/Notifications';
 
 interface IProps {
-    langOptions: {};
-    typeOptions: {};
-    notifications: [];
-    preloadedGroupValues: {};
-    notificationGroup: {};
-    handleNotificationGroup: () => void;
-    editNotificationGroup: () => void;
+    langOptions: LanguageType[];
+    typeOptions: LabelTypes[];
+    notifications: SingleNotification[];
+    preloadedGroupValues: NotificationObjectType[];
+    notificationGroup: NotificationObjectType[];
+    handleNotificationGroup: (object: object) => void;
+    editNotificationGroup: (object: object, id: number) => void;
     handleExit: () => void;
 }
 
@@ -33,7 +40,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         formState: { errors },
         control,
         reset,
-    } = useForm({ shouldUnregister: true, defaultValues: preloadedGroupValues });
+    } = useForm<GroupFormValues>({ shouldUnregister: true, defaultValues: preloadedGroupValues });
     const [alert, setAlert] = useState(false);
 
     const handleClick = (data) => {
@@ -59,7 +66,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
 
     const handleExitClick = () => handleExit();
 
-    const onSubmit = (data) => handleClick(data);
+    const onSubmit: SubmitHandler<GroupFormValues> = (data) => handleClick(data);
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>

@@ -3,13 +3,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
 import Select from 'react-select';
 import notificationStyle from '../../styles/NotificationsForm.module.css';
+import { SingleNotification, LanguageType } from '../typings/Notifications';
 
 interface IProps {
-    langOptions: {};
-    handleOpen: () => void;
-    newNotificationHandler: () => void;
-    preloadedValues: {};
-    changeNotification: () => void;
+    langOptions: LanguageType[];
+    handleOpen(): void;
+    newNotificationHandler: (data: object) => void;
+    preloadedValues: SingleNotification;
+    changeNotification: (data: object, id: number) => void;
 }
 
 const NotificationsForm: React.FC<IProps> = ({
@@ -31,6 +32,8 @@ const NotificationsForm: React.FC<IProps> = ({
         preloadedValues ? changeNotification(data, preloadedValues.id) : newNotificationHandler(data);
         reset(data);
     };
+
+    console.log('prealoded', preloadedValues);
 
     const onSubmit = (data) => handleClick(data);
 
@@ -62,7 +65,7 @@ const NotificationsForm: React.FC<IProps> = ({
                             <Select instanceId="language" placeholder="Wybierz..." options={langOptions} {...field} />
                         )}
                     />
-                    {errors.language && <p>{errors.language.message}</p>}
+                    {errors.language && <p>{(errors.language as any).message}</p>}
                 </Grid>
                 <div className={notificationStyle.buttonContainer}>
                     <Button type="submit">Zapisz</Button>
