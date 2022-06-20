@@ -7,8 +7,9 @@ interface IProps {
     postNotifications: (data: { name: string }) => Promise<void>;
     prevPageURL?: string;
     nextPageURL?: string;
-    retrieveNotifications: (url: string, sortOrder: string, sortTypeOrder: string, type: string) => Promise<void>;
+    retrieveNotifications: (url?: string, sortOrder?: string, sortTypeOrder?: string, type?: string) => Promise<void>;
     deleteNotifications: (id: number) => Promise<void>;
+    editNotifications: (data: object, id: number) => Promise<void>;
 }
 
 export const NotificationsContext = createContext<IProps>(null!);
@@ -19,7 +20,12 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
     const [prevPageURL, setPrevPageURL] = useState();
     const [nextPageURL, setNextPageURL] = useState();
 
-    const retrieveNotifications = async (defaultUrl, sortOrder, sortTypeOrder, type) => {
+    const retrieveNotifications = async (
+        defaultUrl?: string,
+        sortOrder?: string,
+        sortTypeOrder?: string,
+        type?: string,
+    ) => {
         if (!defaultUrl) {
             defaultUrl = `/api/notifications/manage?page=1&limit=10`;
         }
@@ -31,11 +37,9 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
             sortTypeOrder = `name`;
         }
 
-        if (!type) {
-            type = `documents`;
-        }
-
-        const dataWithPage = await fetch(`${defaultUrl}&type=${type}&order=${sortOrder}&orderBy=${sortTypeOrder}`);
+        const dataWithPage = await fetch(
+            `${defaultUrl}&${type ? `type=${type}` : ''}&order=${sortOrder}&orderBy=${sortTypeOrder}`,
+        );
         const resultData = await dataWithPage.json();
 
         setNextPageURL(resultData?.links.next);
@@ -51,6 +55,22 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
         };
         try {
             const fetchResponse = await fetch(`/api/notifications/manage`, settings);
+            const data = await fetchResponse.json();
+            return data;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    };
+
+    const editNotifications = async (data: object, id: number) => {
+        const settings = {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: { 'content-type': 'application/json' },
+        };
+        try {
+            const fetchResponse = await fetch(`/api/notifications/manage/${id}`, settings);
             const data = await fetchResponse.json();
             return data;
         } catch (error) {
@@ -92,6 +112,7 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
                 nextPageURL,
                 retrieveNotifications,
                 deleteNotifications,
+                editNotifications,
             }}
         >
             {children}

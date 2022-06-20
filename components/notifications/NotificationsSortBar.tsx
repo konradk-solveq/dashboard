@@ -2,21 +2,19 @@ import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Container, Divider } from 'theme-ui';
 import Select from 'react-select';
-import { typeOptions, sortingByOrder, sortingByOrderType } from './NotificationsUtils';
+import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, defaultFormValues } from './NotificationsUtils';
 import { NotificationsContext } from './NotificationsApi';
+import { LabelTypes } from '../typings/Notifications';
 
-const NotificationsSortBar: React.FC<{}> = ({}) => {
+interface IProps {
+    sortingTypesDisplay: LabelTypes[];
+    sortingByOrder: LabelTypes[];
+    sortingByOrderType: LabelTypes[];
+}
+
+const NotificationsSortBar: React.FC<IProps> = ({}) => {
     const { retrieveNotifications } = useContext(NotificationsContext);
-    let defaultFormValues = {
-        type: { value: 'documents', label: 'Dokument' },
-        sortOrder: { value: 'ASC', label: 'Rosnąco' },
-        sortTypeOrder: { value: 'name', label: 'Nazwa' },
-    };
-    const {
-        handleSubmit,
-        formState: { errors },
-        control,
-    } = useForm({ shouldUnregister: true, defaultValues: defaultFormValues });
+    const { handleSubmit, control } = useForm({ shouldUnregister: true, defaultValues: defaultFormValues });
 
     const onSubmit = (data) => {
         let url = `/api/notifications/manage?page=1&limit=10`;
@@ -42,7 +40,12 @@ const NotificationsSortBar: React.FC<{}> = ({}) => {
                         rules={{ required: true }}
                         name="type"
                         render={({ field }) => (
-                            <Select options={typeOptions} placeholder="Wybierz..." instanceId="type" {...field} />
+                            <Select
+                                options={sortingTypesDisplay}
+                                placeholder="Wybierz..."
+                                instanceId="type"
+                                {...field}
+                            />
                         )}
                     />
                 </Container>

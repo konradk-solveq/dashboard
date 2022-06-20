@@ -10,10 +10,10 @@ import NotificationsSortBar from '../../components/notifications/NotificationsSo
 import NotificationsPagination from '../../components/notifications/NotificationsPagination';
 
 const NotificationMenager: React.FC<{}> = ({}) => {
-    const { notifications, postNotifications, deleteNotifications, retrieveNotifications } =
+    const { notifications, postNotifications, deleteNotifications, retrieveNotifications, editNotifications } =
         useContext(NotificationsContext);
     const [addFormShow, setAddFormShow] = useState(false);
-    const [preloadedNotifications, setPreloadedNotifications] = useState({});
+    const [preloadedNotifications, setPreloadedNotifications] = useState([]);
     const [editValues, setEditValues] = useState(null);
     const [deletePopUp, setDeletePopUp] = useState(false);
     const [deleteId, setDeleteId] = useState();
@@ -48,12 +48,13 @@ const NotificationMenager: React.FC<{}> = ({}) => {
     const handleNotificationGroup = (notificationGroup) => {
         postNotifications(notificationGroup);
         setAddFormShow(!addFormShow);
+        retrieveNotifications();
     };
 
     const editNotificationGroup = (notificationGroup, idProperty) => {
-        console.log('Zmiany zostały zapisane dla grupy powiadomień o ID', idProperty);
-        console.log('Dane grupy powiadomień', notificationGroup);
+        editNotifications(notificationGroup, idProperty);
         setAddFormShow(!addFormShow);
+        retrieveNotifications();
     };
 
     const confirmDelete = () => {
