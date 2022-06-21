@@ -49,8 +49,6 @@ const NotificationsEdit: React.FC<IProps> = ({
             }
 
             const editedGroup = editedObject(editValues, langOptions, typeOptions, undefinedDate);
-            console.log(editValues);
-
             setNotifications(editValues.notifications);
             setPreloadedGroupValues(editedGroup);
             setFormShow(true);
@@ -58,8 +56,6 @@ const NotificationsEdit: React.FC<IProps> = ({
     }, [editValues]);
 
     useEffect(() => {
-        console.log(notifications);
-
         notifications?.length > 0 ? setDisplayEmpty(false) : setDisplayEmpty(true);
     }, [notifications]);
 

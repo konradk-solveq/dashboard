@@ -33,8 +33,6 @@ const NotificationsForm: React.FC<IProps> = ({
         reset(data);
     };
 
-    console.log('prealoded', preloadedValues);
-
     const onSubmit = (data) => handleClick(data);
 
     return (
