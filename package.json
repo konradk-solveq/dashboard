@@ -1,5 +1,6 @@
 {
     "dependencies": {
+        "@emotion/styled": "^11.8.1",
         "@theme-ui/match-media": "^0.10.1",
         "@types/axios": "^0.14.0",
         "@types/eventsource": "^1.1.6",
@@ -10,6 +11,7 @@
         "@types/react": "^17.0.11",
         "axios": "^0.21.1",
         "d3": "^7.0.1",
+        "date-fns": "^2.28.0",
         "eventsource": "^1.1.0",
         "express": "^4.17.1",
         "fast-equals": "^2.0.3",
@@ -19,7 +21,7 @@
         "prop-types": "^15.7.2",
         "querystringify": "^2.2.0",
         "react": "^17.0.2",
-        "react-datepicker": "^4.2.1",
+        "react-datepicker": "^4.8.0",
         "react-dom": "^17.0.2",
         "react-google-charts": "^3.0.15",
         "react-hook-form": "^7.31.1",
@@ -39,6 +41,7 @@
     "devDependencies": {
         "@testing-library/jest-dom": "^5.15.0",
         "@testing-library/react": "^12.1.2",
+        "@types/react-datepicker": "^4.4.1",
         "babel-jest": "^27.3.1",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^27.3.1",
