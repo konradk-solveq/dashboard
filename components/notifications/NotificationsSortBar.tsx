@@ -4,15 +4,8 @@ import { Button, Container, Divider } from 'theme-ui';
 import Select from 'react-select';
 import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, defaultFormValues } from './NotificationsUtils';
 import { NotificationsContext } from './NotificationsApi';
-import { LabelTypes } from '../typings/Notifications';
 
-interface IProps {
-    sortingTypesDisplay: LabelTypes[];
-    sortingByOrder: LabelTypes[];
-    sortingByOrderType: LabelTypes[];
-}
-
-const NotificationsSortBar: React.FC<IProps> = ({}) => {
+const NotificationsSortBar: React.FC<{}> = ({}) => {
     const { retrieveNotifications } = useContext(NotificationsContext);
     const { handleSubmit, control } = useForm({ shouldUnregister: true, defaultValues: defaultFormValues });
 

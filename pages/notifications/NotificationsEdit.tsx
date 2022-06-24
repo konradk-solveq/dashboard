@@ -12,15 +12,13 @@ import {
     displayLanguageLabel,
 } from '../../components/notifications/NotificationsUtils';
 
-import { LabelTypes, NotificationObjectType } from '../../components/typings/Notifications';
+import { LabelTypes } from '../../components/typings/Notifications';
 
 interface IProps {
-    langOptions: LabelTypes[];
     handleNotificationGroup: (object: object) => void;
     editNotificationGroup: (object: object, id: number) => void;
     editValues: any;
-    handleExit;
-    handleOpen: () => void;
+    handleExit: () => void;
 }
 
 const NotificationsEdit: React.FC<IProps> = ({
@@ -37,7 +35,7 @@ const NotificationsEdit: React.FC<IProps> = ({
     const [notifications, setNotifications] = useState([]);
     const [displayEmpty, setDisplayEmpty] = useState(false);
 
-    const langOptions = getAvailableLanguages([...availableLanguages]);
+    const langOptions: LabelTypes[] = getAvailableLanguages([...availableLanguages]);
 
     useEffect(() => {
         if (editValues === null) {
@@ -69,7 +67,7 @@ const NotificationsEdit: React.FC<IProps> = ({
         setNotifications([...notifications, newNotification]);
     };
 
-    const handleOpen = () => {
+    const handleOpen = (): void => {
         setPreloadedValues('');
         setModalShow(!modalShow);
     };
@@ -167,10 +165,8 @@ const NotificationsEdit: React.FC<IProps> = ({
                 </Container>
                 {modalShow && (
                     <NotificationsForm
-                        show={modalShow}
                         handleOpen={handleOpen}
                         langOptions={langOptions}
-                        typeOptions={typeOptions}
                         newNotificationHandler={newNotificationHandler}
                         preloadedValues={preloadedValues}
                         changeNotification={changeNotification}
@@ -181,7 +177,6 @@ const NotificationsEdit: React.FC<IProps> = ({
                         notifications={notifications}
                         langOptions={langOptions}
                         typeOptions={typeOptions}
-                        availableLanguages={availableLanguages}
                         preloadedGroupValues={preloadedGroupValues}
                         handleNotificationGroup={handleNotificationGroup}
                         editNotificationGroup={editNotificationGroup}

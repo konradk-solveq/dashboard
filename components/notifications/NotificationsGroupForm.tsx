@@ -6,20 +6,13 @@ import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.c
 import { notificationObject } from './NotificationsUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import {
-    LanguageType,
-    LabelTypes,
-    SingleNotification,
-    NotificationObjectType,
-    GroupFormValues,
-} from '../typings/Notifications';
+import { LabelTypes, SingleNotification, GroupFormValues } from '../typings/Notifications';
 
 interface IProps {
-    langOptions: LanguageType[];
+    langOptions: LabelTypes[];
     typeOptions: LabelTypes[];
     notifications: SingleNotification[];
-    preloadedGroupValues: NotificationObjectType[];
-    notificationGroup: NotificationObjectType[];
+    preloadedGroupValues: GroupFormValues;
     handleNotificationGroup: (object: object) => void;
     editNotificationGroup: (object: object, id: number) => void;
     handleExit: () => void;
@@ -40,7 +33,10 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         formState: { errors },
         control,
         reset,
-    } = useForm<GroupFormValues>({ shouldUnregister: true, defaultValues: preloadedGroupValues });
+    } = useForm<GroupFormValues>({
+        shouldUnregister: true,
+        defaultValues: preloadedGroupValues,
+    });
     const [alert, setAlert] = useState(false);
 
     const handleClick = (data) => {
@@ -57,9 +53,10 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                 showDate: data.showDate,
                 type: data.type.value,
             },
-            mainNotification,
+            mainNotification.data.title,
             notifications,
         );
+
         preloadedGroupValues ? editNotificationGroup(object, preloadedGroupValues.id) : handleNotificationGroup(object);
         reset(data);
     };
@@ -93,7 +90,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                                 />
                             )}
                         />
-                        {errors.fallbackLanguage && <p>{errors.fallbackLanguage.message}</p>}
+                        {errors.fallbackLanguage && <p>{(errors.fallbackLanguage as any).message}</p>}
                     </Container>
 
                     <Container className={notificationGroupStyle.container}>
@@ -112,7 +109,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                                 />
                             )}
                         />
-                        {errors.type && <p>{errors.type.message}</p>}
+                        {errors.type && <p>{(errors.type as any).message}</p>}
                     </Container>
                     <Container className={notificationGroupStyle.container}>
                         <Label>Data pokazania powiadomienia</Label>
@@ -129,7 +126,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                                 />
                             )}
                         />
-                        {errors.showDate && <p>{errors.showDate.message}</p>}
+                        {errors.showDate && <p>{(errors.showDate as any).message}</p>}
                     </Container>
                     <Container className={notificationGroupStyle.container}>
                         <Label>Data wygaśnięcia powiadomienia</Label>

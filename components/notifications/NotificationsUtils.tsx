@@ -67,12 +67,12 @@ export let defaultFormValues = {
 
 export const notificationObject = (
     data: notificationDataType,
-    notification: contentType,
+    notificationTitle: string,
     notifications: contentType[],
 ): NotificationObjectType => {
     const object = {
         type: data.type,
-        name: notification.data.title,
+        name: notificationTitle,
         contents: notifications,
         showDate: data.showDate,
         expirationDate: data.expirationDate,

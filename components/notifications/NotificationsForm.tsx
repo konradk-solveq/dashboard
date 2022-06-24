@@ -3,13 +3,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button, Grid, Input, Label } from 'theme-ui';
 import Select from 'react-select';
 import notificationStyle from '../../styles/NotificationsForm.module.css';
-import { SingleNotification, LanguageType } from '../typings/Notifications';
+import { FormValues } from '../typings/Notifications';
 
 interface IProps {
-    langOptions: LanguageType[];
+    langOptions: { value: string; label: string }[];
     handleOpen(): void;
     newNotificationHandler: (data: object) => void;
-    preloadedValues: SingleNotification;
+    preloadedValues: FormValues;
     changeNotification: (data: object, id: number) => void;
 }
 
@@ -26,7 +26,7 @@ const NotificationsForm: React.FC<IProps> = ({
         formState: { errors },
         control,
         reset,
-    } = useForm({ shouldUnregister: true, defaultValues: preloadedValues });
+    } = useForm<FormValues>({ shouldUnregister: true, defaultValues: preloadedValues });
 
     const handleClick = (data) => {
         preloadedValues ? changeNotification(data, preloadedValues.id) : newNotificationHandler(data);

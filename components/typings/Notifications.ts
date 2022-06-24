@@ -20,10 +20,6 @@ export type NotificationsType = {
     fallbackLanguage: string;
 };
 
-export interface LabelTypes {
-    value: string;
-    label: string;
-}
 export type LabelWithUndefined = { value?: string; label: string };
 
 export type NotificationObjectType = {
@@ -52,18 +48,27 @@ export type actionsType = {
 
 export type SingleNotification = {
     id: number;
-    language: LanguageType;
-    message: string;
-    title: string;
-};
+} & contentType;
 
 export type GroupFormValues = {
-    fallbackLanguage: string;
-    type: string;
-    showDate: string;
-    expDate: string;
+    fallbackLanguage: LabelTypes;
+    type: LabelTypes;
+    showDate: Date;
+    expDate?: Date;
     draft: boolean;
-    defaultValues: NotificationObjectType[];
+    id: number;
+};
+
+export interface LabelTypes {
+    value: string;
+    label: string;
+}
+
+export type FormValues = {
+    id: number;
+    title: string;
+    message: string;
+    language: { label: string; value: string };
 };
 
 export type notificationActionType = 'internal_uri' | 'external_uri' | 'email';
