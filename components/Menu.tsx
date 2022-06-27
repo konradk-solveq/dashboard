@@ -91,6 +91,7 @@ const Menu: React.FC<{}> = ({ children }) => {
                     <Item text="Wersja Aplikacji" target="/settings/version" />
                     <Item text="Wersja Aplikacji - (v.2)" target="/settings/appVersionToPlatform" />
                     <Item text="Tłumaczenia" target="/settings/translation" />
+                    <Item text="Powiadomienia" target="/settings/notifications" />
                 </List>
             </Box>
         );

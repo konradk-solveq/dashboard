@@ -28,7 +28,7 @@ const DAYS_HOURS = [
     { title: 'Piątek', day: 5 },
     { title: 'Sobota', day: 6 },
     { title: 'Niedziela', day: 0 },
-]
+];
 
 const Route: React.FC<{ route: any }> = ({ route }) => {
     const mapImages = route.images.find(({ type }) => type === 'map') || {};
@@ -48,8 +48,7 @@ const Route: React.FC<{ route: any }> = ({ route }) => {
     );
 };
 
-const ColectData: React.FC<{ route: any, setChartData: any }> = ({ route, setChartData }) => {
-
+const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
     useEffect(() => {
         const broken = typeof route.images.find(({ type }) => type === 'map') == 'undefined';
 
@@ -57,7 +56,6 @@ const ColectData: React.FC<{ route: any, setChartData: any }> = ({ route, setCha
             sumAll.push(route);
         }
         if (!broken) {
-
             if (route.isPublic) {
                 if (!sumPublic.some((e) => e.id === route.id)) {
                     let newItem = {
@@ -81,10 +79,10 @@ const ColectData: React.FC<{ route: any, setChartData: any }> = ({ route, setCha
         setChartData(sumAll);
     }, [route]);
 
-    return (null);
+    return null;
 };
 
-const Legend: React.FC<{ color: string, title: string }> = ({ color, title }) => {
+const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) => {
     return (
         <Flex
             sx={{
@@ -106,7 +104,7 @@ const Legend: React.FC<{ color: string, title: string }> = ({ color, title }) =>
     );
 };
 
-export default function Page({ }) {
+export default function Page({}) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
     const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
@@ -118,7 +116,6 @@ export default function Page({ }) {
     useEffect(() => {
         setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 500 })}`);
     }, [debouncedName, page]);
-
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)
@@ -154,7 +151,7 @@ export default function Page({ }) {
         setStartDate(firstDate);
         setVeryStartDate(firstDate);
         setVeryEndDate(lastDate);
-    }, [chartData, page])
+    }, [chartData, page]);
 
     useEffect(() => {
         if (!chartData) return;
@@ -169,11 +166,7 @@ export default function Page({ }) {
             if (cd.images.length > 1) imgTempData.push(cd);
         }
         setFilteredChartData(tempChartData);
-        console.log('%c imgTempData:', 'background: #ffcc00; color: #003300', imgTempData)
-
-
-    }, [chartData, startDate, endDate])
-
+    }, [chartData, startDate, endDate]);
 
     const handleScrolLeft = (end: boolean = false) => {
         const pagesWidth = pages.length * 42;
@@ -207,7 +200,7 @@ export default function Page({ }) {
                 }}
             >
                 <h1>
-                    Przeklikaj poszczególne zakładni od 1 - do ostatniej aby zliczyć trasy i zbudować listę nazw tras
+                    Przeklikaj poszczególne zakładki od 1 - do ostatniej aby zliczyć trasy i zbudować listę nazw tras
                     publicznych
                 </h1>
             </Container>
@@ -225,12 +218,21 @@ export default function Page({ }) {
             <Flex
                 sx={{
                     position: 'relative',
-                    top: '-20px'
+                    top: '-20px',
                 }}
             >
                 {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b' }}>WCZYTANO WSZYSTKIE TRASY</Box>}
-                {total - sumAll.length > 0 && <><Box>wszystkich tras: {total}, tras wczytanych: {sumAll.length}</Box>
-                    <Box sx={{ ml: '20px', fontFamily: 'din-b' }}> posostało do wczytania: {total - sumAll.length}</Box></>}
+                {total - sumAll.length > 0 && (
+                    <>
+                        <Box>
+                            wszystkich tras: {total}, tras wczytanych: {sumAll.length}
+                        </Box>
+                        <Box sx={{ ml: '20px', fontFamily: 'din-b' }}>
+                            {' '}
+                            posostało do wczytania: {total - sumAll.length}
+                        </Box>
+                    </>
+                )}
             </Flex>
 
             <Flex sx={{ maxHeight: '350px' }}>
@@ -267,52 +269,44 @@ export default function Page({ }) {
                 veryEndDate={veryEndDate}
             />
 
-            <Flex sx={{
-                my: '20px',
-                pb: '30px',
-                borderTop: '1px solid #ddd',
-                borderBottom: '1px solid #ddd',
-                flexDirection: 'row',
-                maxWidth: '100%',
-                flexWrap: 'wrap',
-                justifyContent: 'space-around'
-            }}>
+            <Flex
+                sx={{
+                    my: '20px',
+                    pb: '30px',
+                    borderTop: '1px solid #ddd',
+                    borderBottom: '1px solid #ddd',
+                    flexDirection: 'row',
+                    maxWidth: '100%',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-around',
+                }}
+            >
                 <Box>
-                    <ChartDate
-                        data={filteredChartData}
-                        title={'Ilość tras według dat'}
-                        page={page}
-                    />
+                    <ChartDate data={filteredChartData} title={'Ilość tras według dat'} page={page} />
                 </Box>
 
                 <Box sx={{ width: '500px' }}>
-                    <ChartDay
-                        data={filteredChartData}
-                        title={'Ilość tras według dni'}
-                        page={page}
-                    />
+                    <ChartDay data={filteredChartData} title={'Ilość tras według dni'} page={page} />
                 </Box>
 
                 <Box sx={{ width: '500px' }}>
-                    <ChartHour
-                        data={filteredChartData}
-                        title={'Ilość tras według godzin'}
-                        page={page}
-                    />
+                    <ChartHour data={filteredChartData} title={'Ilość tras według godzin'} page={page} />
                 </Box>
             </Flex>
 
-            <Flex sx={{
-                my: '20px',
-                pb: '30px',
-                borderTop: '1px solid #ddd',
-                borderBottom: '1px solid #ddd',
-                flexDirection: 'row',
-                maxWidth: '100%',
-                flexWrap: 'wrap',
-                justifyContent: 'space-around'
-            }}>
-                {DAYS_HOURS.map(e => (
+            <Flex
+                sx={{
+                    my: '20px',
+                    pb: '30px',
+                    borderTop: '1px solid #ddd',
+                    borderBottom: '1px solid #ddd',
+                    flexDirection: 'row',
+                    maxWidth: '100%',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-around',
+                }}
+            >
+                {DAYS_HOURS.map((e) => (
                     <Box sx={{ width: '300px' }}>
                         <ChartHoursOfDay
                             data={filteredChartData}
@@ -321,7 +315,8 @@ export default function Page({ }) {
                             title={e.title}
                             page={page}
                         />
-                    </Box>))}
+                    </Box>
+                ))}
             </Flex>
 
             <Flex
@@ -330,48 +325,31 @@ export default function Page({ }) {
                     my: '20px',
                 }}
             >
-                <Legend
-                    color={'khaki'}
-                    title={' - trasy prawidłowe'}
-                />
-                <Legend
-                    color={'#68B028'}
-                    title={' - trasy upublicznione'}
-                />
-                <Legend
-                    color={'#cf0f36'}
-                    title={' - trasy uszkodzone'}
-                />
+                <Legend color={'khaki'} title={' - trasy prawidłowe'} />
+                <Legend color={'#68B028'} title={' - trasy upublicznione'} />
+                <Legend color={'#cf0f36'} title={' - trasy uszkodzone'} />
             </Flex>
-            {
-                elements?.length === 0 ? null : (
-                    <>
-                        {elements?.map((el, index) => {
-                            return <ColectData
-                                key={'box' + index}
-                                route={el}
-                                setChartData={setChartData}
-                            ></ColectData>;
+            {elements?.length === 0 ? null : (
+                <>
+                    {elements?.map((el, index) => {
+                        return <ColectData key={'box' + index} route={el} setChartData={setChartData}></ColectData>;
+                    })}
+                </>
+            )}
+            {sumAll.length === 0 ? null : (
+                <>
+                    <Flex
+                        sx={{
+                            margin: 1,
+                            flexWrap: 'wrap',
+                        }}
+                    >
+                        {sumAll?.map((el, index) => {
+                            return <Route key={'box' + index} route={el}></Route>;
                         })}
-                    </>
-                )
-            }
-            {
-                sumAll.length === 0 ? null : (
-                    <>
-                        <Flex
-                            sx={{
-                                margin: 1,
-                                flexWrap: 'wrap',
-                            }}
-                        >
-                            {sumAll?.map((el, index) => {
-                                return <Route key={'box' + index} route={el}></Route>;
-                            })}
-                        </Flex>
-                    </>
-                )
-            }
+                    </Flex>
+                </>
+            )}
             <Flex
                 sx={{
                     justifyContent: 'center',
