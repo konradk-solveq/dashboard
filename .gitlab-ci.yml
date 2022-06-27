@@ -94,8 +94,8 @@ deploy-pro:
     extends:
         - .deploy
     rules:
-        - if: '$CI_COMMIT_REF_NAME == "master"'
-        - if: '$CI_COMMIT_TAG'
+        - if: '$CI_COMMIT_TAG != null'
+          when: manual
     variables:
         DOPPLER_TOKEN_MAIN: $DOPPLER_TOKEN_MAIN_PRO
         DOPPLER_TOKEN_ROUTE53: $DOPPLER_TOKEN_ROUTE53_PRO
