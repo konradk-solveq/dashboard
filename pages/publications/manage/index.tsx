@@ -7,10 +7,8 @@ import ManagePublicationForm from '../../../components/publication/manage/Manage
 
 const ManagePublications: React.FC = () => {
     return (
-        <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px', height: '100%' }}>
-                <ManagePublicationForm />
-            </Container>
+        <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px', height: '100%' }}>
+            <ManagePublicationForm />
         </Container>
     );
 };
