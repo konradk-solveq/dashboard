@@ -79,11 +79,10 @@ const MenuDrawer: React.FC<{}> = ({ children }) => {
             <Drawer
                 anchor="left"
                 variant="temporary"
+                sx={{ width: '200px' }}
                 elevation={3}
                 open={open}
                 onClose={() => setOpen(false)}
-                onOpen={() => setOpen(true)}
-                sx={{ width: '200px' }}
             >
                 <div>{content()}</div>
             </Drawer>
