@@ -1,19 +1,20 @@
 // import { useBreakpointIndex, useResponsiveValue } from '@@mui/material//match-media';
 import Routing from 'next/link';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
+import { List, Box, Container, Divider, IconButton, Drawer } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import useToggle from './hooks/useToggle';
 
 const Item: React.FC<{ target: string; text: string }> = ({ target, text }) => {
     return (
         <Container
             sx={{
-                pl: 10,
-                fontSize: '18px',
+                fontSize: '15px',
                 color: '#eee',
+                ml: '10px',
+                mb: '4px',
             }}
         >
             <Routing passHref href={target}>
@@ -23,75 +24,32 @@ const Item: React.FC<{ target: string; text: string }> = ({ target, text }) => {
     );
 };
 
-const Splitter: React.FC<{}> = () => {
-    return (
-        <Box
-            sx={{
-                width: '100%',
-                height: '1px',
-                my: '5px',
-                bg: '#777',
-                position: 'relative',
-            }}
-        ></Box>
-    );
-};
-
-const List: React.FC<{ title: string }> = ({ title, children }) => {
-    const [isShown, toggle] = useToggle(true);
-
-    return (
-        <>
-            <Box sx={{ width: '100%' }} onClick={toggle}>
-                <Box
-                    sx={{
-                        fontSize: '25px',
-                        color: '#eee',
-                    }}
-                >
-                    {title}
-                </Box>
-            </Box>
-            {isShown && children}
-        </>
-    );
-};
-
-const Menu: React.FC<{}> = ({ children }) => {
-    // console.log('%c children:', 'background: #ffcc00; color: #003300', children);
-
-    // let test = useResponsiveValue<'10px' | '20px'>(['10px', '20px', '10px', '20px']);
-    // const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
-    // const index = useBreakpointIndex();
-    const index = 1;
-
-    const [menuOn, setMenuOn] = useState(false);
-
+const MenuDrawer: React.FC<{}> = ({ children }) => {
+    const [open, setOpen] = useState(false);
     const content = () => {
         return (
             <Box
                 sx={{
+                    p: '16px',
                     bg: '#555',
-                    px: 20,
-                    py: 10,
                     userSelect: 'none',
+                    mt: '80px',
                 }}
             >
-                <List title="Trasy">
+                <Divider textAlign="left">Trasy</Divider>
+                <List>
                     <Item text="Lista Tras" target="/routes/list" />
                     <Item text="Wyróżnione Trasy" target="/routes/featured" />
                     <Item text="Statystyki Tras" target="/routes/statistics" />
                     <Item text="Raporty" target="/routes/raports" />
                 </List>
-
-                <Splitter />
+                <Divider textAlign="left">Publikacje</Divider>
                 <List title="Publikacje">
                     <Item text="Zarządzaj Publikacjami" target="/publications/manage" />
                     <Item text="Wgraj Dokumenty" target="/publications/manage/documents" />
                 </List>
-
-                <Splitter />
-                <List title="Ustawienia">
+                <Divider textAlign="left">Ustawienia</Divider>
+                <List>
                     <Item text="Powiadomienia" target="/settings/notifications" />
                     <Item text="Tłumaczenia" target="/settings/translation" />
                     <Item text="Wersja Aplikacji" target="/settings/version" />
@@ -100,54 +58,36 @@ const Menu: React.FC<{}> = ({ children }) => {
             </Box>
         );
     };
-
-    const hiddeManeu = {
-        height: 0,
-    };
-
-    if (index < 2) {
-        return (
-            <Box
-                sx={{
-                    maxWidth: '250px',
-                    position: 'sticky',
-                    top: 0,
-                    left: 0,
-                    height: '40px',
-                    bg: menuOn ? '#555' : 'transparent',
-                    overflow: menuOn ? 'visible' : 'hidden',
+    return (
+        <div>
+            <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ ml: 'auto', mr: '2', transition: '1s' }}
+                onClick={() => {
+                    setOpen(!open);
                 }}
             >
-                <Button
-                    onClick={() => {
-                        setMenuOn(!menuOn);
-                    }}
-                    sx={{
-                        width: '60px',
-                        px: 0,
-                        borderRadius: 0,
-                        bg: '#444',
-                        cursor: 'pointer',
-                    }}
-                >
-                    Menu
-                </Button>
-                <Container sx={menuOn ? {} : hiddeManeu}>{content()}</Container>
-            </Box>
-        );
-    } else {
-        return (
-            <Container
-                sx={{
-                    maxWidth: '250px',
-                    position: 'sticky',
-                    top: 20,
-                    bg: '#555',
-                }}
+                {open ? (
+                    <CloseIcon htmlColor="#ffffff" sx={{ transform: 'rotate(90deg)' }} />
+                ) : (
+                    <MenuIcon htmlColor="#ffffff" />
+                )}
+            </IconButton>
+            <Drawer
+                anchor="left"
+                variant="temporary"
+                elevation={3}
+                open={open}
+                onClose={() => setOpen(false)}
+                onOpen={() => setOpen(true)}
+                sx={{ width: '200px' }}
             >
-                {content()}
-            </Container>
-        );
-    }
+                <div>{content()}</div>
+            </Drawer>
+        </div>
+    );
 };
-export default Menu;
+export default MenuDrawer;
