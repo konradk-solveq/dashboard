@@ -1,6 +1,6 @@
 // import { useBreakpointIndex } from '@@mui/material//match-media';
 import { useEffect, useRef, useState } from 'react';
-import Container from '@mui/material/Container';
+import { Box, Container } from '@mui/material';
 import Footer from './Footer';
 import Header from './Header';
 import Menu from './Menu';
@@ -25,42 +25,64 @@ const Layout: React.FC<{}> = ({ children }) => {
     }, [headerObj.current, footerObj.current]);
 
     return (
-        <Container
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '500px',
-            }}
-        >
-            <Container ref={headerObj}>
+        // <Container
+        //     sx={{
+        //         display: 'flex',
+        //         flexDirection: 'column',
+        //         height: '500px',
+        //         m: '0px',
+        //         pl: '0px',
+        //         backgroundColor: 'pink',
+        //         width: '100%',
+        //     }}
+        // >
+        //     <Container ref={headerObj} sx={{ m: '0px' }}>
+        //         <Header />
+        //     </Container>
+        //     <Container
+        //         sx={{
+        //             display: 'flex',
+        //             flexDirection: 'column',
+        //             alignContent: 'flex-start',
+        //             backgroundColor: '#fff',
+        //         }}
+        //     >
+        //         <Menu />
+
+        //         <Container
+        //             sx={{
+        //                 minHeight: contentH - (index < 2 ? 65 : 0),
+        //                 width: '100vw',
+        //                 backgroundColor: '#fff',
+        //                 p: 10,
+        //             }}
+        //         >
+        //             {children}
+        //         </Container>
+        //     </Container>
+        //     <div ref={footerObj}>
+        //         <Footer />
+        //     </div>
+        //     {/* <Tester /> */}
+        // </Container>
+
+        <Box>
+            <Box ref={headerObj} sx={{ m: '0px' }}>
                 <Header />
-            </Container>
-            <Container
+            </Box>
+            <Box
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignContent: 'flex-start',
-                    bg: '#fff',
+                    minHeight: contentH - (index < 2 ? 65 : 0),
+                    pt: 2,
+                    backgroundColor: '#fff',
                 }}
             >
-                <Menu />
-
-                <Container
-                    sx={{
-                        minHeight: contentH - (index < 2 ? 65 : 0),
-                        width: '100%',
-                        bg: '#fff',
-                        p: 10,
-                    }}
-                >
-                    {children}
-                </Container>
-            </Container>
-            <div ref={footerObj}>
+                {children}
+            </Box>
+            <Box ref={footerObj}>
                 <Footer />
-            </div>
-            <Tester />
-        </Container>
+            </Box>
+        </Box>
     );
 };
 export default Layout;
