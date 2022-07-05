@@ -1,14 +1,17 @@
-import { useBreakpointIndex } from '@theme-ui/match-media';
+// import { useBreakpointIndex } from '@@mui/material//match-media';
 import { signOut, useSession } from 'next-auth/client';
 import Routing from 'next/link';
 import React from 'react';
-import { AspectRatio, Box, Button, Container, Flex } from 'theme-ui';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 import Logo from '../assets/myKrossLogo';
 import SmallLogo from '../assets/smallLogo';
 
 const Header: React.FC<{}> = ({ children }) => {
     const [session, loading] = useSession();
-    const index = useBreakpointIndex();
+    const index = 1;
+    //useBreakpointIndex();
 
     const icon = (i) => {
         if (i < 2) {
@@ -21,9 +24,14 @@ const Header: React.FC<{}> = ({ children }) => {
                         minHeight: 48,
                     }}
                 >
-                    <AspectRatio ratio={1 / 1}>
+                    <Box
+                        sx={{
+                            heigth: 100,
+                            width: 100,
+                        }}
+                    >
                         <SmallLogo />
-                    </AspectRatio>
+                    </Box>
                 </Box>
             );
         } else {
@@ -36,17 +44,22 @@ const Header: React.FC<{}> = ({ children }) => {
                         minHeight: 48,
                     }}
                 >
-                    <AspectRatio ratio={748.9161 / 128.6318}>
+                    <Box
+                        sx={{
+                            heigth: 748.9161 / 128.6318,
+                            width: 748.9161 / 128.6318,
+                        }}
+                    >
                         <Logo />
-                    </AspectRatio>
+                    </Box>
                 </Box>
             );
         }
     };
 
     return (
-        <Flex sx={{ minHeight: 48, flexDirection: 'column', justifyContent: 'space-between' }}>
-            <Flex
+        <Container sx={{ display: 'flex', minHeight: 48, flexDirection: 'column', justifyContent: 'space-between' }}>
+            <Container
                 sx={{
                     // bg: '#f8f8f8',
                     padding: 2,
@@ -58,7 +71,7 @@ const Header: React.FC<{}> = ({ children }) => {
                 <Routing passHref href="/">
                     {icon(index)}
                 </Routing>
-                <Flex
+                <Container
                     sx={{
                         justifyContent: 'end',
                         flexDirection: 'column',
@@ -73,9 +86,9 @@ const Header: React.FC<{}> = ({ children }) => {
                             </Button>
                         </>
                     )}
-                </Flex>
-            </Flex>
-        </Flex>
+                </Container>
+            </Container>
+        </Container>
     );
 };
 export default Header;

@@ -1,4 +1,4 @@
-import { Box, Container } from '@theme-ui/components';
+import { Box, Container } from '@mui/material/';
 import { NextPage } from 'next';
 import React, { useContext, useState } from 'react';
 import useSWR from 'swr';

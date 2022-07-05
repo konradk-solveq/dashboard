@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Input, Select, Button } from 'theme-ui';
+import { Container, Input, Select, Button } from '@mui/material/';
 
 import { sortLanguages } from '../../../helpers/sortLanguages';
 import { UploadFormFieldsProps } from '../../typings/PublicationSection';
@@ -14,7 +14,10 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
     return (
         <>
             {fields.map((field: any, index: number) => (
-                <Grid gap={2} columns="0.5fr 1fr 1fr 0.25fr" marginBottom="25px" key={field.id}>
+                <Container
+                    sx={{ display: 'grid', gridTemplateColumns: '0.5fr 1fr 1fr 0.25fr', gap: 2, mb: '25px' }}
+                    key={field.id}
+                >
                     <Select
                         {...register(`documents.${index}.language`, {
                             validate: (v) => {
@@ -50,7 +53,7 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
                             Usuń
                         </Button>
                     )}
-                </Grid>
+                </Container>
             ))}
         </>
     );

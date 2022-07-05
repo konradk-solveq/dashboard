@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Grid, Button, Box, Select, Input, Flex, Text, Paragraph } from 'theme-ui';
+import { Button, Box, Select, Input, Container, Typography } from '@mui/material/';
 import styled from '@emotion/styled';
 
 import { readFromFile } from '../../../helpers/readFromFile';
@@ -74,17 +74,30 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
         return <DocumentUploadProgress message={message} setIsLoading={setIsLoading} />;
     } else if (loadingError) {
         return (
-            <Flex sx={{ flexDirection: 'column', height: '80%', justifyContent: 'center', alignItems: 'center' }}>
-                <Paragraph mb="80px" sx={{ fontSize: '1.2rem' }}>
+            <Container
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '80%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography variant="body1" sx={{ fontSize: '1.2rem', mb: '80px' }}>
                     Nie udało połączyć się z serwerem
-                </Paragraph>
-            </Flex>
+                </Typography>
+            </Container>
         );
     }
     return (
-        <Box as="form" sx={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit(onSubmit)}>
-            <Flex
+        <Box
+            // as="form"
+            sx={{ display: 'flex', flexDirection: 'column' }}
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <Container
                 sx={{
+                    display: 'flex',
                     alignItems: 'center',
                     width: '50%',
                     alignSelf: 'center',
@@ -101,12 +114,20 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
                 <Label>Nazwa Dokumentu</Label>
 
                 <Input sx={{ textAlign: 'center' }} {...register(`documentName`)} type="text" required />
-            </Flex>
-            <Grid gap={2} columns="0.5fr 1fr 1fr 0.25fr" marginBottom="10px" sx={{ justifyItems: 'center' }}>
+            </Container>
+            <Container
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '0.5fr 1fr 1fr 0.25fr',
+                    gap: 2,
+                    mb: '10px',
+                    justifyItems: 'center',
+                }}
+            >
                 <Label>Kod Językowy</Label>
                 <Label>Plik z dokumentem</Label>
                 <Label>Plik z akcjami</Label>
-            </Grid>
+            </Container>
 
             <UploadFormFields
                 fields={fields}
@@ -117,16 +138,15 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
                 errors={errors}
             />
             {errors?.documents && (
-                <Text sx={{ textAlign: 'center', margin: '25px 0 35px', fontSize: '1.5rem' }}>
+                <Typography variant="body1" sx={{ textAlign: 'center', margin: '25px 0 35px', fontSize: '1.5rem' }}>
                     Języki nie mogą się powtarzać!
-                </Text>
+                </Typography>
             )}
 
             <Button
                 type="button"
-                bg={fields.length >= availableLanguages?.length ? 'grey' : 'default'}
                 onClick={() => append(defaultFormValues.documents[0] as object)}
-                sx={{ margin: '0 auto' }}
+                sx={{ margin: '0 auto', bg: `${fields.length >= availableLanguages?.length ? 'grey' : 'default'}` }}
                 disabled={fields.length >= availableLanguages?.length ? true : false}
             >
                 Dodaj kolejny język

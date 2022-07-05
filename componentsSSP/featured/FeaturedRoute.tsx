@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Container, Field, Grid } from 'theme-ui';
+import { Box, Container, TextField, Grid } from '@mui/material/';
 import ApiContext from '../../components/contexts/api';
 import { FeaturedSectionContext } from '../../components/contexts/featured/contexts';
 import Actions from './Actions';
@@ -23,8 +23,8 @@ const SectionNameInput: React.FC<{ language: string; code: string; currentValue?
 
     return (
         <Container>
-            <Field
-                bg="white"
+            <TextField
+                sx={{ backgroundColor: 'white' }}
                 label={language}
                 name={`${language}-${sectionId}`}
                 defaultValue={currentValue}
@@ -57,11 +57,19 @@ const NameEdit: React.FC<{}> = () => {
 const FeaturedRoute: React.FC<{}> = () => {
     return (
         <Container>
-            <Grid bg="gray" p={2} variant="block" gap={2} columns={[2, '12fr 4fr']}>
+            <Grid
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: [2, '12fr 4fr'],
+                    mb: '10px',
+                    p: 2,
+                    backgroundColor: 'gray',
+                }}
+            >
                 <NameEdit />
                 <Actions />
             </Grid>
-            <Box bg="gray" p={2} variant="block">
+            <Box sx={{ backgroundColor: 'gray', p: 2 }}>
                 <SectionRoutesManage />
             </Box>
             <Box m={1} />

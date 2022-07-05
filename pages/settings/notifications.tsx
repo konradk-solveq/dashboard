@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
-import { Container, Heading, Button, Alert, Divider } from 'theme-ui';
+import { Container, Typography, Button, Alert, Divider } from '@mui/material/';
 import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
@@ -65,7 +65,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
 
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
+            <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
                 {addFormShow ? (
                     <NotificationsEditPage
                         handleNotificationGroup={handleNotificationGroup}
@@ -93,9 +93,10 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             </Alert>
                         )}
 
-                        <Heading
-                            m="20px"
+                        <Typography
+                            variant="h2"
                             sx={{
+                                m: '20px',
                                 textAlign: 'center',
                                 display: 'flex',
                                 justifyContent: 'space-between',
@@ -109,11 +110,11 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             >
                                 Dodaj Powiadomienie
                             </Button>
-                        </Heading>
+                        </Typography>
 
                         <NotificationsSortBar />
 
-                        <Heading m="20px">Lista Powiadomień</Heading>
+                        <Typography sx={{ m: '20px' }}>Lista Powiadomień</Typography>
 
                         {preloadedNotifications?.length > 0 ? (
                             <Container sx={{ minHeight: '300px' }}>

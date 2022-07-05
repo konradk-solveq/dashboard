@@ -2,17 +2,19 @@ import '../styles/globals.css';
 
 import { getSession, Provider, signIn } from 'next-auth/client';
 import App, { AppContext, AppInitialProps, AppProps } from 'next/app';
-import { Theme, ThemeProvider } from 'theme-ui';
+import { ThemeProvider, styled, createTheme } from '@mui/material/styles';
 
 import { ApiContextContainer } from '../components/contexts/api';
 import Layout from '../components/Layout';
-import theme from '../components/theme';
+
 import { cache } from '../helpers/cache';
 
 const getConfig = cache(async () => {
     const data = await fetch(`${process.env.NEXT_PUBLIC_URL || ''}/api/application/config`);
     return data.json();
 });
+
+const mdTheme = createTheme();
 
 function KrossDashboardApp({ Component, pageProps }: AppProps) {
     if (pageProps.session === null && typeof window !== 'undefined') {
@@ -27,7 +29,7 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
             }}
         >
             <ApiContextContainer config={pageProps.config}>
-                <ThemeProvider theme={theme as Theme}>
+                <ThemeProvider theme={mdTheme}>
                     <Layout>
                         <Component {...pageProps} />
                     </Layout>

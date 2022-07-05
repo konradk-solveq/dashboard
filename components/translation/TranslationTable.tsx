@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Label, Select } from 'theme-ui';
+import { Container, InputLabel, Select } from '@mui/material/';
 import TranslationRow from './TranslationRow';
 
 const TranslationTable = ({
@@ -11,9 +11,9 @@ const TranslationTable = ({
 }) => {
     return (
         <>
-            <Grid columns="1fr 20px 60px 30px 100px" marginBottom="20px">
+            <Container sx={{ display: 'grid', gridTemplateColumns: '1fr 20px 60px 30px 100px', mb: '20px' }}>
                 <p></p>
-                <Label pt="10px">limit:</Label>
+                <InputLabel sx={{ pt: '10px' }}>limit:</InputLabel>
                 <Select
                     value={limitAndOffset.limit}
                     onChange={(e) => {
@@ -25,7 +25,7 @@ const TranslationTable = ({
                     <option value={20}>20</option>
                     <option value={40}>40</option>
                 </Select>
-                <Label pt="10px">strona:</Label>
+                <InputLabel sx={{ pt: '10px' }}>strona:</InputLabel>
                 <Select
                     value={limitAndOffset.offset}
                     onChange={(e) => {
@@ -40,13 +40,13 @@ const TranslationTable = ({
                         );
                     })}
                 </Select>
-            </Grid>
-            <Grid gap={2} columns="50px 60px 230px 2fr 100px" marginBottom="10px">
-                <Label>Kod</Label>
-                <Label>Wersja</Label>
-                <Label>Suma kontrolna</Label>
-                <Label>Tłumaczenie</Label>
-            </Grid>
+            </Container>
+            <Container sx={{ display: 'grid', gridTemplateColumns: '50px 60px 230px 2fr 100px', mb: '10px' }}>
+                <InputLabel>Kod</InputLabel>
+                <InputLabel>Wersja</InputLabel>
+                <InputLabel>Suma kontrolna</InputLabel>
+                <InputLabel>Tłumaczenie</InputLabel>
+            </Container>
             {uiTranslationsState.length &&
                 uiTranslationsState.map(({ controlSum, id, version, code, translation }) => (
                     <TranslationRow

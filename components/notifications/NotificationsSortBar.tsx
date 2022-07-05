@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Container, Divider } from 'theme-ui';
+import { Button, Container, Divider } from '@mui/material/';
 import Select from 'react-select';
 import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, defaultFormValues } from './NotificationsUtils';
 import { NotificationsContext } from './NotificationsApi';

@@ -1,16 +1,12 @@
 import NextLink from 'next/link';
 import { useContext } from 'react';
-import { Box, Button, Flex } from 'theme-ui';
+import { Box, Button, Container } from '@mui/material/';
 import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
 
-const NavButtons: React.FC<{}> = ({ }) => {
+const NavButtons: React.FC<{}> = ({}) => {
     const { nextRouteUrl, previousRouteUrl } = useContext(RouteNavigationContext);
     return (
-        <Flex sx={{
-            width: '100%',
-            justifyContent: 'space-between',
-            mb: '20px',
-        }}>
+        <Container sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mb: '20px' }}>
             {previousRouteUrl && (
                 <NextLink href={previousRouteUrl} passHref>
                     <Button className="sys-btn">&lt;&lt;&lt; poprzednia</Button>
@@ -23,7 +19,7 @@ const NavButtons: React.FC<{}> = ({ }) => {
                 </NextLink>
             )}
             {!nextRouteUrl && <Box sx={{ width: '100px', height: '20px' }} />}
-        </Flex>
+        </Container>
     );
 };
 export default NavButtons;

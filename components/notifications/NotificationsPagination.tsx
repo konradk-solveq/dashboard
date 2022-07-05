@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Container, Divider } from 'theme-ui';
+import { Button, Container, Divider } from '@mui/material/';
 import { NotificationsContext } from './NotificationsApi';
 
 const NotificationsPagination: React.FC<{}> = ({}) => {
@@ -13,9 +13,9 @@ const NotificationsPagination: React.FC<{}> = ({}) => {
     return (
         <Container>
             <Divider />
-            <Container ml="20px" mr="20px">
+            <Container sx={{ ml: '20px', mr: '20px' }}>
                 {prevPageURL && (
-                    <Button mr="20px" sx={{ cursor: 'pointer' }} onClick={handlePrevPage}>
+                    <Button sx={{ cursor: 'pointer', mr: '20px' }} onClick={handlePrevPage}>
                         Poprzednia
                     </Button>
                 )}

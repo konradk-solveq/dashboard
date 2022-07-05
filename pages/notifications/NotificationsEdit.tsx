@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Heading, Grid, Label, Button } from 'theme-ui';
+import { Container, Typography, InputLabel, Button } from '@mui/material/';
 import { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
@@ -110,10 +110,11 @@ const NotificationsEdit: React.FC<IProps> = ({
 
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
-                <Heading
-                    m="20px"
+            <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
+                <Typography
+                    variant="h2"
                     sx={{
+                        m: '20px',
                         textAlign: 'center',
                         display: 'flex',
                         justifyContent: 'center',
@@ -121,13 +122,21 @@ const NotificationsEdit: React.FC<IProps> = ({
                     }}
                 >
                     Wersje językowe powiadomienia
-                </Heading>
+                </Typography>
                 <Container>
-                    <Grid gap={2} columns="50px 190px 2fr" marginBottom="10px" sx={{ fontSize: '1.25em' }}>
-                        <Label>Język</Label>
-                        <Label>Tytuł</Label>
-                        <Label>Treść</Label>
-                    </Grid>
+                    <Container
+                        sx={{
+                            display: 'grid',
+                            gridTemplateColumns: '50px 190px 2fr',
+                            mb: '10px',
+                            fontSize: '1.25em',
+                            gap: 2,
+                        }}
+                    >
+                        <InputLabel>Język</InputLabel>
+                        <InputLabel>Tytuł</InputLabel>
+                        <InputLabel>Treść</InputLabel>
+                    </Container>
                     {displayEmpty ? (
                         <Container sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555' }}>
                             Brak powiadomień

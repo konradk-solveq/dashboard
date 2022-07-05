@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import { Button, Label, Container, Alert, Close } from 'theme-ui';
+import { Button, InputLabel, Container, Alert } from '@mui/material/';
+import CloseIcon from '@mui/icons-material/Close';
 import Select from 'react-select';
 import notificationGroupStyle from '../../styles/NotificationsGroupForm.module.css';
 import { notificationObject } from './NotificationsUtils';
@@ -70,12 +71,12 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                 {alert && (
                     <Alert sx={{ mt: '30px' }}>
                         Proszę dodaj powiadomienie dla języka domyślnego.
-                        <Close sx={{ ml: 'auto', cursor: 'pointer' }} onClick={() => setAlert(false)} />
+                        <CloseIcon sx={{ ml: 'auto', cursor: 'pointer' }} onClick={() => setAlert(false)} />
                     </Alert>
                 )}
                 <div className={notificationGroupStyle.content}>
                     <Container className={notificationGroupStyle.container}>
-                        <Label>Język domyślny</Label>
+                        <InputLabel>Język domyślny</InputLabel>
                         <Controller
                             control={control}
                             rules={{ required: 'Język domyślny jest wymagany.' }}
@@ -94,7 +95,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                     </Container>
 
                     <Container className={notificationGroupStyle.container}>
-                        <Label>Typ</Label>
+                        <InputLabel>Typ</InputLabel>
                         <Controller
                             control={control}
                             rules={{ required: 'Typ jest wymagany.' }}
@@ -112,7 +113,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                         {errors.type && <p>{(errors.type as any).message}</p>}
                     </Container>
                     <Container className={notificationGroupStyle.container}>
-                        <Label>Data pokazania powiadomienia</Label>
+                        <InputLabel>Data pokazania powiadomienia</InputLabel>
                         <Controller
                             control={control}
                             name="showDate"
@@ -129,7 +130,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                         {errors.showDate && <p>{(errors.showDate as any).message}</p>}
                     </Container>
                     <Container className={notificationGroupStyle.container}>
-                        <Label>Data wygaśnięcia powiadomienia</Label>
+                        <InputLabel>Data wygaśnięcia powiadomienia</InputLabel>
                         <Controller
                             control={control}
                             name="expDate"
@@ -146,7 +147,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                 </div>
                 <Container className={notificationGroupStyle.buttonContainer}>
                     <div>
-                        <Label>Wersja robocza</Label>
+                        <InputLabel>Wersja robocza</InputLabel>
                         <input
                             type="checkbox"
                             placeholder="Draft"

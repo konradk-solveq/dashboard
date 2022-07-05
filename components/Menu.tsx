@@ -1,7 +1,10 @@
-import { useBreakpointIndex, useResponsiveValue } from '@theme-ui/match-media';
+// import { useBreakpointIndex, useResponsiveValue } from '@@mui/material//match-media';
 import Routing from 'next/link';
 import { useState } from 'react';
-import { Box, Button, Container, Link, Text } from 'theme-ui';
+import Link from '@mui/material/Link';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 import useToggle from './hooks/useToggle';
 
 const Item: React.FC<{ target: string; text: string }> = ({ target, text }) => {
@@ -40,14 +43,14 @@ const List: React.FC<{ title: string }> = ({ title, children }) => {
     return (
         <>
             <Box sx={{ width: '100%' }} onClick={toggle}>
-                <Text
+                <Box
                     sx={{
                         fontSize: '25px',
                         color: '#eee',
                     }}
                 >
                     {title}
-                </Text>
+                </Box>
             </Box>
             {isShown && children}
         </>
@@ -57,9 +60,10 @@ const List: React.FC<{ title: string }> = ({ title, children }) => {
 const Menu: React.FC<{}> = ({ children }) => {
     // console.log('%c children:', 'background: #ffcc00; color: #003300', children);
 
-    let test = useResponsiveValue<'10px' | '20px'>(['10px', '20px', '10px', '20px']);
-    const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
-    const index = useBreakpointIndex();
+    // let test = useResponsiveValue<'10px' | '20px'>(['10px', '20px', '10px', '20px']);
+    // const menuPointer = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
+    // const index = useBreakpointIndex();
+    const index = 1;
 
     const [menuOn, setMenuOn] = useState(false);
 
@@ -88,11 +92,10 @@ const Menu: React.FC<{}> = ({ children }) => {
 
                 <Splitter />
                 <List title="Ustawienia">
+                    <Item text="Powiadomienia" target="/settings/notifications" />
+                    <Item text="Tłumaczenia" target="/settings/translation" />
                     <Item text="Wersja Aplikacji" target="/settings/version" />
                     <Item text="Wersja Aplikacji - (v.2)" target="/settings/appVersionToPlatform" />
-                    <Item text="Tłumaczenia" target="/settings/translation" />
-                    <Item text="Powiadomienia" target="/settings/notifications" />
-                    <Item text="Webhook" target="/webhook" />
                 </List>
             </Box>
         );

@@ -163,3 +163,7 @@ export const dark = {
 };
 
 export default dark;
+
+// sx={{display:'grid', gridTemplateColumns:'50px 180px 1fr', mb:'10px'}}
+
+// display:'flex',

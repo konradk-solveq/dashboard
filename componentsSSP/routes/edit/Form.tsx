@@ -2,7 +2,7 @@ import { useRouter } from 'next/dist/client/router';
 import NextLink from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { AspectImage, Box, Button, Flex } from 'theme-ui';
+import { Box, Button, Container } from '@mui/material/';
 
 import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
 import fetcher from '../../../helpers/fetcher';
@@ -117,8 +117,9 @@ const Form: React.FC<Props> = (props) => {
     }
 
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
                 width: '100%',
             }}
@@ -134,8 +135,9 @@ const Form: React.FC<Props> = (props) => {
                         borderRadius: '10px',
                     }}
                 >
-                    <Flex
+                    <Container
                         sx={{
+                            display: 'flex',
                             justifyContent: 'space-between',
                             flexDirection: ['column', 'column', 'row'],
                         }}
@@ -158,18 +160,16 @@ const Form: React.FC<Props> = (props) => {
                         </Box>
                         {map && map.length > 0 && (
                             <Box sx={{ width: ['100%', '80%', '45%', '35%'], maxWidth: '300px', mb: '15px' }}>
-                                <AspectImage
-                                    sx={
-                                        {
-                                            // width: '100px'
-                                        }
-                                    }
-                                    ratio={1 / 1}
+                                <Box
+                                    component="img"
+                                    sx={{
+                                        width: '100px',
+                                    }}
                                     src={map[0].variants.square[1].url}
-                                ></AspectImage>
+                                ></Box>
                             </Box>
                         )}
-                    </Flex>
+                    </Container>
 
                     <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze} />
                     <InputForm
@@ -230,8 +230,9 @@ const Form: React.FC<Props> = (props) => {
                     ></Box>
 
                     {images && (
-                        <Flex
+                        <Container
                             sx={{
+                                display: 'flex',
                                 flexWrap: 'wrap',
                             }}
                         >
@@ -245,21 +246,26 @@ const Form: React.FC<Props> = (props) => {
                                     }}
                                     key={'img_' + i}
                                 >
-                                    <AspectImage ratio={1} src={e.variants.square[1].url}></AspectImage>
+                                    <Box
+                                        component="img"
+                                        sx={{ width: '100%', height: '100%' }}
+                                        src={e.variants.square[1].url}
+                                    ></Box>
                                 </Box>
                             ))}
-                        </Flex>
+                        </Container>
                     )}
 
-                    <Flex
+                    <Container
                         sx={{
+                            display: 'flex',
                             width: '100%',
                             justifyContent: 'center',
                             mt: '16px',
                         }}
                     >
                         <NextLink href={backUrl} passHref>
-                            <Button variant="white" className="sys-btn" backgroundColor="gray">
+                            <Button sx={{ color: 'white', backgroundColor: 'gray' }} className="sys-btn">
                                 Wróć do listy
                             </Button>
                         </NextLink>
@@ -267,7 +273,7 @@ const Form: React.FC<Props> = (props) => {
                         <Button type="button" sx={{ marginLeft: 1 }} className="sys-btn" onClick={handleSaveData}>
                             Zmień / Zapisz
                         </Button>
-                    </Flex>
+                    </Container>
                 </Box>
             )}
 
@@ -276,7 +282,7 @@ const Form: React.FC<Props> = (props) => {
             </Box>
 
             {showAlert && <BigAlert text={'Z A P I S A N O'} show={showAlert} />}
-        </Flex>
+        </Container>
     );
 };
 

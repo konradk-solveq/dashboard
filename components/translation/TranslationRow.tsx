@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid, Input, Text } from 'theme-ui';
+import { Button, Container, Input, Typography } from '@mui/material/';
 
 const TranslationRow: React.FC<{
     code: string;
@@ -9,13 +9,13 @@ const TranslationRow: React.FC<{
     deleteHandler;
 }> = ({ code, version, controlSum, deleteHandler, translation }) => {
     return (
-        <Grid gap={2} columns="50px 60px 230px 2fr 100px" marginBottom="10px">
-            <Text pt="10px">{code}</Text>
-            <Text pt="10px">{version}</Text>
-            <Text pt="10px">{controlSum}</Text>
+        <Container sx={{ display: 'grid', gridTemplateColumns: '50px 60px 230px 2fr 100px', mb: '10px' }}>
+            <Typography sx={{ pt: '10px' }}>{code}</Typography>
+            <Typography sx={{ pt: '10px' }}>{version}</Typography>
+            <Typography sx={{ pt: '10px' }}>{controlSum}</Typography>
             <Input contentEditable={false} value={translation || ''} onChange={() => {}}></Input>
             <Button onClick={deleteHandler}>Usuń</Button>
-        </Grid>
+        </Container>
     );
 };
 export default TranslationRow;

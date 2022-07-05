@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Button, Grid, Label, Divider, Input, Select } from 'theme-ui';
+import Input from '@mui/material/Input';
+import Divider from '@mui/material/Divider';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import AppVersionToPlatformRow from './AppVersionToPlatformRow';
 
 const AppVersionToPlatformTable = ({
@@ -12,13 +17,13 @@ const AppVersionToPlatformTable = ({
     setNewAppVersionToPlatformValue,
     limitAndOffset,
     setLimitsAndOffset,
-    appVersionToPlatformsCount
+    appVersionToPlatformsCount,
 }) => {
     return (
         <>
-            <Grid columns="1fr 20px 60px 30px 100px" marginBottom="20px">
+            <Box sx={{ display: 'grid', columns: '1fr 20px 60px 30px 100px', marginBottom: '20px' }}>
                 <p></p>
-                <Label pt="10px">limit:</Label>
+                <InputLabel sx={{ pt: '10px' }}>limit:</InputLabel>
                 <Select
                     value={limitAndOffset.limit}
                     onChange={(e) => {
@@ -30,7 +35,7 @@ const AppVersionToPlatformTable = ({
                     <option value={20}>20</option>
                     <option value={40}>40</option>
                 </Select>
-                <Label pt="10px">strona:</Label>
+                <InputLabel sx={{ pt: '10px' }}>strona:</InputLabel>
                 <Select
                     value={limitAndOffset.offset}
                     onChange={(e) => {
@@ -45,15 +50,15 @@ const AppVersionToPlatformTable = ({
                         );
                     })}
                 </Select>
-            </Grid>
-            <Grid gap={2} columns="1fr 1fr 3fr 1fr 1fr 100px 100px" marginBottom="10px">
-                <Label>Wersja</Label>
-                <Label>Platforma</Label>
-                <Label>Data publikacji</Label>
-                <Label>Opublikowana</Label>
-                <Label>Wymuszenie aktualizacji</Label>
-                <Label></Label>
-            </Grid>
+            </Box>
+            <Box sx={{ display: 'grid', columns: '1fr 1fr 3fr 1fr 1fr 100px 100px', marginBottom: '10px', gap: 2 }}>
+                <InputLabel>Wersja</InputLabel>
+                <InputLabel>Platforma</InputLabel>
+                <InputLabel>Data publikacji</InputLabel>
+                <InputLabel>Opublikowana</InputLabel>
+                <InputLabel>Wymuszenie aktualizacji</InputLabel>
+                <InputLabel></InputLabel>
+            </Box>
             {appVersionToPlatformsState.length
                 ? appVersionToPlatformsState.map(
                       ({
@@ -90,37 +95,43 @@ const AppVersionToPlatformTable = ({
                       },
                   )
                 : ''}
-            <Divider marginY="40px"></Divider>
-            <Grid gap={2} columns="1fr 150px 150px 1fr" marginBottom="10px">
+            <Divider sx={{ marginY: '40px' }}></Divider>
+            <Box sx={{ display: 'grid', columns: '1fr 150px 150px 1fr', marginBottom: '10px', gap: 2 }}>
                 <Box></Box>
-                <Label>Wersja</Label>
-                <Label>Platforma</Label>
+                <InputLabel>Wersja</InputLabel>
+                <InputLabel>Platforma</InputLabel>
                 <Box></Box>
-            </Grid>
-            <Grid gap={2} columns="1fr 150px 150px 1fr" marginBottom="10px">
+            </Box>
+            <Box sx={{ display: 'grid', columns: '1fr 150px 150px 1fr', marginBottom: '10px', gap: 2 }}>
                 <Box></Box>
                 <Input
-                    bg="white"
+                    sx={{ backgroundColor: 'white' }}
                     value={newAppVersionToPlatformState.appVersionNumber}
                     onChange={(e) => setNewAppVersionToPlatformValue('appVersionNumber', e.target.value)}
                 ></Input>
                 <Input
-                    bg="white"
+                    sx={{ backgroundColor: 'white' }}
                     value={newAppVersionToPlatformState.appPlatformName}
                     onChange={(e) => setNewAppVersionToPlatformValue('appPlatformName', e.target.value)}
                 ></Input>
                 <Box></Box>
-            </Grid>
-            <Grid gap={2} columns="4fr 200px 4fr">
+            </Box>
+            <Box
+                sx={{
+                    display: 'grid',
+                    columns: '4fr 200px 4fr',
+                    marginBottom: '10px',
+                    gap: 2,
+                }}
+            >
                 <Box></Box>
                 <Button
-                    bg="default"
                     sx={{ textAlign: 'center' }}
                     onClick={() => createAppVersionToPlatformAndNotify(newAppVersionToPlatformState)}
                 >
                     Dodaj wersję
                 </Button>
-            </Grid>
+            </Box>
         </>
     );
 };

@@ -1,9 +1,10 @@
-import { useResponsiveValue } from '@theme-ui/match-media';
+// import { useResponsiveValue } from '@@mui/material//match-media';
 import React from 'react';
-import { Box, Container, Flex } from 'theme-ui';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 const Footer: React.FC<{}> = ({ children }) => {
-    const footerPart = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
+    // const footerPart = useResponsiveValue<'sticky' | 'unset'>(['unset', 'unset', 'unset', 'sticky']);
 
     return (
         <Container
@@ -17,82 +18,7 @@ const Footer: React.FC<{}> = ({ children }) => {
                 bottom: 0,
             }}
         >
-            <Flex
-                sx={{
-                    flexDirection: ['column', 'row', 'row', 'row', 'row'],
-                    justifyContent: 'stretch',
-                    width: '100%',
-                }}
-            >
-                <Flex
-                    sx={{
-                        flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                        justifyContent: 'stretch',
-                        width: ['100%', '50%', '50%', '50%', '50%'],
-                    }}
-                >
-                    <Container
-                        sx={{
-                            borderRight: [
-                                'none',
-                                '1px solid #ddd',
-                                '1px solid #ddd',
-                                '1px solid #ddd',
-                                '1px solid #ddd',
-                            ],
-                            borderBottom: ['1px solid #ddd', '1px solid #ddd', 'none', 'none', 'none'],
-                            justifyContent: 'start',
-                            pl: 30,
-                        }}
-                    >
-                        text
-                    </Container>
-                    <Container
-                        sx={{
-                            borderRight: [
-                                'none',
-                                '1px solid #ddd',
-                                '1px solid #ddd',
-                                '1px solid #ddd',
-                                '1px solid #ddd',
-                            ],
-                            borderBottom: ['1px solid #ddd', 'none', 'none', 'none', 'none'],
-                            justifyContent: 'start',
-                            pl: 30,
-                        }}
-                    >
-                        text
-                    </Container>
-                </Flex>
-                <Flex
-                    sx={{
-                        flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                        justifyContent: 'stretch',
-                        width: ['100%', '50%', '50%', '50%', '50%'],
-                    }}
-                >
-                    <Container
-                        sx={{
-                            borderRight: ['none', 'none', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd'],
-                            borderBottom: ['1px solid #ddd', '1px solid #ddd', 'none', 'none', 'none'],
-                            justifyContent: 'start',
-                            pl: 30,
-                        }}
-                    >
-                        text
-                    </Container>
-                    <Container
-                        sx={{
-                            // borderRight: ['none', 'none', '1px solid #ddd', '1px solid #ddd', '1px solid #ddd'],
-                            justifyContent: 'start',
-                            pl: 30,
-                        }}
-                    >
-                        text
-                    </Container>
-                </Flex>
-            </Flex>
-            <Flex
+            <Box
                 sx={{
                     justifyContent: 'center',
                     width: '100%',
@@ -107,9 +33,9 @@ const Footer: React.FC<{}> = ({ children }) => {
                         mt: 15,
                     }}
                 >
-                    2021 Kross. All rights reserved{' '}
+                    2022 Kross. All rights reserved{' '}
                 </Box>
-            </Flex>
+            </Box>
         </Container>
     );
 };
