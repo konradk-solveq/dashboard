@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Grid, Input, Label } from 'theme-ui';
+import { Button, Box, Input, InputLabel } from '@mui/material/';
 import Select from 'react-select';
 import notificationStyle from '../../styles/NotificationsForm.module.css';
 import { FormValues } from '../typings/Notifications';
@@ -41,20 +41,20 @@ const NotificationsForm: React.FC<IProps> = ({
                 <div className={notificationStyle.close} onClick={handleOpen}>
                     {'\u2715'}
                 </div>
-                <Grid columns="50px 380px 1fr" marginBottom="10px">
-                    <Label>Tytuł</Label>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '50px 380px 1fr' }}>
+                    <InputLabel>Tytuł</InputLabel>
 
                     <Input className={notificationStyle.title} type="text" {...register('title', { required: true })} />
                     {errors.title && <p>Tytuł jest wymagany.</p>}
-                </Grid>
-                <Grid columns="50px 380px 1fr" marginBottom="10px">
-                    <Label>Treść</Label>
+                </Box>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '50px 380px 1fr' }}>
+                    <InputLabel>Treść</InputLabel>
                     <textarea {...register('message', { required: true })} />
                     {errors.message && <p>Treść jest wymagana.</p>}
-                </Grid>
+                </Box>
 
-                <Grid columns="50px 380px 1fr" marginBottom="10px">
-                    <Label>Język</Label>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '50px 380px 1fr' }}>
+                    <InputLabel>Język</InputLabel>
                     <Controller
                         control={control}
                         rules={{ required: 'Język jest wymagany.' }}
@@ -64,7 +64,7 @@ const NotificationsForm: React.FC<IProps> = ({
                         )}
                     />
                     {errors.language && <p>{(errors.language as any).message}</p>}
-                </Grid>
+                </Box>
                 <div className={notificationStyle.buttonContainer}>
                     <Button type="submit">Zapisz</Button>
                 </div>

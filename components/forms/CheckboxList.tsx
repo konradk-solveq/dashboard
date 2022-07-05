@@ -1,4 +1,4 @@
-import { Box, Flex, Checkbox, Label } from 'theme-ui';
+import { Box, Container, Checkbox, InputLabel } from '@mui/material/';
 
 interface Props {
     title: string;
@@ -30,8 +30,9 @@ const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }
             }}
         >
             <Box sx={{ fontFamily: 'din-b' }}>{title}</Box>
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     justifyContent: 'flex-start',
                     flexWrap: 'wrap',
                     width: '100%',
@@ -39,17 +40,17 @@ const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }
                 }}
             >
                 {listOptions.map((e) => (
-                    <Flex key={e.enumValue} sx={{ mr: '10px' }}>
-                        <Label>
+                    <Container key={e.enumValue} sx={{ mr: '10px', display: 'flex' }}>
+                        <InputLabel>
                             <Box>{e.i18nValue}</Box>
                             <Checkbox
                                 checked={values.includes(e.enumValue)}
                                 onChange={() => handlerOnChange(e.enumValue)}
                             />
-                        </Label>
-                    </Flex>
+                        </InputLabel>
+                    </Container>
                 ))}
-            </Flex>
+            </Container>
         </Box>
     );
 };

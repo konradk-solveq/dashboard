@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Link, AspectImage, Heading, Flex, AspectRatio } from 'theme-ui';
+import { Box, Container, Link, Typography } from '@mui/material/';
 import NextLink from 'next/link';
 
 const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ bg, route, page, q }) => {
@@ -8,7 +8,7 @@ const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ b
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
 
     return (
-        <Grid sx={{ bg: bg, m: 1 }} columns={[1, '3fr ']} className="sys-btn">
+        <Container sx={{ bg: bg, m: 1, display: 'grid', gridTemplateColumns: [1, '3fr '] }} className="sys-btn">
             <NextLink
                 href={{
                     pathname: '/routes/edit',
@@ -18,30 +18,31 @@ const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ b
             >
                 <Link className="sys-btn">
                     <Box sx={{ overflow: 'hidden', p: 1 }}>
-                        <Heading as="h3" sx={{ textAlign: 'center' }}>
+                        <Typography variant="h3" sx={{ textAlign: 'center' }}>
                             <Box>{route.name}</Box>
-                        </Heading>
+                        </Typography>
                     </Box>
                     <Box p={1}>
                         <Box sx={{ color: '#fff' }}>
-                            {image?.url && <AspectImage ratio={1} src={image?.url}></AspectImage>}
+                            {image?.url && <Box component="img" sx={{ width: '100%' }} src={image?.url}></Box>}
                             {!image?.url && (
-                                <AspectRatio
-                                    ratio={1}
+                                <Box
                                     sx={{
                                         bg: '#555555',
+                                        width: '100%',
                                     }}
                                 >
-                                    <Flex
+                                    <Container
                                         sx={{
+                                            display: 'flex',
                                             justifyContent: 'center',
                                             alignItems: 'center',
                                             height: '100%',
                                         }}
                                     >
                                         <Box sx={{ bg: '#313131', p: '10px' }}>no image</Box>
-                                    </Flex>
-                                </AspectRatio>
+                                    </Container>
+                                </Box>
                             )}
                         </Box>
                     </Box>
@@ -50,7 +51,7 @@ const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ b
                     <Box sx={{ padding: 1 }}>{route.createdAt}</Box>
                 </Link>
             </NextLink>
-        </Grid>
+        </Container>
     );
 };
 

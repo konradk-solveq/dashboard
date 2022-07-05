@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Field, Grid, Link } from 'theme-ui';
+import { Box, TextField, Container, Link } from '@mui/material/';
 import { FeaturedSectionContext } from '../../components/contexts/featured/contexts';
 import { FeaturedSectionRouteSearchContext } from '../../components/contexts/featured/contexts';
 import { Route } from '../../components/typings/Route';
@@ -29,25 +29,25 @@ const LookupForRoute: React.FC<{}> = () => {
                 );
 
                 return (
-                    <Grid key={route.id} {...routeStyle}>
+                    <Container sx={{ display: 'grid' }} key={route.id} {...routeStyle}>
                         <ActionButton />
                         <Box>
                             {route.name} ({<Link href={`/routes/edit?routeId=${route.id}`}>{route.id}</Link>})
                         </Box>
-                    </Grid>
+                    </Container>
                 );
             })
         );
     return (
         <>
-            <Field
+            <TextField
                 placeholder="Wpisz nazwę, część opisu"
                 label="Wyszukaj trasę"
-                bg="white"
+                sx={{ backgroundColor: 'white' }}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 name={`${sectionId}-route-lookup`}
-            ></Field>
+            ></TextField>
             {isLoading ? <span>Wyszukiwanie</span> : results}
         </>
     );

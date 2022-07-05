@@ -1,11 +1,9 @@
 import React from 'react';
-import { Box } from 'theme-ui';
+import { Box } from '@mui/material/';
 
 const NotificationBox = ({ children }) => {
     return (
         <Box
-            bg="rgba(255, 99, 71, 0.8)"
-            color="white"
             sx={{
                 textAlign: 'center',
                 position: 'fixed',
@@ -14,6 +12,8 @@ const NotificationBox = ({ children }) => {
                 width: '300px',
                 height: '60px',
                 fontSize: '24px',
+                color: 'white',
+                backgroundColor: 'rgba(255, 99, 71, 0.8)',
             }}
         >
             <Box sx={{ position: 'relative', transform: 'translateY(15px)' }}>{children}</Box>

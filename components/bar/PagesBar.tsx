@@ -1,16 +1,15 @@
-import React, {  } from 'react';
-import { Box, Button, Flex,  } from 'theme-ui';
+import React from 'react';
+import { Box, Button, Container } from '@mui/material';
 
 interface Props {
     page: any;
     pages: any;
-    setPage: (Function);
+    setPage: Function;
     scroll: number;
     handleScrollRight: Function;
     handleScrolLeft: Function;
     barRef?: any; // dodawany tlko raz na stronę
 }
-
 
 const PagesBar: React.FC<Props> = ({
     page,
@@ -21,13 +20,15 @@ const PagesBar: React.FC<Props> = ({
     handleScrolLeft,
     barRef,
 }: Props) => {
-
     return (
-        <Flex sx={{
-            mt: '30px',
-            mb: '20px',
-            minWidth: '100%',
-        }}>
+        <Container
+            sx={{
+                display: 'flex',
+                mt: '30px',
+                mb: '20px',
+                minWidth: '100%',
+            }}
+        >
             <Button
                 sx={{
                     p: '1px',
@@ -38,9 +39,13 @@ const PagesBar: React.FC<Props> = ({
                     mr: '3px',
                     cursor: 'pointer',
                 }}
-                className='sys-btn'
-                onClick={() => { handleScrollRight(true); }}
-            >&lt;&lt;&lt;</Button>
+                className="sys-btn"
+                onClick={() => {
+                    handleScrollRight(true);
+                }}
+            >
+                &lt;&lt;&lt;
+            </Button>
             <Button
                 sx={{
                     p: '1px',
@@ -51,18 +56,23 @@ const PagesBar: React.FC<Props> = ({
                     mr: '10px',
                     cursor: 'pointer',
                 }}
-                className='sys-btn'
-                onClick={() => { handleScrollRight(); }}
-            >&lt;</Button>
+                className="sys-btn"
+                onClick={() => {
+                    handleScrollRight();
+                }}
+            >
+                &lt;
+            </Button>
             <Box
                 ref={barRef}
                 sx={{
                     overflow: 'hidden',
                 }}
             >
-                <Flex
-                    className='bar-scroll'
+                <Container
+                    className="bar-scroll"
                     sx={{
+                        display: 'flex',
                         msJustifySelf: 'stretch',
                         position: 'relative',
                         left: scroll + 'px',
@@ -79,9 +89,9 @@ const PagesBar: React.FC<Props> = ({
                                     minWidth: '40px',
                                     minHeight: '40px',
                                     cursor: 'pointer',
+                                    bg: `${thePage === page ? '#555' : 'primary'}`,
                                 }}
-                                bg={thePage === page ? '#555' : 'primary'}
-                                className='sys-btn'
+                                // className="sys-btn"
                                 key={thePage}
                                 onClick={(e) => setPage(thePage)}
                             >
@@ -89,7 +99,7 @@ const PagesBar: React.FC<Props> = ({
                             </Button>
                         );
                     })}
-                </Flex>
+                </Container>
             </Box>
             <Button
                 onClick={() => handleScrolLeft()}
@@ -102,10 +112,13 @@ const PagesBar: React.FC<Props> = ({
                     ml: '10px',
                     cursor: 'pointer',
                 }}
-                className='sys-btn'
-            >&gt;</Button>
-            <Flex
+                className="sys-btn"
+            >
+                &gt;
+            </Button>
+            <Container
                 sx={{
+                    display: 'flex',
                     minWidth: '40px',
                     minHeight: '40px',
                     bx: 'khaki',
@@ -123,21 +136,27 @@ const PagesBar: React.FC<Props> = ({
                         ml: '3px',
                         cursor: 'pointer',
                     }}
-                    className='sys-btn'
-                >&gt;&gt;&gt;</Button>
-                <Box sx={{
-                    position: 'absolute',
-                    left: '2px',
-                    width: '40px',
-                    fontSize: '24px',
-                    fontFamily: 'din-l',
-                    textAlign: 'center',
-                    top: '-30px',
-                }}>{pages.length}</Box>
-            </Flex>
-        </Flex>
-
-    )
-}
+                    className="sys-btn"
+                >
+                    &gt;&gt;&gt;
+                </Button>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        position: 'absolute',
+                        left: '2px',
+                        width: '40px',
+                        fontSize: '24px',
+                        fontFamily: 'din-l',
+                        textAlign: 'center',
+                        top: '-30px',
+                    }}
+                >
+                    {pages.length}
+                </Box>
+            </Container>
+        </Container>
+    );
+};
 
 export default PagesBar;

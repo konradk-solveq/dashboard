@@ -1,5 +1,9 @@
 import React from 'react';
-import { Button, Grid, Checkbox, Input, Label } from 'theme-ui';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Box from '@mui/material/Box';
 
 const AppVersionToPlatformRow: React.FC<{
     published: boolean;
@@ -21,21 +25,29 @@ const AppVersionToPlatformRow: React.FC<{
     deleteHandler,
 }) => {
     return (
-        <Grid gap={2} columns="1fr 1fr 3fr 1fr 1fr 100px 100px" marginBottom="10px">
-            <Input bg="lightgrey" disabled={true} value={appVersionNumber}></Input>
-            <Input bg="lightgrey" disabled={true} value={appPlatformName}></Input>
-            <Input bg="lightgrey" disabled={true} value={publishedAt || '-'}></Input>
-            <Label p="8px">
-                <Checkbox bg="white" checked={published} onChange={(e) => setter('published', e.target.checked)} />
-            </Label>
-            <Label p="8px">
-                <Checkbox bg="white" checked={forceUpdate} onChange={(e) => setter('forceUpdate', e.target.checked)} />
-            </Label>
-            <Button bg="green" onClick={saveHandler}>
+        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr 3fr 1fr 1fr 100px 100px' }}>
+            <Input sx={{ backgroundColor: '#607D8B' }} disabled={true} value={appVersionNumber}></Input>
+            <Input sx={{ backgroundColor: '#607D8B' }} disabled={true} value={appPlatformName}></Input>
+            <Input sx={{ backgroundColor: '#607D8B' }} disabled={true} value={publishedAt || '-'}></Input>
+            <InputLabel sx={{ p: '8px' }}>
+                <Checkbox
+                    sx={{ backgroundColor: 'white' }}
+                    checked={published}
+                    onChange={(e) => setter('published', e.target.checked)}
+                />
+            </InputLabel>
+            <InputLabel sx={{ p: '8px' }}>
+                <Checkbox
+                    sx={{ backgroundColor: 'white' }}
+                    checked={forceUpdate}
+                    onChange={(e) => setter('forceUpdate', e.target.checked)}
+                />
+            </InputLabel>
+            <Button sx={{ backgroundColor: '#green' }} onClick={saveHandler}>
                 Zapisz
             </Button>
             <Button onClick={deleteHandler}>Usuń</Button>
-        </Grid>
+        </Box>
     );
 };
 export default AppVersionToPlatformRow;

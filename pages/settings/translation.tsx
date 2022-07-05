@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Heading, Divider } from 'theme-ui';
+import { Container, Typography, Divider } from '@mui/material/';
 import TranslationsContainer, { TranslationsContext, LanguageData } from '../../components/contexts/translation';
 import LanguageTable from '../../components/translation/LanguageTable';
 import TranslationAddForm from '../../components/translation/TranslationAddForm';
@@ -81,11 +81,11 @@ const TranslationMenage: React.FC<{}> = () => {
     if (!languages && !uiTranslations) return <>{message.loading}</>;
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
+            <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
                 {notification && <NotificationBox>{notification}</NotificationBox>}
-                <Heading m="20px" sx={{ textAlign: 'center' }}>
+                <Typography variant="h2" sx={{ textAlign: 'center', m: '20px' }}>
                     Języki
-                </Heading>
+                </Typography>
                 <LanguageTable
                     {...{
                         languageState,
@@ -105,10 +105,8 @@ const TranslationMenage: React.FC<{}> = () => {
                         <li>Przed usunięciem języka należy usunąć wszystkie tłumaczenia dotyczące tego języka.</li>
                     </ul>
                 </p>
-                <Divider marginY="60px"></Divider>
-                <Heading m="20px" sx={{ textAlign: 'center' }}>
-                    Tłumaczenia
-                </Heading>
+                <Divider sx={{ marginY: '60px' }}></Divider>
+                <Typography sx={{ textAlign: 'center', m: '20px' }}>Tłumaczenia</Typography>
                 <TranslationAddForm
                     {...{ newUiTranslations, setNewUiTranslationsValue, addUiTranslationAndNotify }}
                 ></TranslationAddForm>

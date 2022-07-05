@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Grid, Label } from 'theme-ui';
+import { Box, Button, Grid, InputLabel, Container } from '@mui/material/';
 import LanguageRow from './LanguageRow';
 
 const LanguageTable = ({
@@ -19,13 +19,15 @@ const LanguageTable = ({
         languageState.reduce((previous, current) => (previous > current.id ? previous : current.id), 0) + 1;
     return (
         <>
-            <Grid gap={2} columns="50px 180px 2fr 40px 100px 100px" marginBottom="10px">
-                <Label>Kod</Label>
-                <Label>Nazwa</Label>
-                <Label>Ikona</Label>
-                <Label>Aktywny</Label>
-                <Label></Label>
-            </Grid>
+            <Container
+                sx={{ display: 'grid', gridTemplateColumns: '50px 180px 2fr 40px 100px 100px', gap: 2, mb: '10px' }}
+            >
+                <InputLabel>Kod</InputLabel>
+                <InputLabel>Nazwa</InputLabel>
+                <InputLabel>Ikona</InputLabel>
+                <InputLabel>Aktywny</InputLabel>
+                <InputLabel></InputLabel>
+            </Container>
             {languageState.length
                 ? languageState.map(({ code, name, icon, isActive, newLanguage, id }) => {
                       return (
@@ -51,12 +53,11 @@ const LanguageTable = ({
                       );
                   })
                 : ''}
-            <Grid gap={2} columns="4fr 200px 4fr">
+            <Grid sx={{ gap: 2, gridTemplateColumns: '4fr 200px 4fr' }}>
                 <Box></Box>
                 <Button
-                    bg={!disabledAddLanguage ? 'default' : 'lightgray'}
+                    sx={{ backgroundColor: `${!disabledAddLanguage ? 'default' : 'lightgray'}`, textAlign: 'center' }}
                     disabled={disabledAddLanguage}
-                    sx={{ textAlign: 'center' }}
                     onClick={() => setLanguageState((p) => [...p, { id: nextLanguageId, code: '', newLanguage: true }])}
                 >
                     Dodaj język

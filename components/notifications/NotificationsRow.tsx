@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid, Text } from 'theme-ui';
+import { Button, Container, Box } from '@mui/material/';
 
 const NotificationsRow: React.FC<{
     title: string;
@@ -9,8 +9,8 @@ const NotificationsRow: React.FC<{
     editHandler;
 }> = ({ id, title, deleteHandler, editHandler }) => {
     return (
-        <Grid columns="4fr 1fr 1fr" gap="10px" margin={'20px'}>
-            <Text>{title}</Text>
+        <Container sx={{ display: 'grid', gridTemplateColumns: '4fr 1fr 1fr', gap: '10px', margin: '20px' }}>
+            <Box>{title}</Box>
 
             <Button
                 onClick={() => editHandler(id)}
@@ -21,7 +21,7 @@ const NotificationsRow: React.FC<{
             <Button onClick={() => deleteHandler(id)} sx={{ maxHeight: '40px', cursor: 'pointer' }}>
                 Usuń
             </Button>
-        </Grid>
+        </Container>
     );
 };
 

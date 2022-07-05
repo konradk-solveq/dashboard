@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container, Text } from 'theme-ui';
+import { Button, Container, Box } from '@mui/material/';
 import rowStyle from '../../styles/NotificationsGroupRow.module.css';
 
 const NotificationsGroupRow: React.FC<{
@@ -12,9 +12,9 @@ const NotificationsGroupRow: React.FC<{
 }> = ({ id, language, title, text, deleteHandler, editHandler }) => {
     return (
         <Container className={rowStyle.container}>
-            <Text className={rowStyle.language}>{language}</Text>
-            <Text className={rowStyle.title}>{title}</Text>
-            <Text className={rowStyle.text}>{text}</Text>
+            <Box className={rowStyle.language}>{language}</Box>
+            <Box className={rowStyle.title}>{title}</Box>
+            <Box className={rowStyle.text}>{text}</Box>
             <div className={rowStyle.buttons}>
                 <Button
                     className={rowStyle.button}

@@ -1,17 +1,17 @@
 import React from 'react';
-import { Box, Button, Grid, Input, Label } from 'theme-ui';
+import { Box, Button, Container, Input, InputLabel } from '@mui/material/';
 
 const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addUiTranslationAndNotify }) => {
     const { code, version, file } = newUiTranslations;
     const disabledAddTranslation = code && version && file ? false : true;
     return (
         <>
-            <Grid gap={2} columns="50px 180px 1fr" marginBottom="10px">
-                <Label>Kod</Label>
-                <Label>Wersja</Label>
-                <Label>Plik z tłumaczeniem UI</Label>
-            </Grid>
-            <Grid gap={2} columns="50px 180px 1fr" marginBottom="10px">
+            <Container sx={{ display: 'grid', gridTemplateColumns: '50px 180px 1fr', mb: '10px' }}>
+                <InputLabel>Kod</InputLabel>
+                <InputLabel>Wersja</InputLabel>
+                <InputLabel>Plik z tłumaczeniem UI</InputLabel>
+            </Container>
+            <Container sx={{ display: 'grid', gridTemplateColumns: '50px 180px 1fr', mb: '10px' }}>
                 <Input value={code} onChange={(e) => setNewUiTranslationsValue('code')(e.target.value)}></Input>
                 <Input value={version} onChange={(e) => setNewUiTranslationsValue('version')(e.target.value)}></Input>
                 <Input
@@ -20,8 +20,8 @@ const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addU
                     multiple={false}
                     onChange={(e) => setNewUiTranslationsValue('file')(e.target.files[0])}
                 ></Input>
-            </Grid>
-            <Grid gap={2} columns="4fr 200px 4fr" mb="40px">
+            </Container>
+            <Container sx={{ display: 'grid', gridTemplateColumns: '4fr 200px 4fr', mb: '40px' }}>
                 <Box></Box>
                 <Button
                     sx={{ textAlign: 'center' }}
@@ -30,7 +30,7 @@ const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addU
                 >
                     Dodaj tłumaczenie
                 </Button>
-            </Grid>
+            </Container>
         </>
     );
 };

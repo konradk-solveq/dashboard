@@ -1,13 +1,13 @@
-import { useBreakpointIndex } from '@theme-ui/match-media';
+// import { useBreakpointIndex } from '@@mui/material//match-media';
 import { useEffect, useRef, useState } from 'react';
-import { Flex } from 'theme-ui';
+import Container from '@mui/material/Container';
 import Footer from './Footer';
 import Header from './Header';
 import Menu from './Menu';
 import Tester from './Tester';
 
 const Layout: React.FC<{}> = ({ children }) => {
-    const index = useBreakpointIndex();
+    const index = 1;
 
     const [contentH, setContentH] = useState(null);
 
@@ -25,25 +25,27 @@ const Layout: React.FC<{}> = ({ children }) => {
     }, [headerObj.current, footerObj.current]);
 
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
                 height: '500px',
             }}
         >
-            <div ref={headerObj}>
+            <Container ref={headerObj}>
                 <Header />
-            </div>
-            <Flex
+            </Container>
+            <Container
                 sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
+                    display: 'flex',
+                    flexDirection: 'column',
                     alignContent: 'flex-start',
-                    bg: ['#fff', '#fff', '#666', '#666', '#666'],
+                    bg: '#fff',
                 }}
             >
                 <Menu />
 
-                <Flex
+                <Container
                     sx={{
                         minHeight: contentH - (index < 2 ? 65 : 0),
                         width: '100%',
@@ -52,13 +54,13 @@ const Layout: React.FC<{}> = ({ children }) => {
                     }}
                 >
                     {children}
-                </Flex>
-            </Flex>
+                </Container>
+            </Container>
             <div ref={footerObj}>
                 <Footer />
             </div>
             <Tester />
-        </Flex>
+        </Container>
     );
 };
 export default Layout;

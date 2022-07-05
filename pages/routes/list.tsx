@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Grid, Input } from 'theme-ui';
+import { Box, Container, Input } from '@mui/material/';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
-import { useResponsiveValue } from '@theme-ui/match-media';
 import PagesBar from '../../components/bar/PagesBar';
 import { useRouter } from 'next/dist/client/router';
 import Tile from '../../componentsSSP/routes/list/Tile';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
-export default function Page({ }) {
+export default function Page({}) {
     const { query, pathname, replace, asPath } = useRouter();
     const [name, setName] = useState<string>(query?.q?.toString() || '');
     const page = Number(query?.page);
@@ -25,7 +24,7 @@ export default function Page({ }) {
     const debouncedName = useDebounce(name, 333);
     const debouncedTotal = useDebounce(total, 125);
     const debouncedLimit = useDebounce(limit, 125);
-    const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
+    // const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
 
     useEffect(() => {
         setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
@@ -69,7 +68,7 @@ export default function Page({ }) {
         });
         const path = `${pathname}?${queryString}`;
         return path;
-    }
+    };
 
     useEffect(() => {
         const path = getPathForRoute();
@@ -104,12 +103,16 @@ export default function Page({ }) {
 
             {elements.length === 0 ? null : (
                 <>
-                    <Grid sx={{ margin: 1 }} gap={0} columns={[1, layout]}>
+                    <Container
+                        sx={{ margin: 1, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}
+
+                        // columns={[1, layout]}
+                    >
                         {elements?.map((el, index) => {
                             const bg = index % 2 ? 'primary' : 'muted';
                             return <Tile key={el.id} bg={bg} route={el} page={page} q={debouncedName}></Tile>;
                         })}
-                    </Grid>
+                    </Container>
                 </>
             )}
 

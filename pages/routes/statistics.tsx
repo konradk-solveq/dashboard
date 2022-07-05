@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import useSWR from 'swr';
-import { Box, Flex, Container } from 'theme-ui';
+import { Box, Container } from '@mui/material/';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
@@ -84,8 +84,9 @@ const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setCha
 
 const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) => {
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'row',
             }}
         >
@@ -100,7 +101,7 @@ const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) =>
                 }}
             />
             <Box>{title}</Box>
-        </Flex>
+        </Container>
     );
 };
 
@@ -189,8 +190,9 @@ export default function Page({}) {
     };
 
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
             }}
         >
@@ -215,8 +217,9 @@ export default function Page({}) {
                 barRef={barRef}
             />
 
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     position: 'relative',
                     top: '-20px',
                 }}
@@ -233,20 +236,15 @@ export default function Page({}) {
                         </Box>
                     </>
                 )}
-            </Flex>
+            </Container>
 
-            <Flex sx={{ maxHeight: '350px' }}>
-                <Flex
-                    sx={{
-                        flexDirection: 'column',
-                        width: '50%',
-                    }}
-                >
+            <Container sx={{ maxHeight: '350px', display: 'flex' }}>
+                <Container sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
                     <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
                     <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
                     <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
                     <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
-                </Flex>
+                </Container>
                 <Box sx={{ width: '50%' }}>
                     <ChartTypes3D
                         data={[
@@ -258,7 +256,7 @@ export default function Page({}) {
                         title={'Zestawienie ilości tras'}
                     />
                 </Box>
-            </Flex>
+            </Container>
 
             <DateInputs
                 startDate={startDate}
@@ -269,8 +267,9 @@ export default function Page({}) {
                 veryEndDate={veryEndDate}
             />
 
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     my: '20px',
                     pb: '30px',
                     borderTop: '1px solid #ddd',
@@ -292,12 +291,13 @@ export default function Page({}) {
                 <Box sx={{ width: '500px' }}>
                     <ChartHour data={filteredChartData} title={'Ilość tras według godzin'} page={page} />
                 </Box>
-            </Flex>
+            </Container>
 
-            <Flex
+            <Container
                 sx={{
                     my: '20px',
                     pb: '30px',
+                    display: 'flex',
                     borderTop: '1px solid #ddd',
                     borderBottom: '1px solid #ddd',
                     flexDirection: 'row',
@@ -317,10 +317,11 @@ export default function Page({}) {
                         />
                     </Box>
                 ))}
-            </Flex>
+            </Container>
 
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     flexDirection: 'column',
                     my: '20px',
                 }}
@@ -328,7 +329,7 @@ export default function Page({}) {
                 <Legend color={'khaki'} title={' - trasy prawidłowe'} />
                 <Legend color={'#68B028'} title={' - trasy upublicznione'} />
                 <Legend color={'#cf0f36'} title={' - trasy uszkodzone'} />
-            </Flex>
+            </Container>
             {elements?.length === 0 ? null : (
                 <>
                     {elements?.map((el, index) => {
@@ -338,8 +339,9 @@ export default function Page({}) {
             )}
             {sumAll.length === 0 ? null : (
                 <>
-                    <Flex
+                    <Container
                         sx={{
+                            display: 'flex',
                             margin: 1,
                             flexWrap: 'wrap',
                         }}
@@ -347,11 +349,12 @@ export default function Page({}) {
                         {sumAll?.map((el, index) => {
                             return <Route key={'box' + index} route={el}></Route>;
                         })}
-                    </Flex>
+                    </Container>
                 </>
             )}
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     justifyContent: 'center',
                     width: '100%',
                 }}
@@ -363,7 +366,7 @@ export default function Page({}) {
                     ))}
                     <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
                 </Container>
-            </Flex>
-        </Flex>
+            </Container>
+        </Container>
     );
 }

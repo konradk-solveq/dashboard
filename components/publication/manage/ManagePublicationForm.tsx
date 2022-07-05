@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { Paragraph as Paragraph, Spinner, Flex, Button } from 'theme-ui';
+import { Typography, CircularProgress, Box, Button, Container } from '@mui/material/';
 import styled from '@emotion/styled';
 
 import { errorHandler } from '../../contexts/translation';
@@ -108,28 +108,42 @@ const ManagePublicationForm: React.FC = () => {
 
     if (isError) {
         return (
-            <Flex sx={{ flexDirection: 'column', height: '80%', justifyContent: 'center', alignItems: 'center' }}>
-                <Paragraph mb="80px" sx={{ fontSize: '1.2rem' }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '80%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography variant="body1" sx={{ fontSize: '1.2rem', mb: '80px' }}>
                     Nie udało połączyć się z serwerem
-                </Paragraph>
-                <Button sx={{ fontSize: '1rem' }} type="button" bg="darkgrey" onClick={handleBack}>
+                </Typography>
+                <Button sx={{ fontSize: '1rem', bg: 'darkgrey' }} type="button" onClick={handleBack}>
                     Cofnij
                 </Button>
-            </Flex>
+            </Box>
         );
     }
 
     return (
         <>
-            <Flex
-                as="form"
-                sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80%' }}
+            <Container
+                // as="form"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '80%',
+                }}
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {isLoading ? <Spinner mb="80px" /> : renderStep()}
+                {isLoading ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
                 {activeStep > 0 && activeStep < steps.length - 1 && (
                     <ButtonContainer>
-                        <Button sx={{ fontSize: '1rem' }} type="button" bg="darkgrey" onClick={handleBack}>
+                        <Button sx={{ fontSize: '1rem', bg: 'darkgrey' }} type="button" onClick={handleBack}>
                             Cofnij
                         </Button>
                         {activeStep === steps.length - 2 ? (
@@ -148,20 +162,26 @@ const ManagePublicationForm: React.FC = () => {
                         Wróć na start
                     </Button>
                 )}
-            </Flex>
+            </Container>
             {errors.current && (
-                <Paragraph sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                <Typography
+                    variant="body1"
+                    sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
+                >
                     Dokumenty nie mogą być takie same!
-                </Paragraph>
+                </Typography>
             )}
             {(errors.publicationDate || errors.showDate) && (
-                <Paragraph sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                <Typography
+                    variant="body1"
+                    sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
+                >
                     {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
                         'Data nie może być w przeszłości.'}
                     {(errors?.publicationDate?.type === 'afterShowDate' ||
                         errors?.showDate?.type === 'beforePublicationDate') &&
                         'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
-                </Paragraph>
+                </Typography>
             )}
         </>
     );

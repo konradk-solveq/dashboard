@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex } from 'theme-ui';
+import { Container } from '@mui/material/';
 import fetcher from '../../helpers/fetcher';
 import useSWR from 'swr';
 
@@ -20,8 +20,9 @@ export default function Page({}) {
     const [chosenDate, setChosenDate] = useState(date);
     const { data: reports, error: reportsError } = useSWR<any>(`/api/report/${chosenDate}`, fetcher);
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
                 mx: 'auto',
             }}
@@ -50,6 +51,6 @@ export default function Page({}) {
             ) : (
                 ''
             )}
-        </Flex>
+        </Container>
     );
 }

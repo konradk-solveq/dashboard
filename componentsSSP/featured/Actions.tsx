@@ -1,4 +1,4 @@
-import { Box, Grid, Switch } from '@theme-ui/components';
+import { Box, Grid, Switch } from '@mui/material/';
 import React, { useContext } from 'react';
 import { FeaturedSectionContext } from '../../components/contexts/featured/contexts';
 import pointerStyle from './pointerStyle';

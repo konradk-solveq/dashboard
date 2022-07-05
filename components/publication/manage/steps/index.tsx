@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Heading, Button, Select, Checkbox } from 'theme-ui';
+import { Box, Typography, Button, Select, Checkbox } from '@mui/material/';
 import { Controller } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -44,7 +44,7 @@ export const Step0: React.FC<Step0Props> = ({ handlePublicationTypeSelect }) => 
     return (
         <>
             <Box mb="80px">
-                <Heading>Typ Publikacji</Heading>
+                <Typography>Typ Publikacji</Typography>
             </Box>
             <Row>
                 <Button
@@ -80,7 +80,7 @@ export const Step1: React.FC = () => {
     return (
         <>
             <Box mb="80px">
-                <Heading>Dokument Aktualny i Nowy</Heading>
+                <Typography>Dokument Aktualny i Nowy</Typography>
             </Box>
             <Row>
                 <ItemColumn>
@@ -129,7 +129,7 @@ export const Step2: React.FC = () => {
     return (
         <>
             <Box mb="80px">
-                <Heading>Daty Wyświetlania Dokumentów</Heading>
+                <Typography>Daty Wyświetlania Dokumentów</Typography>
             </Box>
             <Row>
                 <ItemColumn>
@@ -209,7 +209,7 @@ export const Step3 = () => {
     return (
         <>
             <Box mb="80px">
-                <Heading>Domyślny język kiedy brakuje zapytanego</Heading>
+                <Typography>Domyślny język kiedy brakuje zapytanego</Typography>
             </Box>
             <Row>
                 <ItemColumn>
@@ -240,7 +240,7 @@ export const Step4 = () => {
             <Row>
                 <ItemColumn>
                     <NestedLabel>
-                        <Heading mb="30px">Zapisać jako draft?</Heading>
+                        <Typography mb="30px">Zapisać jako draft?</Typography>
                         <Checkbox {...register('draft')} />
                     </NestedLabel>
                 </ItemColumn>
@@ -254,11 +254,11 @@ export const Submitted: React.FC<SubmittedProps> = ({ isError }) => {
         <Box mb="80px">
             {' '}
             {isError ? (
-                <Heading variant="h1" sx={{ textAlign: 'center', lineHeight: '40px' }}>
+                <Typography variant="h1" sx={{ textAlign: 'center', lineHeight: '40px' }}>
                     Nie udało się zapisać.
-                </Heading>
+                </Typography>
             ) : (
-                <Heading variant="h1">Pomyślnie wysłano zapytanie!</Heading>
+                <Typography variant="h1">Pomyślnie wysłano zapytanie!</Typography>
             )}
         </Box>
     );
