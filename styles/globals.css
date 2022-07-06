@@ -62,8 +62,17 @@ body {
     cursor: pointer;
 }
 
-.sys-btn:hover {
-    background-color: #f67e83;
+.card-route {
+    transition: 0.2s;
+}
+
+.card-route:hover {
+    transform: translateY(-10px) scale(1.005) translateZ(0);
+    box-shadow: 0 32px 48px rgba(0, 0, 0, 0.11), 0 24px 46px (#2f4858);
+}
+
+/* .sys-btn:hover {
+    background-color: #41040662;
     transition: all 0.3s;
     color: #313131 !important;
-}
+} */

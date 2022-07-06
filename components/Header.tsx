@@ -15,7 +15,7 @@ const Header: React.FC<{}> = ({ children }) => {
     //useBreakpointIndex();
 
     return (
-        <Box sx={{ flexGrow: 1, width: '100vw', display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ flexGrow: 1, width: '100%', display: 'flex', justifyContent: 'center' }}>
             <AppBar position="static" color="primary" style={{ zIndex: 1301 }}>
                 <Toolbar>
                     <Menu />
