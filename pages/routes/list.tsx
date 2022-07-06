@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Container, Input } from '@mui/material/';
+import { Box, Container, Paper, Divider, InputBase } from '@mui/material/';
+import SearchIcon from '@mui/icons-material/Search';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
@@ -35,30 +36,6 @@ export default function Page({}) {
         .fill(0)
         .map((v, i) => i + 1);
 
-    const [scroll, setScroll] = useState(0);
-    const SCROLL_MOVE = 42 * 8;
-    const barRef = useRef<any>();
-
-    const handleScrolLeft = (end: boolean = false) => {
-        const pagesWidth = pages.length * 42;
-        const barWidth = barRef?.current?.clientWidth;
-        let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
-
-        if (pagesWidth + newPosition < barWidth) {
-            newPosition = -(pagesWidth - barWidth);
-        }
-        setScroll(newPosition);
-    };
-
-    const handleScrollRight = (end: boolean) => {
-        let newPosition = end ? 0 : scroll + SCROLL_MOVE;
-
-        if (newPosition > 0) {
-            newPosition = 0;
-        }
-        setScroll(newPosition);
-    };
-
     const getPathForRoute = (routeId?: string, page?: number) => {
         const queryString = qs.stringify({
             ...query,
@@ -78,36 +55,34 @@ export default function Page({}) {
     }, [pathname, query, asPath, page, debouncedName]);
 
     return (
-        <Box>
-            <Box>Wyszukaj po nazwie:</Box>
-            <Input
-                onChange={(e) => {
-                    setPage(1);
-                    setName(e.target.value);
-                }}
-                defaultValue={query.q}
-                sx={{
-                    mb: '30px',
-                }}
-            ></Input>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', m: '10px' }}>
+            <Box sx={{ display: 'flex' }}>
+                <Paper
+                    component="form"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, ml: '16px', mr: '16px' }}
+                >
+                    <SearchIcon />
+                    <InputBase
+                        sx={{ ml: 1, flex: 1, fontSize: '16px' }}
+                        placeholder="Wyszukaj po nazwie"
+                        defaultValue={query.q}
+                        inputProps={{ 'aria-label': 'Wyszukaj po nazwie' }}
+                        onChange={(e) => {
+                            setPage(1);
+                            setName(e.target.value);
+                        }}
+                    />
+                </Paper>
 
-            <PagesBar
-                page={page}
-                pages={pages}
-                setPage={setPage}
-                scroll={scroll}
-                handleScrollRight={handleScrollRight}
-                handleScrolLeft={handleScrolLeft}
-                barRef={barRef}
-            />
+                <PagesBar page={page} pages={pages} setPage={setPage} />
+            </Box>
+            <Divider textAlign="center" sx={{ width: '600px', m: '10px', fontSize: '24px', fontWeight: '400' }}>
+                Lista tras
+            </Divider>
 
             {elements.length === 0 ? null : (
                 <>
-                    <Container
-                        sx={{ margin: 1, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}
-
-                        // columns={[1, layout]}
-                    >
+                    <Container sx={{ margin: 1, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}>
                         {elements?.map((el, index) => {
                             const bg = index % 2 ? 'primary' : 'muted';
                             return <Tile key={el.id} bg={bg} route={el} page={page} q={debouncedName}></Tile>;
@@ -116,14 +91,7 @@ export default function Page({}) {
                 </>
             )}
 
-            <PagesBar
-                page={page}
-                pages={pages}
-                setPage={setPage}
-                scroll={scroll}
-                handleScrollRight={handleScrollRight}
-                handleScrolLeft={handleScrolLeft}
-            />
+            <PagesBar page={page} pages={pages} setPage={setPage} />
         </Box>
     );
 }
