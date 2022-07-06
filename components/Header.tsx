@@ -36,10 +36,9 @@ const Header: React.FC<{}> = ({ children }) => {
                     </Routing>
                     {session && (
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 'auto' }}>
-                            <IconButton>
-                                <AccountCircleIcon htmlColor="#ffffff" />
-                            </IconButton>
-                            <Typography variant="h6" sx={{ color: '#ffffff', mr: '16px' }}>
+                            <AccountCircleIcon htmlColor="#ffffff" />
+
+                            <Typography variant="h6" sx={{ color: '#ffffff', mr: '16px', ml: '8px' }}>
                                 {session.user.email}
                             </Typography>
                             <IconButton onClick={() => signOut()}>
