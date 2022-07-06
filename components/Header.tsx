@@ -41,7 +41,7 @@ const Header: React.FC<{}> = ({ children }) => {
                             <Typography variant="h6" sx={{ color: '#ffffff', mr: '16px', ml: '8px' }}>
                                 {session.user.email}
                             </Typography>
-                            <IconButton onClick={() => signOut()}>
+                            <IconButton onClick={() => signOut()} title="Wyloguj">
                                 <LogoutIcon htmlColor="#ffffff" />
                             </IconButton>
                         </Box>
