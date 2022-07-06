@@ -64,6 +64,7 @@ const MenuDrawer: React.FC<{}> = ({ children }) => {
                 size="large"
                 edge="start"
                 color="inherit"
+                title="Menu"
                 aria-label="menu"
                 sx={{ ml: 'auto', mr: '2', transition: '1s' }}
                 onClick={() => {
