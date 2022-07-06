@@ -36,7 +36,7 @@ export const mdTheme = createTheme({
         primary: {
             main: '#2F4858',
             light: '#E5353A',
-            dark: '#e21e24',
+            dark: '#E31F26',
         },
         secondary: {
             main: '#E31F26',
@@ -68,6 +68,7 @@ export const mdTheme = createTheme({
         h4: {
             fontSize: 24,
             lineHeight: 1.375,
+            fontWeight: baseProperties.fontWeightLight,
             ...baseHeadingProperties,
         },
 
