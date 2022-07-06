@@ -14,6 +14,7 @@ const PagesBar: React.FC<Props> = ({ page, pages, setPage }: Props) => {
             page={page}
             showFirstButton
             showLastButton
+            color="secondary"
             onChange={(e, value) => setPage(value)}
         ></Pagination>
     );

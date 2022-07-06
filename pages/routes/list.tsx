@@ -56,29 +56,42 @@ export default function Page({}) {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', m: '10px' }}>
-            <Box sx={{ display: 'flex' }}>
-                <Paper
-                    component="form"
-                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, ml: '16px', mr: '16px' }}
+            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Divider
+                        textAlign="left"
+                        sx={{ width: '85vw', fontSize: '24px', fontWeight: '400', mt: '10px', mb: '10px' }}
+                    >
+                        Lista tras
+                    </Divider>
+                </Box>
+                <Box
+                    sx={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
                 >
-                    <SearchIcon />
-                    <InputBase
-                        sx={{ ml: 1, flex: 1, fontSize: '16px' }}
-                        placeholder="Wyszukaj po nazwie"
-                        defaultValue={query.q}
-                        inputProps={{ 'aria-label': 'Wyszukaj po nazwie' }}
-                        onChange={(e) => {
-                            setPage(1);
-                            setName(e.target.value);
-                        }}
-                    />
-                </Paper>
-
-                <PagesBar page={page} pages={pages} setPage={setPage} />
+                    <Paper
+                        component="form"
+                        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, mr: '16px' }}
+                    >
+                        <SearchIcon />
+                        <InputBase
+                            sx={{ ml: 1, flex: 1, fontSize: '16px' }}
+                            placeholder="Wyszukaj po nazwie"
+                            defaultValue={query.q}
+                            inputProps={{ 'aria-label': 'Wyszukaj po nazwie' }}
+                            onChange={(e) => {
+                                setPage(1);
+                                setName(e.target.value);
+                            }}
+                        />
+                    </Paper>
+                    <PagesBar page={page} pages={pages} setPage={setPage} />
+                </Box>
             </Box>
-            <Divider textAlign="center" sx={{ width: '600px', m: '10px', fontSize: '24px', fontWeight: '400' }}>
-                Lista tras
-            </Divider>
 
             {elements.length === 0 ? null : (
                 <>
