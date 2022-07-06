@@ -33,7 +33,7 @@ const MenuDrawer: React.FC<{}> = ({ children }) => {
                     p: '16px',
                     bg: '#555',
                     userSelect: 'none',
-                    mt: '80px',
+                    mt: '60px',
                 }}
             >
                 <Divider textAlign="left">Trasy</Divider>

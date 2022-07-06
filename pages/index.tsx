@@ -7,7 +7,7 @@ const Home: React.FC<{}> = ({}) => {
             sx={{
                 display: 'flex',
                 width: '100%',
-                minHeight: 200,
+                minHeight: 400,
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
