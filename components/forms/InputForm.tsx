@@ -20,17 +20,9 @@ const InputForm: React.FC<Props> = ({ title, value, setValue, freeze }) => {
     }, [freeze]);
 
     return (
-        <Container
-            sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                borderTop: '1px solid #55555544',
-                mt: '5px',
-            }}
-        >
+        <Container sx={{ display: 'flex' }}>
             <Box sx={{ width: '100%' }}>
-                <InputLabel>{title}</InputLabel>
+                <InputLabel sx={{ color: 'black', fontWeight: 400, fontSize: '24px' }}>{title}</InputLabel>
                 {edit && (
                     <Input
                         value={value ? value : ''}
@@ -38,7 +30,6 @@ const InputForm: React.FC<Props> = ({ title, value, setValue, freeze }) => {
                         sx={{
                             bg: '#fff',
                             p: '2px',
-                            fontFamily: 'din-b',
                             minWidth: '250px',
                             width: '100%',
                         }}
@@ -48,11 +39,12 @@ const InputForm: React.FC<Props> = ({ title, value, setValue, freeze }) => {
                 {!edit && (
                     <Box
                         sx={{
-                            fontFamily: 'din-b',
                             p: '3px',
                             minWidth: '250px',
                             minHeight: '30px',
                             color: value ? '' : 'primary',
+                            fontWeight: 200,
+                            fontSize: '24px',
                         }}
                     >
                         {value
@@ -65,21 +57,11 @@ const InputForm: React.FC<Props> = ({ title, value, setValue, freeze }) => {
                     </Box>
                 )}
             </Box>
-            <Button
-                className="sys-btn"
-                type="button"
-                sx={{
-                    py: '3px',
-                    px: '10px',
-                    height: '28px',
-                    ml: '20px',
-                    bg: edit ? '#888' : 'primary',
-                    minWidth: '62px',
-                }}
-                onClick={handleEdit}
-            >
-                edytuj
-            </Button>
+            <Box>
+                <Button type="button" variant="contained" onClick={handleEdit}>
+                    Edytuj
+                </Button>
+            </Box>
         </Container>
     );
 };
