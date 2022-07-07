@@ -120,7 +120,12 @@ const ManagePublicationForm: React.FC = () => {
                 <Typography variant="body1" sx={{ fontSize: '1.2rem', mb: '80px' }}>
                     Nie udało połączyć się z serwerem
                 </Typography>
-                <Button sx={{ fontSize: '1rem', bg: 'darkgrey' }} type="button" onClick={handleBack}>
+                <Button
+                    variant="contained"
+                    sx={{ fontSize: '1rem', bg: 'darkgrey' }}
+                    type="button"
+                    onClick={handleBack}
+                >
                     Cofnij
                 </Button>
             </Box>
@@ -143,22 +148,39 @@ const ManagePublicationForm: React.FC = () => {
                 {isLoading ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
                 {activeStep > 0 && activeStep < steps.length - 1 && (
                     <ButtonContainer>
-                        <Button sx={{ fontSize: '1rem', bg: 'darkgrey' }} type="button" onClick={handleBack}>
+                        <Button
+                            variant="contained"
+                            sx={{ fontSize: '1rem', bg: 'darkgrey' }}
+                            type="button"
+                            onClick={handleBack}
+                        >
                             Cofnij
                         </Button>
                         {activeStep === steps.length - 2 ? (
-                            <Button sx={{ fontSize: '1rem' }} type="button" onClick={handleSubmit(onSubmit)}>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                sx={{ fontSize: '1rem' }}
+                                type="button"
+                                onClick={handleSubmit(onSubmit)}
+                            >
                                 Wyślij
                             </Button>
                         ) : (
-                            <Button sx={{ fontSize: '1rem' }} type="button" onClick={handleNext}>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                sx={{ fontSize: '1rem' }}
+                                type="button"
+                                onClick={handleNext}
+                            >
                                 Dalej
                             </Button>
                         )}
                     </ButtonContainer>
                 )}
                 {activeStep === steps.length - 1 && (
-                    <Button type="button" onClick={handleBack}>
+                    <Button variant="contained" type="button" onClick={handleBack}>
                         Wróć na start
                     </Button>
                 )}
@@ -166,7 +188,7 @@ const ManagePublicationForm: React.FC = () => {
             {errors.current && (
                 <Typography
                     variant="body1"
-                    sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
+                    sx={{ margin: '0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
                 >
                     Dokumenty nie mogą być takie same!
                 </Typography>
@@ -174,7 +196,7 @@ const ManagePublicationForm: React.FC = () => {
             {(errors.publicationDate || errors.showDate) && (
                 <Typography
                     variant="body1"
-                    sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
+                    sx={{ margin: '0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
                 >
                     {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
                         'Data nie może być w przeszłości.'}

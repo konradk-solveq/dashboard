@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Input, Select, Button } from '@mui/material/';
+import { Container, Input, Select, Button, MenuItem } from '@mui/material/';
 
 import { sortLanguages } from '../../../helpers/sortLanguages';
 import { UploadFormFieldsProps } from '../../typings/PublicationSection';
@@ -19,6 +19,7 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
                     key={field.id}
                 >
                     <Select
+                        className="document-select-form"
                         {...register(`documents.${index}.language`, {
                             validate: (v) => {
                                 for (let x = 0; x < index; x++) {
@@ -29,12 +30,18 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
                         sx={{ textAlign: 'center' }}
                     >
                         {sortLanguages(availableLanguages)?.map((language) => (
-                            <option key={language.name as string} value={language.name as string}>
+                            <MenuItem
+                                style={{ fontSize: '14px' }}
+                                key={language.name as string}
+                                value={language.name as string}
+                            >
                                 {language.name.toUpperCase()}
-                            </option>
+                            </MenuItem>
                         ))}
                     </Select>
                     <Input
+                        className="document-select-form document-input-form"
+                        disableUnderline={true}
                         {...register(`documents.${index}.file`)}
                         type="file"
                         accept="*/.json"
@@ -42,6 +49,8 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
                         required
                     />
                     <Input
+                        className="document-select-form document-input-form"
+                        disableUnderline={true}
                         {...register(`documents.${index}.actions`)}
                         type="file"
                         accept="*/.json"
@@ -49,7 +58,7 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
                         required
                     />
                     {index >= 1 && (
-                        <Button type="button" onClick={() => remove(index)}>
+                        <Button variant="contained" color="error" type="button" onClick={() => remove(index)}>
                             Usuń
                         </Button>
                     )}

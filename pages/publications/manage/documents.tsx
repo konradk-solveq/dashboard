@@ -22,7 +22,7 @@ const DocumentUpload: React.FC = () => {
     return (
         <Container>
             <Container sx={{ maxWidth: '1200px', height: '80%', p: '30px', marginX: 'auto' }}>
-                <Typography variant="h1" sx={{ textAlign: 'center', m: '20px' }}>
+                <Typography variant="h3" sx={{ textAlign: 'center', m: '20px' }}>
                     Dodaj Dokument
                 </Typography>
                 <UploadDocumentForm loadingError={loadingError} />
