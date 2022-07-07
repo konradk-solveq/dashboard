@@ -29,7 +29,7 @@ const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }
                 py: '5px',
             }}
         >
-            <Box sx={{ fontFamily: 'din-b' }}>{title}</Box>
+            <Box sx={{ fontSize: '24px', m: '16px' }}>{title}</Box>
             <Container
                 sx={{
                     display: 'flex',
@@ -41,7 +41,15 @@ const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }
             >
                 {listOptions.map((e) => (
                     <Container key={e.enumValue} sx={{ mr: '10px', display: 'flex' }}>
-                        <InputLabel>
+                        <InputLabel
+                            sx={{
+                                fontWeight: 200,
+                                fontSize: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
                             <Box>{e.i18nValue}</Box>
                             <Checkbox
                                 checked={values.includes(e.enumValue)}

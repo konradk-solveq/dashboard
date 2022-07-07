@@ -39,21 +39,9 @@ const TextareaForm: React.FC<Props> = ({ title, value, setValue, highlight, free
             }}
             ref={area}
         >
-            <Container
-                sx={{
-                    display: 'flex',
-                    minWidth: highlight ? areaW + 'px' : '100%',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
-                    bg: highlight ? '#aaa' : 'transparent',
-                    position: 'relative',
-                    left: highlight ? '-10px' : '0',
-                    p: highlight ? '10px' : '0',
-                    borderRadius: '10px',
-                }}
-            >
+            <Box sx={{ display: 'flex', mt: '16px', mb: '16px', width: '100%' }}>
                 <Box sx={{ width: '100%' }}>
-                    <InputLabel>{title}</InputLabel>
+                    <InputLabel sx={{ color: 'black', fontWeight: 400, fontSize: '24px' }}>{title}</InputLabel>
                     {edit && (
                         <TextareaAutosize
                             value={value ? value : ''}
@@ -61,7 +49,6 @@ const TextareaForm: React.FC<Props> = ({ title, value, setValue, highlight, free
                             style={{
                                 backgroundColor: '#fff',
                                 padding: '2px',
-                                fontFamily: 'din-b',
                                 minWidth: '250px',
                                 width: '100%',
                             }}
@@ -71,7 +58,6 @@ const TextareaForm: React.FC<Props> = ({ title, value, setValue, highlight, free
                     {!edit && (
                         <Box
                             sx={{
-                                fontFamily: 'din-b',
                                 p: '3px',
                                 minWidth: '250px',
                                 minHeight: '30px',
@@ -88,22 +74,12 @@ const TextareaForm: React.FC<Props> = ({ title, value, setValue, highlight, free
                         </Box>
                     )}
                 </Box>
-                <Button
-                    className="sys-btn"
-                    type="button"
-                    sx={{
-                        py: '3px',
-                        px: '10px',
-                        height: '28px',
-                        ml: '20px',
-                        bg: edit ? '#888' : 'primary',
-                        minWidth: '62px',
-                    }}
-                    onClick={handleEdit}
-                >
-                    edytuj
-                </Button>
-            </Container>
+                <Box>
+                    <Button variant="contained" type="button" onClick={handleEdit}>
+                        Edytuj
+                    </Button>
+                </Box>
+            </Box>
         </Container>
     );
 };
