@@ -127,6 +127,20 @@ const ManagePublicationForm: React.FC = () => {
                 onSubmit={handleSubmit(onSubmit)}
             >
                 {isLoading ? <Spinner mb="80px" /> : renderStep()}
+                {errors.current && (
+                    <Paragraph mb={20} sx={{ textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                        Dokumenty nie mogą być takie same!
+                    </Paragraph>
+                )}
+                {(errors.publicationDate || errors.showDate) && (
+                    <Paragraph mb={20} sx={{ textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                        {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
+                            'Data nie może być w przeszłości.'}
+                        {(errors?.publicationDate?.type === 'afterShowDate' ||
+                            errors?.showDate?.type === 'beforePublicationDate') &&
+                            'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
+                    </Paragraph>
+                )}
                 {activeStep > 0 && activeStep < steps.length - 1 && (
                     <ButtonContainer>
                         <Button sx={{ fontSize: '1rem' }} type="button" bg="darkgrey" onClick={handleBack}>
@@ -149,20 +163,6 @@ const ManagePublicationForm: React.FC = () => {
                     </Button>
                 )}
             </Flex>
-            {errors.current && (
-                <Paragraph sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
-                    Dokumenty nie mogą być takie same!
-                </Paragraph>
-            )}
-            {(errors.publicationDate || errors.showDate) && (
-                <Paragraph sx={{ margin: '-200px auto 0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
-                    {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
-                        'Data nie może być w przeszłości.'}
-                    {(errors?.publicationDate?.type === 'afterShowDate' ||
-                        errors?.showDate?.type === 'beforePublicationDate') &&
-                        'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
-                </Paragraph>
-            )}
         </>
     );
 };
