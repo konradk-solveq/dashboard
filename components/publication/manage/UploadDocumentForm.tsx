@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Button, Box, Select, Input, Container, Typography } from '@mui/material/';
+import { Button, Box, Select, Input, Container, Typography, MenuItem } from '@mui/material/';
 import styled from '@emotion/styled';
 
 import { readFromFile } from '../../../helpers/readFromFile';
@@ -12,6 +12,7 @@ import { errorHandler } from '../../contexts/translation';
 
 const Label = styled.label`
     margin: 0 auto;
+    font-weight: 400;
 `;
 
 const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
@@ -107,13 +108,28 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
                 }}
             >
                 <Label>Rodzaj Dokumentu</Label>
-                <Select {...register(`documentType`)} sx={{ width: '200px', textAlign: 'center' }}>
-                    <option value="terms">Regulamin</option>
-                    <option value="policy">Polityka Prywatności</option>
+                <Select
+                    className="document-select-form"
+                    {...register(`documentType`)}
+                    sx={{ width: '300px', textAlign: 'center' }}
+                >
+                    <MenuItem style={{ fontSize: '14px' }} value="terms">
+                        Regulamin
+                    </MenuItem>
+                    <MenuItem style={{ fontSize: '14px' }} value="policy">
+                        Polityka Prywatności
+                    </MenuItem>
                 </Select>
                 <Label>Nazwa Dokumentu</Label>
 
-                <Input sx={{ textAlign: 'center' }} {...register(`documentName`)} type="text" required />
+                <Input
+                    className="document-input-form document-select-form"
+                    disableUnderline={true}
+                    sx={{ textAlign: 'center', fontSize: '14px', width: '300px' }}
+                    {...register(`documentName`)}
+                    type="text"
+                    required
+                />
             </Container>
             <Container
                 sx={{
@@ -144,6 +160,7 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
             )}
 
             <Button
+                variant="contained"
                 type="button"
                 onClick={() => append(defaultFormValues.documents[0] as object)}
                 sx={{ margin: '0 auto', bg: `${fields.length >= availableLanguages?.length ? 'grey' : 'default'}` }}
@@ -152,7 +169,7 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
                 Dodaj kolejny język
             </Button>
             <br />
-            <Button type="submit" sx={{ margin: '0 auto' }}>
+            <Button variant="contained" color="success" type="submit" sx={{ margin: '0 auto' }}>
                 Wyślij
             </Button>
         </Box>

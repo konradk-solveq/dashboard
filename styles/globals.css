@@ -90,6 +90,32 @@ body {
     padding: 16px;
 }
 
+.document-select-form {
+    font-size: 16px !important;
+    height: 35px;
+}
+
+.document-select-form .MuiInput-input {
+    font-size: 16px !important;
+    height: 20px;
+}
+
+.document-input-form {
+    padding: 2px 4px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    text-align: center;
+}
+
+.document-input-form input {
+    font-weight: 200;
+}
+
+.document-input-form:hover {
+    border-radius: 4px;
+    border: 1px solid black;
+}
+
 /* .sys-btn:hover {
     background-color: #41040662;
     transition: all 0.3s;
