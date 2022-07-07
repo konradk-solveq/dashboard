@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Container, TextField, Grid } from '@mui/material/';
+import { Box, Container, TextField, Input, InputLabel, Typography } from '@mui/material/';
 import ApiContext from '../../components/contexts/api';
 import { FeaturedSectionContext } from '../../components/contexts/featured/contexts';
 import Actions from './Actions';
@@ -22,15 +22,20 @@ const SectionNameInput: React.FC<{ language: string; code: string; currentValue?
     };
 
     return (
-        <Container>
+        <Box sx={{ m: 1 }}>
             <TextField
-                sx={{ backgroundColor: 'white' }}
-                label={language}
+                className="featured-text-field"
+                size="small"
+                color="primary"
+                id={language}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                label={<Typography variant="h4">{language}</Typography>}
                 name={`${language}-${sectionId}`}
-                defaultValue={currentValue}
+                defaultValue={currentValue ? currentValue : ''}
                 onChange={onChangeHandler}
             />
-        </Container>
+        </Box>
     );
 };
 
@@ -39,7 +44,7 @@ const NameEdit: React.FC<{}> = () => {
     const { config } = useContext(ApiContext);
 
     return (
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', m: 1 }}>
             {config.langs.map((e) => {
                 return (
                     <SectionNameInput
@@ -56,24 +61,24 @@ const NameEdit: React.FC<{}> = () => {
 
 const FeaturedRoute: React.FC<{}> = () => {
     return (
-        <Container>
-            <Grid
+        <Box>
+            <Box
                 sx={{
-                    display: 'grid',
-                    gridTemplateColumns: [2, '12fr 4fr'],
-                    mb: '10px',
-                    p: 2,
-                    backgroundColor: 'gray',
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    p: '8px',
+                    borderRadius: '15px',
+                    backgroundColor: '#f0f0f0f0',
+                    width: '100%',
                 }}
             >
                 <NameEdit />
                 <Actions />
-            </Grid>
-            <Box sx={{ backgroundColor: 'gray', p: 2 }}>
+            </Box>
+            <Box sx={{ p: 2 }}>
                 <SectionRoutesManage />
             </Box>
-            <Box m={1} />
-        </Container>
+        </Box>
     );
 };
 

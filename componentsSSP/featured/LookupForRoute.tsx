@@ -39,17 +39,20 @@ const LookupForRoute: React.FC<{}> = () => {
             })
         );
     return (
-        <>
+        <Box sx={{ display: 'flex', flexDirection: 'column', p: 2, gap: 2 }}>
             <TextField
                 placeholder="Wpisz nazwę, część opisu"
                 label="Wyszukaj trasę"
-                sx={{ backgroundColor: 'white' }}
+                className="featured-search-text-field"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                size="small"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 name={`${sectionId}-route-lookup`}
             ></TextField>
-            {isLoading ? <span>Wyszukiwanie</span> : results}
-        </>
+            {isLoading ? <span>Wyszukiwanie...</span> : results}
+        </Box>
     );
 };
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useContext } from 'react';
-import { Box, Divider, Container } from '@mui/material/';
+import { Box, Divider, Container, Typography } from '@mui/material/';
 import { FeaturedSectionContext } from '../../components/contexts/featured/contexts';
 import { SimplifiedFeaturedRoute } from '../../components/typings/FeaturedSection';
 import LookupForRoute from './LookupForRoute';
@@ -45,7 +45,7 @@ const SectionRoutesManage: React.FC<{}> = (props) => {
 
     return (
         <Box>
-            <h2>Trasy</h2>
+            <Typography>Trasy</Typography>
             <Routes />
             <Divider />
             <LookupForRoute />

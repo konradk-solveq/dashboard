@@ -71,6 +71,25 @@ body {
     box-shadow: 0 32px 48px rgba(0, 0, 0, 0.11), 0 24px 46px (#2f4858);
 }
 
+.featured-text-field input {
+    font-size: 16px !important;
+    font-weight: 200;
+    width: 500px;
+    background: white;
+    border: 3px solid white;
+    border-radius: 5px;
+}
+
+.featured-search-text-field input {
+    font-size: 16px !important;
+    font-weight: 200;
+    width: 30vw;
+    background: white;
+    border: 3px solid white;
+    border-radius: 5px;
+    padding: 16px;
+}
+
 /* .sys-btn:hover {
     background-color: #41040662;
     transition: all 0.3s;
