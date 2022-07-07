@@ -30,8 +30,8 @@ const EmojiButton: React.FC<{ enabled?: boolean; action?: () => void }> = ({
 const Actions: React.FC<{}> = () => {
     const { section, actions, ...context } = useContext(FeaturedSectionContext);
     return (
-        <Box sx={{ fontSize: '2rem' }}>
-            <Grid gap={3} columns={6}>
+        <Box sx={{ fontSize: '2rem', display: 'flex' }}>
+            <Box sx={{ fontSize: '2rem', display: 'flex', alignItems: 'space-between', gap: '16px' }}>
                 <EmojiButton action={context.editRoutes.toggle}>
                     🚴‍♀️<sup style={{ fontSize: '1.2rem' }}>{section?.routes?.length || 0}</sup>
                 </EmojiButton>
@@ -48,7 +48,7 @@ const Actions: React.FC<{}> = () => {
                 <EmojiButton>
                     <Switch sx={switchStyle} onChange={actions.toggle} checked={section.isActive} />
                 </EmojiButton>
-            </Grid>
+            </Box>
         </Box>
     );
 };
