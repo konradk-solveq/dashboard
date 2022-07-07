@@ -187,7 +187,14 @@ export default function Page({}) {
                     publicznych
                 </Typography>
             </Box>
-            <Box sx={{ mt: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box
+                sx={{
+                    mt: '16px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
                 <PagesBar page={page} pages={pages} setPage={setPage} />
 
                 <Box
@@ -335,6 +342,7 @@ export default function Page({}) {
                 <Legend color={'#68B028'} title={' - trasy upublicznione'} />
                 <Legend color={'#cf0f36'} title={' - trasy uszkodzone'} />
             </Container>
+
             {elements?.length === 0 ? null : (
                 <>
                     {elements?.map((el, index) => {
@@ -342,11 +350,14 @@ export default function Page({}) {
                     })}
                 </>
             )}
+
             {sumAll.length === 0 ? null : (
                 <>
-                    <Container
+                    <Box
                         sx={{
                             display: 'flex',
+                            p: 1,
+                            alignItems: 'center',
                             margin: 1,
                             flexWrap: 'wrap',
                         }}
@@ -354,7 +365,7 @@ export default function Page({}) {
                         {sumAll?.map((el, index) => {
                             return <Route key={'box' + index} route={el}></Route>;
                         })}
-                    </Container>
+                    </Box>
                 </>
             )}
             <Container
