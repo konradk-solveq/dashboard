@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import useSWR from 'swr';
-import { Box, Container } from '@mui/material/';
+import { Box, Container, Typography, Divider } from '@mui/material/';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
@@ -38,7 +38,7 @@ const Route: React.FC<{ route: any }> = ({ route }) => {
     return (
         <Box
             sx={{
-                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
+                backgroundColor: `${image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red'}`,
                 m: '2px',
                 width: '12px',
                 height: '12px',
@@ -92,7 +92,7 @@ const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) =>
         >
             <Box
                 sx={{
-                    bg: color,
+                    backgroundColor: `${color}`,
                     mx: '5px',
                     my: '7px',
                     width: '12px',
@@ -169,103 +169,108 @@ export default function Page({}) {
         setFilteredChartData(tempChartData);
     }, [chartData, startDate, endDate]);
 
-    const handleScrolLeft = (end: boolean = false) => {
-        const pagesWidth = pages.length * 42;
-        const barWidth = barRef.current.clientWidth;
-        let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
-
-        if (pagesWidth + newPosition < barWidth) {
-            newPosition = -(pagesWidth - barWidth);
-        }
-        setScroll(newPosition);
-    };
-
-    const handleScrollRight = (end: boolean) => {
-        let newPosition = end ? 0 : scroll + SCROLL_MOVE;
-
-        if (newPosition > 0) {
-            newPosition = 0;
-        }
-        setScroll(newPosition);
-    };
-
     return (
-        <Container
+        <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
             }}
         >
-            <Container
+            <Box
                 sx={{
-                    px: ['0', '0', '50px', '50px', '50px'],
+                    width: '100%',
+                    m: 2,
                 }}
             >
-                <h1>
+                <Typography variant="h4" textAlign="center">
                     Przeklikaj poszczególne zakładki od 1 - do ostatniej aby zliczyć trasy i zbudować listę nazw tras
                     publicznych
-                </h1>
-            </Container>
+                </Typography>
+            </Box>
+            <Box sx={{ mt: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <PagesBar page={page} pages={pages} setPage={setPage} />
 
-            <PagesBar
-                page={page}
-                pages={pages}
-                setPage={setPage}
-                scroll={scroll}
-                handleScrollRight={handleScrollRight}
-                handleScrolLeft={handleScrolLeft}
-                barRef={barRef}
-            />
+                <Box
+                    sx={{
+                        display: 'flex',
+                    }}
+                >
+                    {total - sumAll.length <= 0 && <Box>WCZYTANO WSZYSTKIE TRASY</Box>}
+                    {total - sumAll.length > 0 && (
+                        <Box sx={{ ml: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Box>
+                                Wszystkich tras: {total}, Tras wczytanych: {sumAll.length}
+                            </Box>
+                            <Box sx={{ ml: '20px' }}> Posostało do wczytania: {total - sumAll.length}</Box>
+                        </Box>
+                    )}
+                </Box>
+            </Box>
 
-            <Container
+            <Box
                 sx={{
                     display: 'flex',
-                    position: 'relative',
-                    top: '-20px',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
             >
-                {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b' }}>WCZYTANO WSZYSTKIE TRASY</Box>}
-                {total - sumAll.length > 0 && (
-                    <>
-                        <Box>
-                            wszystkich tras: {total}, tras wczytanych: {sumAll.length}
-                        </Box>
-                        <Box sx={{ ml: '20px', fontFamily: 'din-b' }}>
-                            {' '}
-                            posostało do wczytania: {total - sumAll.length}
-                        </Box>
-                    </>
-                )}
-            </Container>
+                <Box
+                    sx={{
+                        maxHeight: '350px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        mb: 5,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '50%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            mt: 30,
+                        }}
+                    >
+                        <ChartTypes3D
+                            data={[
+                                ['Trasa', 'ilość danego typu'],
+                                ['prywatne', goodRoutes()],
+                                ['upublicznione', pulicRoutes()],
+                                ['uszkodzone', wrongRoutes()],
+                            ]}
+                            title={'Zestawienie ilości tras'}
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '50%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <h2>Ilość wszystkich tras: {allRoutes()}</h2>
+                        <h2>Ilość tras publicznych: {pulicRoutes()}</h2>
+                        <h2>Ilość poprawnych tras: {goodRoutes()}</h2>
+                        <h2>Ilość tras uszkodzonych: {wrongRoutes()}</h2>
+                    </Box>
+                </Box>
 
-            <Container sx={{ maxHeight: '350px', display: 'flex' }}>
-                <Container sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
-                    <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
-                    <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
-                    <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
-                    <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
-                </Container>
-                <Box sx={{ width: '50%' }}>
-                    <ChartTypes3D
-                        data={[
-                            ['Trasa', 'ilość danego typu'],
-                            ['prywatne', goodRoutes()],
-                            ['upublicznione', pulicRoutes()],
-                            ['uszkodzone', wrongRoutes()],
-                        ]}
-                        title={'Zestawienie ilości tras'}
+                <Box>
+                    <DateInputs
+                        startDate={startDate}
+                        setStartDate={setStartDate}
+                        endDate={endDate}
+                        setEndDate={setEndDate}
+                        veryStartDate={veryStartDate}
+                        veryEndDate={veryEndDate}
                     />
                 </Box>
-            </Container>
-
-            <DateInputs
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                veryStartDate={veryStartDate}
-                veryEndDate={veryEndDate}
-            />
+            </Box>
 
             <Container
                 sx={{
@@ -367,6 +372,6 @@ export default function Page({}) {
                     <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
                 </Container>
             </Container>
-        </Container>
+        </Box>
     );
 }

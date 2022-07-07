@@ -5,28 +5,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const Btn: React.FC<{ title: string; onclick: () => void }> = ({ title, onclick }) => {
     return (
-        <Button
-            className="sys-btn"
-            type="button"
-            sx={{
-                fontFamily: 'din-r',
-                fontSize: '16px',
-                py: '0px',
-                px: '10px',
-                height: '25px',
-                mr: '5px',
-                bg: 'primary',
-                minWidth: '62px',
-            }}
-            onClick={onclick}
-        >
+        <Button variant="contained" type="button" sx={{ fontSize: '12px', mr: '8px' }} onClick={onclick}>
             {title}
         </Button>
     );
 };
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
-    return <Typography sx={{ fontFamily: 'din-b', fontSize: '16px' }}>{title}</Typography>;
+    return <Typography sx={{ fontSize: '16px' }}>{title}</Typography>;
 };
 
 interface Props {
@@ -59,9 +45,9 @@ const DateInputs: React.FC<Props> = ({
     return (
         <Container sx={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
             <Box sx={{ width: '180px' }}>
-                <Title title={'data początkowa'} />
+                <Title title={'Data początkowa'} />
 
-                <Box>
+                <Box sx={{ mt: '8px', mb: '8px' }}>
                     <Btn title={'pierwsza'} onclick={() => setStartDate(veryStartDate)} />
                 </Box>
 
@@ -74,9 +60,9 @@ const DateInputs: React.FC<Props> = ({
             </Box>
 
             <Box sx={{ width: '180px' }}>
-                <Title title={'data końcowa'} />
+                <Title title={'Data końcowa'} />
 
-                <Box>
+                <Box sx={{ mt: '8px', mb: '8px' }}>
                     <Btn title={'teraz'} onclick={() => setEndDate(new Date())} />
                     <Btn title={'ostatnia'} onclick={() => setEndDate(veryEndDate)} />
                 </Box>
