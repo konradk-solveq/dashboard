@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Box, Button, Container, TextField, Grid } from '@mui/material/';
+import { Box, Button, Container, TextField, Alert } from '@mui/material/';
 import SettingsContainer, { SettingsContext, SettingsPostData } from '../../components/contexts/settings';
 
 const NewValueText: React.FC<{ name: string; label: string; defaultValue: string; setter: (v: string) => void }> = ({
@@ -11,7 +11,14 @@ const NewValueText: React.FC<{ name: string; label: string; defaultValue: string
     return (
         <Box>
             <Container sx={{ p: 3 }}>
-                <TextField sx={{ backgroundColor: 'white' }} {...props} onChange={(e) => setter(e.target.value)} />
+                <TextField
+                    className="featured-text-field"
+                    size="small"
+                    color="primary"
+                    sx={{ p: 1 }}
+                    {...props}
+                    onChange={(e) => setter(e.target.value)}
+                />
             </Container>
         </Box>
     );
@@ -26,9 +33,9 @@ const VersionEditForm: React.FC<{}> = () => {
         async (platform, value) => {
             try {
                 await setKey(platform, value);
-                setNotification('Zapisano');
+                setNotification('Dane zostały zapisane.');
             } catch (err) {
-                setNotification('Wystąpił błąd');
+                setNotification('Wystąpił błąd przy zapisywaniu.');
             }
         },
         [setKey, setNotification],
@@ -59,7 +66,9 @@ const VersionEditForm: React.FC<{}> = () => {
     }
 
     return (
-        <Container>
+        <Container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', mt: 2 }}>
+            {notification && <Alert severity="info">{notification}</Alert>}
+
             {Object.entries(settings.version).map(([platform, { i18n, value }]) => {
                 return (
                     <NewValueText
@@ -70,9 +79,15 @@ const VersionEditForm: React.FC<{}> = () => {
                     />
                 );
             })}
-            <Container sx={{ display: 'grid', gridTemplateColumns: [2, '20fr 3fr'], gap: 2 }}>
-                <Box sx={{ textAlign: 'center' }}>{notification}</Box>
-                <Button onClick={() => setKeyAndNotify('version', newValue)}>Zapisz</Button>
+            <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <Button
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    onClick={() => setKeyAndNotify('version', newValue)}
+                >
+                    Zapisz
+                </Button>
             </Container>
         </Container>
     );
