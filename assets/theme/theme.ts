@@ -93,10 +93,10 @@ export const mdTheme = createTheme({
         },
 
         subtitle2: {
-            fontFamily: baseProperties.fontFamily,
-            fontSize: baseProperties.fontSizeMD,
-            fontWeight: baseProperties.fontWeightRegular,
-            lineHeight: 1.6,
+            fontSize: 20,
+            lineHeight: 1.375,
+            fontWeight: 200,
+            ...baseHeadingProperties,
         },
 
         body1: {

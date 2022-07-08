@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, InputLabel, Select } from '@mui/material/';
+import { Container, Typography, Select, Box, MenuItem } from '@mui/material/';
 import TranslationRow from './TranslationRow';
 
 const TranslationTable = ({
@@ -11,41 +11,57 @@ const TranslationTable = ({
 }) => {
     return (
         <>
-            <Container sx={{ display: 'grid', gridTemplateColumns: '1fr 20px 60px 30px 100px', mb: '20px' }}>
-                <p></p>
-                <InputLabel sx={{ pt: '10px' }}>limit:</InputLabel>
-                <Select
-                    value={limitAndOffset.limit}
-                    onChange={(e) => {
-                        setLimitsAndOffset({ limit: parseInt(e.target.value), offset: 0 });
-                    }}
-                >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={40}>40</option>
-                </Select>
-                <InputLabel sx={{ pt: '10px' }}>strona:</InputLabel>
-                <Select
-                    value={limitAndOffset.offset}
-                    onChange={(e) => {
-                        setLimitsAndOffset({ ...limitAndOffset, offset: parseInt(e.target.value) });
-                    }}
-                >
-                    {calcPages(limitAndOffset.limit, uiTranslationCount).map(({ offset, label }, index) => {
-                        return (
-                            <option key={index} value={offset}>
-                                {label}
-                            </option>
-                        );
-                    })}
-                </Select>
+            <Container sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'flex', marginBottom: '20px', ml: 'auto', gap: '16px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
+                        <Typography variant="h5">Limit:</Typography>
+                        <Select
+                            className="document-select-form"
+                            value={limitAndOffset.limit}
+                            onChange={(e) => {
+                                setLimitsAndOffset({ limit: parseInt(e.target.value), offset: 0 });
+                            }}
+                        >
+                            <MenuItem style={{ fontSize: '14px' }} value={5}>
+                                5
+                            </MenuItem>
+                            <MenuItem style={{ fontSize: '14px' }} value={10}>
+                                10
+                            </MenuItem>
+                            <MenuItem style={{ fontSize: '14px' }} value={20}>
+                                20
+                            </MenuItem>
+                            <MenuItem style={{ fontSize: '14px' }} value={40}>
+                                40
+                            </MenuItem>
+                        </Select>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
+                        <Typography variant="h5">Strona:</Typography>
+                        <Select
+                            className="document-select-form"
+                            value={limitAndOffset.offset}
+                            onChange={(e) => {
+                                setLimitsAndOffset({ ...limitAndOffset, offset: parseInt(e.target.value) });
+                            }}
+                        >
+                            {calcPages(limitAndOffset.limit, uiTranslationCount).map(({ offset, label }, index) => {
+                                return (
+                                    <MenuItem style={{ fontSize: '14px' }} key={index} value={offset}>
+                                        {label}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </Box>
+                </Box>
             </Container>
-            <Container sx={{ display: 'grid', gridTemplateColumns: '50px 60px 230px 2fr 100px', mb: '10px' }}>
-                <InputLabel>Kod</InputLabel>
-                <InputLabel>Wersja</InputLabel>
-                <InputLabel>Suma kontrolna</InputLabel>
-                <InputLabel>Tłumaczenie</InputLabel>
+            <Container sx={{ display: 'grid', gridTemplateColumns: '0.25fr 0.5fr 2fr 3fr 1fr', mb: '10px', gap: 2 }}>
+                <Typography variant="h5">Kod</Typography>
+                <Typography variant="h5">Wersja</Typography>
+                <Typography variant="h5">Suma kontrolna</Typography>
+                <Typography variant="h5">Tłumaczenie</Typography>
+                <Typography variant="h5"></Typography>
             </Container>
             {uiTranslationsState.length &&
                 uiTranslationsState.map(({ controlSum, id, version, code, translation }) => (

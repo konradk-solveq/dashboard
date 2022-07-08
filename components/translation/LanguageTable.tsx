@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Grid, InputLabel, Container } from '@mui/material/';
+import { Button, Typography, Container } from '@mui/material/';
 import LanguageRow from './LanguageRow';
 
 const LanguageTable = ({
@@ -19,14 +19,12 @@ const LanguageTable = ({
         languageState.reduce((previous, current) => (previous > current.id ? previous : current.id), 0) + 1;
     return (
         <>
-            <Container
-                sx={{ display: 'grid', gridTemplateColumns: '50px 180px 2fr 40px 100px 100px', gap: 2, mb: '10px' }}
-            >
-                <InputLabel>Kod</InputLabel>
-                <InputLabel>Nazwa</InputLabel>
-                <InputLabel>Ikona</InputLabel>
-                <InputLabel>Aktywny</InputLabel>
-                <InputLabel></InputLabel>
+            <Container sx={{ display: 'grid', gridTemplateColumns: '0.5fr 1fr 10fr 1fr 1fr 1fr', gap: 2, mb: '10px' }}>
+                <Typography variant="h5">Kod</Typography>
+                <Typography variant="h5">Nazwa</Typography>
+                <Typography variant="h5">Ikona</Typography>
+                <Typography variant="h5">Aktywny</Typography>
+                <Typography></Typography>
             </Container>
             {languageState.length
                 ? languageState.map(({ code, name, icon, isActive, newLanguage, id }) => {
@@ -53,16 +51,17 @@ const LanguageTable = ({
                       );
                   })
                 : ''}
-            <Grid sx={{ gap: 2, gridTemplateColumns: '4fr 200px 4fr' }}>
-                <Box></Box>
+            <Container sx={{ display: 'flex' }}>
                 <Button
-                    sx={{ backgroundColor: `${!disabledAddLanguage ? 'default' : 'lightgray'}`, textAlign: 'center' }}
+                    variant={!disabledAddLanguage ? 'contained' : 'outlined'}
+                    size="large"
+                    sx={{ ml: 'auto' }}
                     disabled={disabledAddLanguage}
                     onClick={() => setLanguageState((p) => [...p, { id: nextLanguageId, code: '', newLanguage: true }])}
                 >
                     Dodaj język
                 </Button>
-            </Grid>
+            </Container>
         </>
     );
 };
