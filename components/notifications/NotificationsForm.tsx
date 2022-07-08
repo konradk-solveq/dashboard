@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Box, Input, InputLabel } from '@mui/material/';
+import { Button, Box, Input, Typography } from '@mui/material/';
 import Select from 'react-select';
 import notificationStyle from '../../styles/NotificationsForm.module.css';
 import { FormValues } from '../typings/Notifications';
@@ -37,38 +37,58 @@ const NotificationsForm: React.FC<IProps> = ({
 
     return (
         <form className={notificationStyle.content} onSubmit={handleSubmit(onSubmit)}>
-            <div className={notificationStyle.contentblock}>
-                <div className={notificationStyle.close} onClick={handleOpen}>
-                    {'\u2715'}
-                </div>
-                <Box sx={{ display: 'grid', gridTemplateColumns: '50px 380px 1fr' }}>
-                    <InputLabel>Tytuł</InputLabel>
+            <Box className={notificationStyle.contentblock}>
+                <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
+                    <Typography variant="h5">Tytuł</Typography>
+                    <Box>
+                        <Input
+                            className={notificationStyle.title}
+                            type="text"
+                            {...register('title', { required: true })}
+                        />
+                        <Box>{errors.title && <Typography variant="caption">Tytuł jest wymagany.</Typography>}</Box>
+                    </Box>
+                </Box>
+                <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
+                    <Typography variant="h5">Treść</Typography>
+                    <Box>
+                        <textarea {...register('message', { required: true })} />
+                        <Box>{errors.message && <Typography variant="caption">Treść jest wymagana.</Typography>}</Box>
+                    </Box>
+                </Box>
 
-                    <Input className={notificationStyle.title} type="text" {...register('title', { required: true })} />
-                    {errors.title && <p>Tytuł jest wymagany.</p>}
+                <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
+                    <Typography variant="h5">Język</Typography>
+                    <Box sx={{ width: '320px', fontSize: '16px', fontWeight: '200' }}>
+                        <Controller
+                            control={control}
+                            rules={{ required: 'Język jest wymagany.' }}
+                            name="language"
+                            render={({ field }) => (
+                                <Select
+                                    instanceId="language"
+                                    placeholder="Wybierz..."
+                                    options={langOptions}
+                                    {...field}
+                                />
+                            )}
+                        />
+                        <Box sx={{ mt: 1 }}>
+                            {errors.language && (
+                                <Typography variant="caption">{(errors.language as any).message}</Typography>
+                            )}
+                        </Box>
+                    </Box>
                 </Box>
-                <Box sx={{ display: 'grid', gridTemplateColumns: '50px 380px 1fr' }}>
-                    <InputLabel>Treść</InputLabel>
-                    <textarea {...register('message', { required: true })} />
-                    {errors.message && <p>Treść jest wymagana.</p>}
+                <Box className={notificationStyle.buttonContainer}>
+                    <Button variant="contained" color="error" onClick={handleOpen}>
+                        Wyjdź
+                    </Button>
+                    <Button variant="contained" color="success" type="submit">
+                        Zapisz
+                    </Button>
                 </Box>
-
-                <Box sx={{ display: 'grid', gridTemplateColumns: '50px 380px 1fr' }}>
-                    <InputLabel>Język</InputLabel>
-                    <Controller
-                        control={control}
-                        rules={{ required: 'Język jest wymagany.' }}
-                        name="language"
-                        render={({ field }) => (
-                            <Select instanceId="language" placeholder="Wybierz..." options={langOptions} {...field} />
-                        )}
-                    />
-                    {errors.language && <p>{(errors.language as any).message}</p>}
-                </Box>
-                <div className={notificationStyle.buttonContainer}>
-                    <Button type="submit">Zapisz</Button>
-                </div>
-            </div>
+            </Box>
         </form>
     );
 };

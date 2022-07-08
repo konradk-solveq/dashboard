@@ -12,13 +12,10 @@ const NotificationsRow: React.FC<{
         <Container sx={{ display: 'grid', gridTemplateColumns: '4fr 1fr 1fr', gap: '10px', margin: '20px' }}>
             <Box>{title}</Box>
 
-            <Button
-                onClick={() => editHandler(id)}
-                sx={{ maxHeight: '40px', backgroundColor: 'green', cursor: 'pointer' }}
-            >
+            <Button variant="contained" color="success" onClick={() => editHandler(id)}>
                 Edytuj
             </Button>
-            <Button onClick={() => deleteHandler(id)} sx={{ maxHeight: '40px', cursor: 'pointer' }}>
+            <Button variant="contained" color="error" onClick={() => deleteHandler(id)}>
                 Usuń
             </Button>
         </Container>

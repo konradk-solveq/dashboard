@@ -124,7 +124,7 @@ export const mdTheme = createTheme({
         caption: {
             fontFamily: baseProperties.fontFamily,
             fontSize: baseProperties.fontSizeXS,
-            fontWeight: baseProperties.fontWeightRegular,
+            fontWeight: 200,
             lineHeight: 1.25,
         },
 

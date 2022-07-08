@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Container, Divider } from '@mui/material/';
+import { Button, Divider, Box } from '@mui/material/';
 import Select from 'react-select';
 import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, defaultFormValues } from './NotificationsUtils';
 import { NotificationsContext } from './NotificationsApi';
@@ -17,7 +17,7 @@ const NotificationsSortBar: React.FC<{}> = ({}) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Divider />
-            <Container
+            <Box
                 sx={{
                     m: '20px',
                     mb: '20px',
@@ -27,7 +27,15 @@ const NotificationsSortBar: React.FC<{}> = ({}) => {
                     gap: '20px',
                 }}
             >
-                <Container>
+                <Box
+                    sx={{
+                        textAlign: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '1em',
+                        gap: '20px',
+                    }}
+                >
                     <Controller
                         control={control}
                         rules={{ required: true }}
@@ -41,16 +49,6 @@ const NotificationsSortBar: React.FC<{}> = ({}) => {
                             />
                         )}
                     />
-                </Container>
-                <Container
-                    sx={{
-                        textAlign: 'center',
-                        display: 'flex',
-                        alignItems: 'center',
-                        fontSize: '1em',
-                        gap: '20px',
-                    }}
-                >
                     <Controller
                         control={control}
                         rules={{ required: true }}
@@ -77,16 +75,17 @@ const NotificationsSortBar: React.FC<{}> = ({}) => {
                             />
                         )}
                     />
-                </Container>
-                <Container sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <Button
                         type="submit"
-                        sx={{ textAlign: 'center', fontSize: '1em', cursor: 'pointer', ml: 'auto', mr: '40px' }}
+                        variant="contained"
+                        sx={{ textAlign: 'center', fontSize: '1em', cursor: 'pointer', ml: 'auto' }}
                     >
                         Sortuj
                     </Button>
-                </Container>
-            </Container>
+                </Box>
+            </Box>
             <Divider />
         </form>
     );
