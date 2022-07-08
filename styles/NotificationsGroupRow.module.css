@@ -1,6 +1,7 @@
 .container {
     margin-bottom: 10px !important;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr;
     gap: 20px;
     align-items: flex-start;
     justify-content: flex-start;
@@ -27,10 +28,6 @@
     border-radius: 4px;
     padding: 4px 8px;
     word-break: break-all;
-}
-.button {
-    width: 120px;
-    cursor: pointer;
 }
 .buttons {
     display: flex;

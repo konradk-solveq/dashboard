@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
-import { Container, Typography, Button, Alert, Divider } from '@mui/material/';
+import { Container, Typography, Button, Alert, Box } from '@mui/material/';
 import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
@@ -76,20 +76,43 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                 ) : (
                     <>
                         {deletePopUp && (
-                            <Alert sx={{ backgroundColor: '#555' }}>
-                                Czy na pewno chcesz usunąć grupę powiadomień?
-                                <Button
-                                    sx={{ cursor: 'pointer', width: '120px', ml: 'auto', mr: '30px' }}
-                                    onClick={confirmDelete}
+                            <Alert
+                                severity="error"
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
                                 >
-                                    Tak
-                                </Button>
-                                <Button
-                                    sx={{ cursor: 'pointer', backgroundColor: 'green', width: '120px' }}
-                                    onClick={() => setDeletePopUp(!deletePopUp)}
-                                >
-                                    Nie
-                                </Button>
+                                    <Typography variant="h5" style={{ fontWeight: 200, ml: '10px', mr: 'auto' }}>
+                                        Czy na pewno chcesz usunąć grupę powiadomień?
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', ml: '80px', mr: '10px' }}>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            sx={{ width: '120px', ml: 'auto', mr: '30px' }}
+                                            onClick={confirmDelete}
+                                        >
+                                            Tak
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            sx={{ width: '120px' }}
+                                            onClick={() => setDeletePopUp(!deletePopUp)}
+                                        >
+                                            Nie
+                                        </Button>
+                                    </Box>
+                                </Box>
                             </Alert>
                         )}
 
@@ -104,10 +127,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             }}
                         >
                             Powiadomienia
-                            <Button
-                                onClick={handleClick}
-                                sx={{ textAlign: 'center', fontSize: '0.75em', cursor: 'pointer' }}
-                            >
+                            <Button variant="contained" onClick={handleClick}>
                                 Dodaj Powiadomienie
                             </Button>
                         </Typography>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Typography, InputLabel, Button } from '@mui/material/';
+import { Container, Typography, Box, Button } from '@mui/material/';
 import { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
@@ -127,22 +127,22 @@ const NotificationsEdit: React.FC<IProps> = ({
                     <Container
                         sx={{
                             display: 'grid',
-                            gridTemplateColumns: '50px 190px 2fr',
+                            gridTemplateColumns: '1fr 2fr 3fr 1fr 1fr',
                             mb: '10px',
                             fontSize: '1.25em',
                             gap: 2,
                         }}
                     >
-                        <InputLabel>Język</InputLabel>
-                        <InputLabel>Tytuł</InputLabel>
-                        <InputLabel>Treść</InputLabel>
+                        <Typography variant="h5">Język</Typography>
+                        <Typography variant="h5">Tytuł</Typography>
+                        <Typography variant="h5">Treść</Typography>
                     </Container>
                     {displayEmpty ? (
-                        <Container sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555' }}>
+                        <Box sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555', fontWeight: '200', p: 2 }}>
                             Brak powiadomień
-                        </Container>
+                        </Box>
                     ) : (
-                        <Container>
+                        <Box>
                             {notifications.map((notification) => {
                                 return (
                                     <NotificationsGroupRow
@@ -156,10 +156,10 @@ const NotificationsEdit: React.FC<IProps> = ({
                                     />
                                 );
                             })}
-                        </Container>
+                        </Box>
                     )}
                 </Container>
-                <Container
+                <Box
                     sx={{
                         maxWidth: '1200px',
                         marginTop: '30px',
@@ -168,10 +168,10 @@ const NotificationsEdit: React.FC<IProps> = ({
                         justifyContent: 'flex-end',
                     }}
                 >
-                    <Button onClick={handleOpen} sx={{ textAlign: 'center', fontSize: '1.3em', cursor: 'pointer' }}>
+                    <Button onClick={handleOpen} variant="contained">
                         Dodaj język
                     </Button>
-                </Container>
+                </Box>
                 {modalShow && (
                     <NotificationsForm
                         handleOpen={handleOpen}
@@ -181,17 +181,19 @@ const NotificationsEdit: React.FC<IProps> = ({
                         changeNotification={changeNotification}
                     />
                 )}
-                {formShow && (
-                    <NotificationsGroupForm
-                        notifications={notifications}
-                        langOptions={langOptions}
-                        typeOptions={typeOptions}
-                        preloadedGroupValues={preloadedGroupValues}
-                        handleNotificationGroup={handleNotificationGroup}
-                        editNotificationGroup={editNotificationGroup}
-                        handleExit={handleExit}
-                    />
-                )}
+                <Box sx={{ ml: '48px' }}>
+                    {formShow && (
+                        <NotificationsGroupForm
+                            notifications={notifications}
+                            langOptions={langOptions}
+                            typeOptions={typeOptions}
+                            preloadedGroupValues={preloadedGroupValues}
+                            handleNotificationGroup={handleNotificationGroup}
+                            editNotificationGroup={editNotificationGroup}
+                            handleExit={handleExit}
+                        />
+                    )}
+                </Box>
             </Container>
         </Container>
     );

@@ -13,14 +13,14 @@ const NotificationsPagination: React.FC<{}> = ({}) => {
     return (
         <Container>
             <Divider />
-            <Container sx={{ ml: '20px', mr: '20px' }}>
+            <Container sx={{ m: '10px 20px' }}>
                 {prevPageURL && (
-                    <Button sx={{ cursor: 'pointer', mr: '20px' }} onClick={handlePrevPage}>
+                    <Button variant="contained" sx={{ mr: '20px' }} onClick={handlePrevPage}>
                         Poprzednia
                     </Button>
                 )}
                 {nextPageURL && (
-                    <Button sx={{ cursor: 'pointer' }} onClick={handleNextPage}>
+                    <Button variant="contained" onClick={handleNextPage}>
                         Następna
                     </Button>
                 )}
