@@ -1,9 +1,5 @@
 import React from 'react';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import Box from '@mui/material/Box';
+import { Input, Typography, Button, Checkbox, Box } from '@mui/material';
 
 const AppVersionToPlatformRow: React.FC<{
     published: boolean;
@@ -25,28 +21,48 @@ const AppVersionToPlatformRow: React.FC<{
     deleteHandler,
 }) => {
     return (
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr 3fr 1fr 1fr 100px 100px' }}>
-            <Input sx={{ backgroundColor: '#607D8B' }} disabled={true} value={appVersionNumber}></Input>
-            <Input sx={{ backgroundColor: '#607D8B' }} disabled={true} value={appPlatformName}></Input>
-            <Input sx={{ backgroundColor: '#607D8B' }} disabled={true} value={publishedAt || '-'}></Input>
-            <InputLabel sx={{ p: '8px' }}>
+        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 2fr 2fr 2fr 1fr 1fr 1fr', alignItems: 'center' }}>
+            <Input
+                sx={{ fontSize: '16px' }}
+                disableUnderline={true}
+                className="input-black"
+                disabled={true}
+                value={appVersionNumber}
+            ></Input>
+            <Input
+                sx={{ fontSize: '16px' }}
+                disableUnderline={true}
+                className="input-black"
+                disabled={true}
+                value={appPlatformName}
+            ></Input>
+            <Input
+                sx={{ fontSize: '16px' }}
+                disableUnderline={true}
+                className="input-black"
+                disabled={true}
+                value={publishedAt || '-'}
+            ></Input>
+            <Typography variant="body1">
                 <Checkbox
                     sx={{ backgroundColor: 'white' }}
                     checked={published}
                     onChange={(e) => setter('published', e.target.checked)}
                 />
-            </InputLabel>
-            <InputLabel sx={{ p: '8px' }}>
+            </Typography>
+            <Typography variant="body1">
                 <Checkbox
                     sx={{ backgroundColor: 'white' }}
                     checked={forceUpdate}
                     onChange={(e) => setter('forceUpdate', e.target.checked)}
                 />
-            </InputLabel>
-            <Button sx={{ backgroundColor: '#green' }} onClick={saveHandler}>
+            </Typography>
+            <Button variant="contained" color="success" sx={{ maxHeight: '30px' }} onClick={saveHandler}>
                 Zapisz
             </Button>
-            <Button onClick={deleteHandler}>Usuń</Button>
+            <Button variant="contained" color="error" sx={{ maxHeight: '30px' }} onClick={deleteHandler}>
+                Usuń
+            </Button>
         </Box>
     );
 };
