@@ -116,6 +116,12 @@ body {
     border: 1px solid black;
 }
 
+.input-black {
+    padding: 2px 4px;
+    border-radius: 4px;
+    border: 1px solid black;
+}
+
 /* .sys-btn:hover {
     background-color: #41040662;
     transition: all 0.3s;
