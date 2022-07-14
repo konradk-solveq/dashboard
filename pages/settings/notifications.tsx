@@ -83,18 +83,8 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                    }}
-                                >
-                                    <Typography variant="h5" style={{ fontWeight: 200, ml: '10px', mr: 'auto' }}>
-                                        Czy na pewno chcesz usunąć grupę powiadomień?
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', ml: '80px', mr: '10px' }}>
+                                action={
+                                    <Box>
                                         <Button
                                             variant="contained"
                                             color="error"
@@ -112,6 +102,18 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                                             Nie
                                         </Button>
                                     </Box>
+                                }
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <Typography variant="h5" style={{ fontWeight: 300 }}>
+                                        Czy na pewno chcesz usunąć grupę powiadomień?
+                                    </Typography>
                                 </Box>
                             </Alert>
                         )}
