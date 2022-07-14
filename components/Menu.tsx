@@ -2,7 +2,7 @@
 import Routing from 'next/link';
 import React, { useState } from 'react';
 import Link from '@mui/material/Link';
-import { List, Box, Container, Divider, IconButton, Drawer } from '@mui/material';
+import { List, Box, Container, Divider, IconButton, Drawer, Typography, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import useToggle from './hooks/useToggle';
@@ -11,14 +11,13 @@ const Item: React.FC<{ target: string; text: string }> = ({ target, text }) => {
     return (
         <Container
             sx={{
-                fontSize: '15px',
                 color: '#eee',
-                ml: '10px',
-                mb: '4px',
             }}
         >
             <Routing passHref href={target}>
-                <Link>{text}</Link>
+                <Link>
+                    <MenuItem sx={{ fontSize: 17, fontWeight: 300 }}>{text}</MenuItem>
+                </Link>
             </Routing>
         </Container>
     );
@@ -30,25 +29,30 @@ const MenuDrawer: React.FC<{}> = ({ children }) => {
         return (
             <Box
                 sx={{
-                    p: '16px',
                     bg: '#555',
                     userSelect: 'none',
-                    mt: '60px',
+                    mt: '86px',
                 }}
             >
-                <Divider textAlign="left">Trasy</Divider>
+                <Divider textAlign="left" sx={{ fontSize: 18 }}>
+                    Trasy
+                </Divider>
                 <List>
                     <Item text="Lista Tras" target="/routes/list" />
                     <Item text="Wyróżnione Trasy" target="/routes/featured" />
                     <Item text="Statystyki Tras" target="/routes/statistics" />
                     <Item text="Raporty" target="/routes/raports" />
                 </List>
-                <Divider textAlign="left">Publikacje</Divider>
+                <Divider textAlign="left" sx={{ fontSize: 18 }}>
+                    Publikacje
+                </Divider>
                 <List title="Publikacje">
                     <Item text="Zarządzaj Publikacjami" target="/publications/manage" />
                     <Item text="Wgraj Dokumenty" target="/publications/manage/documents" />
                 </List>
-                <Divider textAlign="left">Ustawienia</Divider>
+                <Divider textAlign="left" sx={{ fontSize: 18 }}>
+                    Ustawienia
+                </Divider>
                 <List>
                     <Item text="Powiadomienia" target="/settings/notifications" />
                     <Item text="Tłumaczenia" target="/settings/translation" />
