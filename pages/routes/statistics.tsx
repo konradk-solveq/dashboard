@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Container, Typography, Divider } from '@mui/material/';
+import { Box, Container, Typography } from '@mui/material/';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
@@ -130,10 +130,6 @@ export default function Page({}) {
 
     const [chartData, setChartData] = useState(null);
     const [filteredChartData, setFilteredChartData] = useState(null);
-
-    const [scroll, setScroll] = useState(0);
-    const SCROLL_MOVE = 42 * 8;
-    const barRef = useRef<any>();
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -360,6 +356,9 @@ export default function Page({}) {
                             alignItems: 'center',
                             margin: 1,
                             flexWrap: 'wrap',
+                            maxWidth: '1300px',
+                            ml: 'auto',
+                            mr: 'auto',
                         }}
                     >
                         {sumAll?.map((el, index) => {

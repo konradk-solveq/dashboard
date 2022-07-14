@@ -38,7 +38,7 @@ export default function Page({}) {
             {chosenDate ? (
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography>{'Raport z dnia: ' + chosenDate}</Typography>
-                    <Box sx={{ ml: 5 }}>
+                    <Box sx={{ ml: 5, fontSize: '18px', fontFamily: 'inherit' }}>
                         <ol>
                             {reports && reports.length
                                 ? reports.map((report) => (
