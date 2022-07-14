@@ -59,7 +59,7 @@ const NotificationsForm: React.FC<IProps> = ({
 
                 <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
                     <Typography variant="h5">Język</Typography>
-                    <Box sx={{ width: '320px', fontSize: '16px', fontWeight: '200' }}>
+                    <Box sx={{ width: '320px', fontSize: '16px', fontWeight: 300 }}>
                         <Controller
                             control={control}
                             rules={{ required: 'Język jest wymagany.' }}

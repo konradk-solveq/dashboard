@@ -11,7 +11,7 @@ const Footer: React.FC<{}> = ({ children }) => {
                 alignItems: 'center',
                 m: '16px 32px',
                 p: '16px 32px',
-                fontWeight: '200',
+                fontWeight: '300',
             }}
         >
             {' '}

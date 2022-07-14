@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container, Input, Typography } from '@mui/material/';
+import { Button, Container, Input } from '@mui/material/';
 
 const TranslationRow: React.FC<{
     code: string;

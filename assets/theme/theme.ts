@@ -1,10 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 
 const baseProperties = {
-    fontFamily: 'Inter', //'din-r, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
-    fontWeightLight: 200,
+    fontFamily: ['Roboto', 'sans-serif'].join(','),
+    fontWeightLight: 300,
     fontWeightRegular: 400,
-    fontWeightMedium: 600,
     fontWeightBold: 700,
     fontSizeXXS: 12,
     fontSizeXS: 14,
@@ -46,7 +45,7 @@ export const mdTheme = createTheme({
         fontFamily: baseProperties.fontFamily,
         fontWeightLight: baseProperties.fontWeightLight,
         fontWeightRegular: baseProperties.fontWeightRegular,
-        fontWeightMedium: baseProperties.fontWeightMedium,
+        fontWeightMedium: baseProperties.fontWeightRegular,
         h1: {
             fontSize: 48,
             lineHeight: 1.25,
@@ -95,7 +94,7 @@ export const mdTheme = createTheme({
         subtitle2: {
             fontSize: 20,
             lineHeight: 1.375,
-            fontWeight: 200,
+            fontWeight: 300,
             ...baseHeadingProperties,
         },
 
@@ -115,8 +114,8 @@ export const mdTheme = createTheme({
 
         button: {
             fontFamily: baseProperties.fontFamily,
-            fontSize: baseProperties.fontSizeXS,
-            fontWeight: baseProperties.fontWeightMedium,
+            fontSize: baseProperties.fontSizeSM,
+            fontWeight: baseProperties.fontWeightRegular,
             lineHeight: 1.5,
             textTransform: 'uppercase',
         },
@@ -124,7 +123,7 @@ export const mdTheme = createTheme({
         caption: {
             fontFamily: baseProperties.fontFamily,
             fontSize: baseProperties.fontSizeXS,
-            fontWeight: 200,
+            fontWeight: 300,
             lineHeight: 1.25,
         },
 

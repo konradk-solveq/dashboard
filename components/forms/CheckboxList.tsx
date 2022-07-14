@@ -43,7 +43,7 @@ const CheckboxList: React.FC<Props> = ({ title, listOptions, values, setValues }
                     <Container key={e.enumValue} sx={{ mr: '10px', display: 'flex' }}>
                         <InputLabel
                             sx={{
-                                fontWeight: 200,
+                                fontWeight: 300,
                                 fontSize: '16px',
                                 display: 'flex',
                                 alignItems: 'center',
