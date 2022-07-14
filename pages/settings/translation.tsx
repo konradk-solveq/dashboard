@@ -110,7 +110,7 @@ const TranslationMenage: React.FC<{}> = () => {
                         <ListItemText
                             primaryTypographyProps={{
                                 fontSize: 16,
-                                fontWeight: 200,
+                                fontWeight: 300,
                                 letterSpacing: 0,
                             }}
                         >
@@ -119,7 +119,7 @@ const TranslationMenage: React.FC<{}> = () => {
                         <ListItemText
                             primaryTypographyProps={{
                                 fontSize: 16,
-                                fontWeight: 200,
+                                fontWeight: 300,
                                 letterSpacing: 0,
                             }}
                         >
@@ -128,7 +128,7 @@ const TranslationMenage: React.FC<{}> = () => {
                         <ListItemText
                             primaryTypographyProps={{
                                 fontSize: 16,
-                                fontWeight: 200,
+                                fontWeight: 300,
                                 letterSpacing: 0,
                             }}
                         >
@@ -137,7 +137,7 @@ const TranslationMenage: React.FC<{}> = () => {
                         <ListItemText
                             primaryTypographyProps={{
                                 fontSize: 16,
-                                fontWeight: 200,
+                                fontWeight: 300,
                                 letterSpacing: 0,
                             }}
                         >
@@ -166,7 +166,7 @@ const TranslationMenage: React.FC<{}> = () => {
                         <ListItemText
                             primaryTypographyProps={{
                                 fontSize: 16,
-                                fontWeight: 200,
+                                fontWeight: 300,
                                 letterSpacing: 0,
                             }}
                         >

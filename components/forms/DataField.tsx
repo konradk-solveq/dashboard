@@ -8,12 +8,12 @@ interface Props {
 const DataField: React.FC<Props> = ({ title, value }) => {
     const checkNoData = (d) => {
         if (typeof d == 'undefined') {
-            return <Box sx={{ color: 'primary', fontWeight: 200 }}>-- undefined --</Box>;
+            return <Box sx={{ color: 'primary', fontWeight: 300 }}>-- undefined --</Box>;
         }
         if (d == null) {
-            return <Box sx={{ color: 'primary', fontWeight: 200 }}>-- null --</Box>;
+            return <Box sx={{ color: 'primary', fontWeight: 300 }}>-- null --</Box>;
         } else {
-            return <Box sx={{ color: 'primary', fontWeight: 200 }}>{d.toString()}</Box>;
+            return <Box sx={{ color: 'primary', fontWeight: 300 }}>{d.toString()}</Box>;
         }
     };
 

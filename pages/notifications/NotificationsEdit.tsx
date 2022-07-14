@@ -138,7 +138,7 @@ const NotificationsEdit: React.FC<IProps> = ({
                         <Typography variant="h5">Treść</Typography>
                     </Container>
                     {displayEmpty ? (
-                        <Box sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555', fontWeight: '200', p: 2 }}>
+                        <Box sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555', fontWeight: 300, p: 2 }}>
                             Brak powiadomień
                         </Box>
                     ) : (

@@ -39,15 +39,15 @@ const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ b
                             )}
                         </Box>
                         <Box sx={{ m: 1 }}>
-                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: '200' }}>
+                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: 300 }}>
                                 ID: {route.id}
                             </Typography>
 
-                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: '200' }}>
+                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: 300 }}>
                                 Autor: {route.author ? route.author : 'Brak Danych'}
                             </Typography>
 
-                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: '200' }}>
+                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: 300 }}>
                                 Data:{route.createdAt}
                             </Typography>
                         </Box>

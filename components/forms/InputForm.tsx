@@ -43,7 +43,7 @@ const InputForm: React.FC<Props> = ({ title, value, setValue, freeze }) => {
                             minWidth: '250px',
                             minHeight: '30px',
                             color: value ? '' : 'primary',
-                            fontWeight: 200,
+                            fontWeight: 300,
                             fontSize: '24px',
                         }}
                     >
