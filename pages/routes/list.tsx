@@ -60,7 +60,14 @@ export default function Page({}) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Divider
                         textAlign="left"
-                        sx={{ width: '85vw', fontSize: '24px', fontWeight: '400', mt: '10px', mb: '10px' }}
+                        sx={{
+                            width: '85vw',
+                            fontSize: '24px',
+                            fontWeight: '400',
+                            mt: '10px',
+                            mb: '10px',
+                            maxWidth: '1200px',
+                        }}
                     >
                         Lista tras
                     </Divider>
