@@ -4,7 +4,6 @@ import { ManageWebhookContext } from '../contexts/settings/ManageWebhook';
 
 const WebhooksListItem = ({ item }) => {
     const { setHookToEdit, manageModalState, modalType } = useContext(ManageWebhookContext);
-    console.log(item);
 
     const handleEditClick = () => {
         manageModalState(modalType[0]);

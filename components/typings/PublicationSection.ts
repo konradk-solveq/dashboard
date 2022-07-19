@@ -37,7 +37,7 @@ export interface DocumentUploadContextProps {
 export interface UploadFormProps {
     loadingError: Boolean
 }
-export interface ManagePublicationContextProps {
+export interface PostPublicationContextProps {
     defaultValues: PublishFormValues;
     availableFiles: AvailableFiles[],
     setAvailableFiles: React.Dispatch<React.SetStateAction<AvailableFiles[]>>;

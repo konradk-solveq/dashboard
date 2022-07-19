@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from '@emotion/styled';
 
-import { ManagePublicationContext } from '../../../contexts/publication/ManagePublication';
+import { PostPublicationContext } from '../../../contexts/publication/PostPublication';
 import { AvailableFiles, Step0Props, SubmittedProps } from '../../../typings/PublicationSection';
 
 const NestedLabel = styled.label`
@@ -69,7 +69,8 @@ export const Step0: React.FC<Step0Props> = ({ handlePublicationTypeSelect }) => 
 };
 
 export const Step1: React.FC = () => {
-    const { availableFiles, publishFormMethods } = useContext(ManagePublicationContext);
+    const { availableFiles, publishFormMethods } = useContext(PostPublicationContext);
+    console.log(availableFiles);
 
     const { control, getValues, setValue } = publishFormMethods;
 
@@ -123,7 +124,7 @@ export const Step1: React.FC = () => {
 };
 
 export const Step2: React.FC = () => {
-    const { publishFormMethods } = useContext(ManagePublicationContext);
+    const { publishFormMethods } = useContext(PostPublicationContext);
     const { control, getValues } = publishFormMethods;
 
     return (
@@ -188,7 +189,7 @@ export const Step2: React.FC = () => {
 };
 
 export const Step3 = () => {
-    const { availableFiles, publishFormMethods } = useContext(ManagePublicationContext);
+    const { availableFiles, publishFormMethods } = useContext(PostPublicationContext);
 
     const { getValues, register, setValue } = publishFormMethods;
 
@@ -232,7 +233,7 @@ export const Step3 = () => {
 };
 
 export const Step4 = () => {
-    const { publishFormMethods } = useContext(ManagePublicationContext);
+    const { publishFormMethods } = useContext(PostPublicationContext);
     const { register } = publishFormMethods;
 
     return (

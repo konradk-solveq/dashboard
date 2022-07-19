@@ -63,7 +63,9 @@ const EditModalForm = () => {
                 required
             >
                 {results.events.events.map((event) => (
-                    <option value={event}>{event}</option>
+                    <option key={event} value={event}>
+                        {event}
+                    </option>
                 ))}
             </Select>
             <Select
@@ -73,9 +75,13 @@ const EditModalForm = () => {
                 defaultValue={hookToEdit?.verificationType}
                 required
             >
-                {results.auth.verificationMethods.map((event) => (
-                    <option value={event.split(/(?=[A-Z])/)}>{event}</option>
-                ))}
+                {results.auth.verificationMethods.map((event) =>
+                    event ? (
+                        <option key={event} value={event.split(/(?=[A-Z])/)}>
+                            {event}
+                        </option>
+                    ) : null,
+                )}
             </Select>
             {watchAuthType === 'jwt' && (
                 <>

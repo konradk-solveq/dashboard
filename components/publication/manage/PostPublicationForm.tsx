@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import { errorHandler } from '../../contexts/translation';
 import { Step0, Step1, Step2, Step3, Step4, Submitted } from './steps';
-import { ManagePublicationContext } from '../../contexts/publication/ManagePublication';
+import { PostPublicationContext } from '../../contexts/publication/PostPublication';
 import { PublishFormSubmission, PublishFormValues, ActiveSteps, Steps } from '../../typings/PublicationSection';
 
 const ButtonContainer = styled.div`
@@ -14,8 +14,8 @@ const ButtonContainer = styled.div`
     margin-bottom: 50px;
 `;
 
-const ManagePublicationForm: React.FC = () => {
-    const { publishFormMethods, postPublication, getAvailableFiles } = useContext(ManagePublicationContext);
+const PostPublicationForm: React.FC = () => {
+    const { publishFormMethods, postPublication, getAvailableFiles } = useContext(PostPublicationContext);
     const [activeStep, setActiveStep] = useState<Number>(0);
     const [isError, setIsError] = useState<Boolean>(false);
     const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -167,4 +167,4 @@ const ManagePublicationForm: React.FC = () => {
     );
 };
 
-export default ManagePublicationForm;
+export default PostPublicationForm;

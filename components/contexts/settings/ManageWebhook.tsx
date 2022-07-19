@@ -31,7 +31,7 @@ const deleteWebhook = async (id: string) =>
         headers: { 'content-type': 'application/json' },
     });
 
-const ManagePublicationContainer: React.FC = ({ children }) => {
+const ManageWebhookContainer: React.FC = ({ children }) => {
     const [results, setResults] = useState<Results>({
         webhooks: [],
         auth: {
@@ -135,4 +135,4 @@ const ManagePublicationContainer: React.FC = ({ children }) => {
     );
 };
 
-export default ManagePublicationContainer;
+export default ManageWebhookContainer;
