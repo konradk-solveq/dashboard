@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
-import { Container, Heading, Button, Alert, Divider } from 'theme-ui';
+import { Container, Typography, Button, Alert, Box } from '@mui/material/';
 import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
@@ -65,7 +65,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
 
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
+            <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
                 {addFormShow ? (
                     <NotificationsEditPage
                         handleNotificationGroup={handleNotificationGroup}
@@ -76,26 +76,52 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                 ) : (
                     <>
                         {deletePopUp && (
-                            <Alert sx={{ backgroundColor: '#555' }}>
-                                Czy na pewno chcesz usunąć grupę powiadomień?
-                                <Button
-                                    sx={{ cursor: 'pointer', width: '120px', ml: 'auto', mr: '30px' }}
-                                    onClick={confirmDelete}
+                            <Alert
+                                severity="error"
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                                action={
+                                    <Box>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            sx={{ width: '120px', ml: 'auto', mr: '30px' }}
+                                            onClick={confirmDelete}
+                                        >
+                                            Tak
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            sx={{ width: '120px' }}
+                                            onClick={() => setDeletePopUp(!deletePopUp)}
+                                        >
+                                            Nie
+                                        </Button>
+                                    </Box>
+                                }
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
                                 >
-                                    Tak
-                                </Button>
-                                <Button
-                                    sx={{ cursor: 'pointer', backgroundColor: 'green', width: '120px' }}
-                                    onClick={() => setDeletePopUp(!deletePopUp)}
-                                >
-                                    Nie
-                                </Button>
+                                    <Typography variant="h5" style={{ fontWeight: 300 }}>
+                                        Czy na pewno chcesz usunąć grupę powiadomień?
+                                    </Typography>
+                                </Box>
                             </Alert>
                         )}
 
-                        <Heading
-                            m="20px"
+                        <Typography
+                            variant="h2"
                             sx={{
+                                m: '20px',
                                 textAlign: 'center',
                                 display: 'flex',
                                 justifyContent: 'space-between',
@@ -103,17 +129,14 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             }}
                         >
                             Powiadomienia
-                            <Button
-                                onClick={handleClick}
-                                sx={{ textAlign: 'center', fontSize: '0.75em', cursor: 'pointer' }}
-                            >
+                            <Button variant="contained" onClick={handleClick}>
                                 Dodaj Powiadomienie
                             </Button>
-                        </Heading>
+                        </Typography>
 
                         <NotificationsSortBar />
 
-                        <Heading m="20px">Lista Powiadomień</Heading>
+                        <Typography sx={{ m: '20px' }}>Lista Powiadomień</Typography>
 
                         {preloadedNotifications?.length > 0 ? (
                             <Container sx={{ minHeight: '300px' }}>

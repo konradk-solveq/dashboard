@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { Spinner } from 'theme-ui';
+import { CircularProgress } from '@mui/material/';
 import styled from '@emotion/styled';
 
 import { ManageWebhookContext } from '../contexts/settings/ManageWebhook';
@@ -29,7 +29,6 @@ const Container = styled.div`
     background-color: white;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    text-align: center;
 `;
 
 const EditModal: React.FC = () => {
@@ -46,7 +45,7 @@ const EditModal: React.FC = () => {
         return (
             <Backdrop>
                 <Container>
-                    <Spinner m={40} />
+                    <CircularProgress sx={{ margin: 40 }} />
                 </Container>
             </Backdrop>
         );

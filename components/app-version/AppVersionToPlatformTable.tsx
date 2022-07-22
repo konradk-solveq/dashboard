@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Grid, Label, Divider, Input, Select } from 'theme-ui';
+import { Input, Select, Typography, Button, Box, MenuItem } from '@mui/material';
 import AppVersionToPlatformRow from './AppVersionToPlatformRow';
 
 const AppVersionToPlatformTable = ({
@@ -12,48 +12,68 @@ const AppVersionToPlatformTable = ({
     setNewAppVersionToPlatformValue,
     limitAndOffset,
     setLimitsAndOffset,
-    appVersionToPlatformsCount
+    appVersionToPlatformsCount,
 }) => {
     return (
-        <>
-            <Grid columns="1fr 20px 60px 30px 100px" marginBottom="20px">
-                <p></p>
-                <Label pt="10px">limit:</Label>
-                <Select
-                    value={limitAndOffset.limit}
-                    onChange={(e) => {
-                        setLimitsAndOffset({ limit: parseInt(e.target.value), offset: 0 });
-                    }}
-                >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={40}>40</option>
-                </Select>
-                <Label pt="10px">strona:</Label>
-                <Select
-                    value={limitAndOffset.offset}
-                    onChange={(e) => {
-                        setLimitsAndOffset({ ...limitAndOffset, offset: parseInt(e.target.value) });
-                    }}
-                >
-                    {calcPages(limitAndOffset.limit, appVersionToPlatformsCount).map(({ offset, label }, index) => {
-                        return (
-                            <option key={index} value={offset}>
-                                {label}
-                            </option>
-                        );
-                    })}
-                </Select>
-            </Grid>
-            <Grid gap={2} columns="1fr 1fr 3fr 1fr 1fr 100px 100px" marginBottom="10px">
-                <Label>Wersja</Label>
-                <Label>Platforma</Label>
-                <Label>Data publikacji</Label>
-                <Label>Opublikowana</Label>
-                <Label>Wymuszenie aktualizacji</Label>
-                <Label></Label>
-            </Grid>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', marginBottom: '20px', ml: 'auto', gap: '16px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
+                    <Typography variant="h5">Limit:</Typography>
+                    <Select
+                        className="document-select-form"
+                        value={limitAndOffset.limit}
+                        onChange={(e) => {
+                            setLimitsAndOffset({ limit: parseInt(e.target.value), offset: 0 });
+                        }}
+                    >
+                        <MenuItem style={{ fontSize: '14px' }} value={5}>
+                            5
+                        </MenuItem>
+                        <MenuItem style={{ fontSize: '14px' }} value={10}>
+                            10
+                        </MenuItem>
+                        <MenuItem style={{ fontSize: '14px' }} value={20}>
+                            20
+                        </MenuItem>
+                        <MenuItem style={{ fontSize: '14px' }} value={40}>
+                            40
+                        </MenuItem>
+                    </Select>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
+                    <Typography variant="h5">Strona:</Typography>
+                    <Select
+                        className="document-select-form"
+                        value={limitAndOffset.offset}
+                        onChange={(e) => {
+                            setLimitsAndOffset({ ...limitAndOffset, offset: parseInt(e.target.value) });
+                        }}
+                    >
+                        {calcPages(limitAndOffset.limit, appVersionToPlatformsCount).map(({ offset, label }, index) => {
+                            return (
+                                <MenuItem style={{ fontSize: '14px' }} key={index} value={offset}>
+                                    {label}
+                                </MenuItem>
+                            );
+                        })}
+                    </Select>
+                </Box>
+            </Box>
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 2fr 2fr 2fr 1fr 1fr 1fr',
+                    marginBottom: '10px',
+                    gap: 2,
+                }}
+            >
+                <Typography variant="h5">Wersja</Typography>
+                <Typography variant="h5">Platforma</Typography>
+                <Typography variant="h5">Data publikacji</Typography>
+                <Typography variant="h5">Opublikowana</Typography>
+                <Typography variant="h5">Wymuszenie aktualizacji</Typography>
+            </Box>
             {appVersionToPlatformsState.length
                 ? appVersionToPlatformsState.map(
                       ({
@@ -90,38 +110,39 @@ const AppVersionToPlatformTable = ({
                       },
                   )
                 : ''}
-            <Divider marginY="40px"></Divider>
-            <Grid gap={2} columns="1fr 150px 150px 1fr" marginBottom="10px">
-                <Box></Box>
-                <Label>Wersja</Label>
-                <Label>Platforma</Label>
-                <Box></Box>
-            </Grid>
-            <Grid gap={2} columns="1fr 150px 150px 1fr" marginBottom="10px">
-                <Box></Box>
-                <Input
-                    bg="white"
-                    value={newAppVersionToPlatformState.appVersionNumber}
-                    onChange={(e) => setNewAppVersionToPlatformValue('appVersionNumber', e.target.value)}
-                ></Input>
-                <Input
-                    bg="white"
-                    value={newAppVersionToPlatformState.appPlatformName}
-                    onChange={(e) => setNewAppVersionToPlatformValue('appPlatformName', e.target.value)}
-                ></Input>
-                <Box></Box>
-            </Grid>
-            <Grid gap={2} columns="4fr 200px 4fr">
-                <Box></Box>
+            <Box sx={{ width: '80vw', borderTop: '1px solid #2F4858', m: 4 }} />
+            <Box sx={{ display: 'flex', marginBottom: '10px', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography variant="h5">Wersja</Typography>
+                    <Input
+                        className="document-input-form document-select-form"
+                        disableUnderline={true}
+                        sx={{ textAlign: 'center', fontSize: '14px', width: '300px', mt: '12px' }}
+                        value={newAppVersionToPlatformState.appVersionNumber}
+                        onChange={(e) => setNewAppVersionToPlatformValue('appVersionNumber', e.target.value)}
+                    ></Input>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography variant="h5">Platforma</Typography>
+                    <Input
+                        className="document-input-form document-select-form"
+                        disableUnderline={true}
+                        sx={{ textAlign: 'center', fontSize: '14px', width: '300px', mt: '12px' }}
+                        value={newAppVersionToPlatformState.appPlatformName}
+                        onChange={(e) => setNewAppVersionToPlatformValue('appPlatformName', e.target.value)}
+                    ></Input>
+                </Box>
+            </Box>
+            <Box>
                 <Button
-                    bg="default"
                     sx={{ textAlign: 'center' }}
+                    variant="contained"
                     onClick={() => createAppVersionToPlatformAndNotify(newAppVersionToPlatformState)}
                 >
                     Dodaj wersję
                 </Button>
-            </Grid>
-        </>
+            </Box>
+        </Box>
     );
 };
 function calcPages(limit, count): { offset: number; label: string }[] {

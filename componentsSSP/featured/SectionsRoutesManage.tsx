@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useContext } from 'react';
-import { Box, Divider, Grid } from 'theme-ui';
+import { Box, Divider, Container, Typography } from '@mui/material/';
 import { FeaturedSectionContext } from '../../components/contexts/featured/contexts';
 import { SimplifiedFeaturedRoute } from '../../components/typings/FeaturedSection';
 import LookupForRoute from './LookupForRoute';
@@ -24,14 +24,14 @@ const SectionRoutesManage: React.FC<{}> = (props) => {
 
     const AssignedRoute = (route: SimplifiedFeaturedRoute): JSX.Element => {
         return (
-            <Grid key={route.routeId} {...routeStyle}>
+            <Container sx={{ display: 'grid' }} key={route.routeId} {...routeStyle}>
                 <Box sx={pointerStyle} onClick={() => removeRoute({ id: route.routeId })}>
                     🗑
                 </Box>
                 <Box>
                     {route.name} ({<Link href={`/routes/edit?routeId=${route.routeId}`}>{route.routeId}</Link>})
                 </Box>
-            </Grid>
+            </Container>
         );
     };
 
@@ -45,7 +45,7 @@ const SectionRoutesManage: React.FC<{}> = (props) => {
 
     return (
         <Box>
-            <h2>Trasy</h2>
+            <Typography>Trasy</Typography>
             <Routes />
             <Divider />
             <LookupForRoute />

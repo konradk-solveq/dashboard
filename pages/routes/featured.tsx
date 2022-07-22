@@ -1,4 +1,4 @@
-import { Box, Container } from '@theme-ui/components';
+import { Box, Container, Typography } from '@mui/material/';
 import { NextPage } from 'next';
 import React, { useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -12,7 +12,7 @@ import pointerStyle from '../../componentsSSP/featured/pointerStyle';
 
 const AddNewSection: React.FC<{}> = () => {
     const { create } = useContext(FeaturedSectionsContext);
-    const style = { fontSize: 4, ...pointerStyle };
+    const style = { fontSize: '16px', ...pointerStyle };
     return (
         <Box onClick={create} sx={style}>
             ➕ Dodaj nową sekcję
@@ -22,12 +22,11 @@ const AddNewSection: React.FC<{}> = () => {
 
 const FeaturedRouteContainer: React.FC<{ section: FeaturedSectionDTO }> = ({ section }) => {
     return (
-        <Container>
+        <Box>
             <FeaturedSectionContainer section={section}>
                 <FeaturedRoute />
-                <Box m={1} />
             </FeaturedSectionContainer>
-        </Container>
+        </Box>
     );
 };
 
@@ -44,7 +43,7 @@ const FeaturedRoutesPage: NextPage<{}> = function ({}) {
     return (
         <FeaturedSectionsContainer {...{ sections, revalidate }}>
             <Container>
-                <h1>Lista sekcji wyróżnionych</h1>
+                <Typography>Lista sekcji wyróżnionych</Typography>
                 {sections.map((section) => {
                     return <FeaturedRouteContainer key={section.sectionId} {...{ section }} />;
                 })}

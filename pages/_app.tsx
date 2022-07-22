@@ -1,12 +1,12 @@
 import '../styles/globals.css';
+import { mdTheme } from '../assets/theme/theme';
 
 import { getSession, Provider, signIn } from 'next-auth/client';
 import App, { AppContext, AppInitialProps, AppProps } from 'next/app';
-import { Theme, ThemeProvider } from 'theme-ui';
-
+import { ThemeProvider } from '@mui/material/styles';
 import { ApiContextContainer } from '../components/contexts/api';
 import Layout from '../components/Layout';
-import theme from '../components/theme';
+
 import { cache } from '../helpers/cache';
 
 const getConfig = cache(async () => {
@@ -27,7 +27,7 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
             }}
         >
             <ApiContextContainer config={pageProps.config}>
-                <ThemeProvider theme={theme as Theme}>
+                <ThemeProvider theme={mdTheme}>
                     <Layout>
                         <Component {...pageProps} />
                     </Layout>

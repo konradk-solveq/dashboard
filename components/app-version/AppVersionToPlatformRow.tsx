@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid, Checkbox, Input, Label } from 'theme-ui';
+import { Input, Typography, Button, Checkbox, Box } from '@mui/material';
 
 const AppVersionToPlatformRow: React.FC<{
     published: boolean;
@@ -21,21 +21,49 @@ const AppVersionToPlatformRow: React.FC<{
     deleteHandler,
 }) => {
     return (
-        <Grid gap={2} columns="1fr 1fr 3fr 1fr 1fr 100px 100px" marginBottom="10px">
-            <Input bg="lightgrey" disabled={true} value={appVersionNumber}></Input>
-            <Input bg="lightgrey" disabled={true} value={appPlatformName}></Input>
-            <Input bg="lightgrey" disabled={true} value={publishedAt || '-'}></Input>
-            <Label p="8px">
-                <Checkbox bg="white" checked={published} onChange={(e) => setter('published', e.target.checked)} />
-            </Label>
-            <Label p="8px">
-                <Checkbox bg="white" checked={forceUpdate} onChange={(e) => setter('forceUpdate', e.target.checked)} />
-            </Label>
-            <Button bg="green" onClick={saveHandler}>
+        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 2fr 2fr 2fr 1fr 1fr 1fr', alignItems: 'center' }}>
+            <Input
+                sx={{ fontSize: '16px' }}
+                disableUnderline={true}
+                className="input-black"
+                disabled={true}
+                value={appVersionNumber}
+            ></Input>
+            <Input
+                sx={{ fontSize: '16px' }}
+                disableUnderline={true}
+                className="input-black"
+                disabled={true}
+                value={appPlatformName}
+            ></Input>
+            <Input
+                sx={{ fontSize: '16px' }}
+                disableUnderline={true}
+                className="input-black"
+                disabled={true}
+                value={publishedAt || '-'}
+            ></Input>
+            <Typography variant="body1">
+                <Checkbox
+                    sx={{ backgroundColor: 'white' }}
+                    checked={published}
+                    onChange={(e) => setter('published', e.target.checked)}
+                />
+            </Typography>
+            <Typography variant="body1">
+                <Checkbox
+                    sx={{ backgroundColor: 'white' }}
+                    checked={forceUpdate}
+                    onChange={(e) => setter('forceUpdate', e.target.checked)}
+                />
+            </Typography>
+            <Button variant="contained" color="success" sx={{ maxHeight: '30px' }} onClick={saveHandler}>
                 Zapisz
             </Button>
-            <Button onClick={deleteHandler}>Usuń</Button>
-        </Grid>
+            <Button variant="contained" color="error" sx={{ maxHeight: '30px' }} onClick={deleteHandler}>
+                Usuń
+            </Button>
+        </Box>
     );
 };
 export default AppVersionToPlatformRow;

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Heading, Button, Select, Checkbox } from 'theme-ui';
+import { Box, Typography, Button, Select, Checkbox, MenuItem } from '@mui/material/';
 import { Controller } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -44,11 +44,12 @@ export const Step0: React.FC<Step0Props> = ({ handlePublicationTypeSelect }) => 
     return (
         <>
             <Box mb="80px">
-                <Heading>Typ Publikacji</Heading>
+                <Typography variant="h3">Typ Publikacji</Typography>
             </Box>
             <Row>
                 <Button
                     type="button"
+                    variant="contained"
                     value="terms"
                     sx={{ width: '200px', fontSize: '1rem' }}
                     onClick={handlePublicationTypeSelect}
@@ -57,6 +58,7 @@ export const Step0: React.FC<Step0Props> = ({ handlePublicationTypeSelect }) => 
                 </Button>
                 <Button
                     type="button"
+                    variant="contained"
                     value="policy"
                     sx={{ width: '200px', padding: '15px', fontSize: '1rem' }}
                     onClick={handlePublicationTypeSelect}
@@ -81,7 +83,7 @@ export const Step1: React.FC = () => {
     return (
         <>
             <Box mb="80px">
-                <Heading>Dokument Aktualny i Nowy</Heading>
+                <Typography variant="h3">Dokument Aktualny i Nowy</Typography>
             </Box>
             <Row>
                 <ItemColumn>
@@ -91,11 +93,15 @@ export const Step1: React.FC = () => {
                         control={control}
                         rules={{ required: true, validate: { sameFile: (v) => v !== getValues('next') } }}
                         render={({ field }) => (
-                            <Select sx={{ width: '200px', textAlign: 'center' }} onChange={field.onChange}>
+                            <Select
+                                className="document-select-form"
+                                sx={{ width: '200px', textAlign: 'center' }}
+                                onChange={field.onChange}
+                            >
                                 {availableFiles?.map((file: AvailableFiles) => (
-                                    <option key={file.id} value={file.id}>
+                                    <MenuItem style={{ fontSize: '14px' }} key={file.id} value={file.id}>
                                         {file.name}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         )}
@@ -108,11 +114,15 @@ export const Step1: React.FC = () => {
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <Select sx={{ width: '200px', textAlign: 'center' }} onChange={field.onChange}>
+                            <Select
+                                className="document-select-form"
+                                sx={{ width: '200px', textAlign: 'center' }}
+                                onChange={field.onChange}
+                            >
                                 {availableFiles?.map((file: AvailableFiles) => (
-                                    <option key={file.id} value={file.id}>
+                                    <MenuItem style={{ fontSize: '14px' }} key={file.id} value={file.id}>
                                         {file.name}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         )}
@@ -130,7 +140,7 @@ export const Step2: React.FC = () => {
     return (
         <>
             <Box mb="80px">
-                <Heading>Daty Wyświetlania Dokumentów</Heading>
+                <Typography>Daty Wyświetlania Dokumentów</Typography>
             </Box>
             <Row>
                 <ItemColumn>
@@ -210,20 +220,21 @@ export const Step3 = () => {
     return (
         <>
             <Box mb="80px">
-                <Heading>Domyślny język kiedy brakuje zapytanego</Heading>
+                <Typography>Domyślny język kiedy brakuje zapytanego</Typography>
             </Box>
             <Row>
                 <ItemColumn>
                     <Label>Kod Językowy</Label>
                     <Select
+                        className="document-select-form"
                         {...register('fallbackLanguage', { required: 'true' })}
                         sx={{ width: '200px', textAlign: 'center' }}
                         defaultValue={fallbackLanguages[0] as string}
                     >
                         {fallbackLanguages.map((language: string) => (
-                            <option key={language} value={language}>
+                            <MenuItem style={{ fontSize: '14px' }} key={language} value={language}>
                                 {language.toUpperCase()}
-                            </option>
+                            </MenuItem>
                         ))}
                     </Select>
                 </ItemColumn>
@@ -241,7 +252,7 @@ export const Step4 = () => {
             <Row>
                 <ItemColumn>
                     <NestedLabel>
-                        <Heading mb="30px">Zapisać jako draft?</Heading>
+                        <Typography mb="30px">Zapisać jako draft?</Typography>
                         <Checkbox {...register('draft')} />
                     </NestedLabel>
                 </ItemColumn>
@@ -255,11 +266,11 @@ export const Submitted: React.FC<SubmittedProps> = ({ isError }) => {
         <Box mb="80px">
             {' '}
             {isError ? (
-                <Heading variant="h1" sx={{ textAlign: 'center', lineHeight: '40px' }}>
+                <Typography variant="h3" sx={{ textAlign: 'center', lineHeight: '40px' }}>
                     Nie udało się zapisać.
-                </Heading>
+                </Typography>
             ) : (
-                <Heading variant="h1">Pomyślnie wysłano zapytanie!</Heading>
+                <Typography variant="h3">Pomyślnie wysłano zapytanie!</Typography>
             )}
         </Box>
     );

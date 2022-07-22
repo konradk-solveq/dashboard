@@ -1,31 +1,28 @@
-import { Box, Flex } from 'theme-ui';
+import { Box, Container } from '@mui/material/';
 
 interface Props {
     title: string;
     value: any;
 }
 
-const DataField: React.FC<Props> = ({
-    title,
-    value,
-}) => {
-    const checkNoData = d => {
+const DataField: React.FC<Props> = ({ title, value }) => {
+    const checkNoData = (d) => {
         if (typeof d == 'undefined') {
-            return <Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- undefined --</Box>;
+            return <Box sx={{ color: 'primary', fontWeight: 300 }}>-- undefined --</Box>;
         }
         if (d == null) {
-            return <Box sx={{ fontFamily: 'din-b', color: 'primary' }}>-- null --</Box>;
+            return <Box sx={{ color: 'primary', fontWeight: 300 }}>-- null --</Box>;
         } else {
-            return <Box sx={{ fontFamily: 'din-b' }}>{d.toString()}</Box>;
+            return <Box sx={{ color: 'primary', fontWeight: 300 }}>{d.toString()}</Box>;
         }
     };
 
     return (
-        <Flex>
+        <Container sx={{ display: 'flex' }}>
             <Box sx={{ mr: '5px' }}>{title}</Box>
             {checkNoData(value)}
-        </Flex>
-    )
-}
+        </Container>
+    );
+};
 
 export default DataField;

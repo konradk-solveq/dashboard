@@ -1,20 +1,20 @@
 import React, { useContext } from 'react';
-import { Button, Heading, Text } from 'theme-ui';
+import { Button, Typography, Box } from '@mui/material/';
 import { ManageWebhookContext } from '../../contexts/settings/ManageWebhook';
 
 const Error = () => {
     const { errorMessage, manageModalState } = useContext(ManageWebhookContext);
 
     return (
-        <>
-            <Heading p={15}>Nie udało się wysłać zapytania.</Heading>
-            <Text pb={15} sx={{ display: 'block', fontSize: '1.2rem' }}>
-                {`${errorMessage[0]}: ${errorMessage[1]}`}
-            </Text>
-            <Button sx={{ margin: '15px 0' }} onClick={() => manageModalState()}>
+        <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ mt: 2 }}>
+                Nie udało się wysłać zapytania.
+            </Typography>
+            <Typography variant="h4" sx={{ mt: 2 }}>{`${errorMessage[0]}: ${errorMessage[1]}`}</Typography>
+            <Button variant="contained" sx={{ mt: 2 }} onClick={() => manageModalState()}>
                 Wróć
             </Button>
-        </>
+        </Box>
     );
 };
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { Paragraph as Paragraph, Spinner, Flex, Button } from 'theme-ui';
+import { Typography, CircularProgress, Box, Button, Container } from '@mui/material/';
 import styled from '@emotion/styled';
 
 import { errorHandler } from '../../contexts/translation';
@@ -108,61 +108,103 @@ const PostPublicationForm: React.FC = () => {
 
     if (isError) {
         return (
-            <Flex sx={{ flexDirection: 'column', height: '80%', justifyContent: 'center', alignItems: 'center' }}>
-                <Paragraph mb="80px" sx={{ fontSize: '1.2rem' }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '80%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography variant="body1" sx={{ fontSize: '1.2rem', mb: '80px' }}>
                     Nie udało połączyć się z serwerem
-                </Paragraph>
-                <Button sx={{ fontSize: '1rem' }} type="button" bg="darkgrey" onClick={handleBack}>
+                </Typography>
+                <Button
+                    variant="contained"
+                    sx={{ fontSize: '1rem', bg: 'darkgrey' }}
+                    type="button"
+                    onClick={handleBack}
+                >
                     Cofnij
                 </Button>
-            </Flex>
+            </Box>
         );
     }
 
     return (
         <>
-            <Flex
-                as="form"
-                sx={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80%' }}
+            <Container
+                // as="form"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '80%',
+                }}
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {isLoading ? <Spinner mb="80px" /> : renderStep()}
-                {errors.current && (
-                    <Paragraph mb={20} sx={{ textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
-                        Dokumenty nie mogą być takie same!
-                    </Paragraph>
-                )}
-                {(errors.publicationDate || errors.showDate) && (
-                    <Paragraph mb={20} sx={{ textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
-                        {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
-                            'Data nie może być w przeszłości.'}
-                        {(errors?.publicationDate?.type === 'afterShowDate' ||
-                            errors?.showDate?.type === 'beforePublicationDate') &&
-                            'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
-                    </Paragraph>
-                )}
+                {isLoading ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
                 {activeStep > 0 && activeStep < steps.length - 1 && (
                     <ButtonContainer>
-                        <Button sx={{ fontSize: '1rem' }} type="button" bg="darkgrey" onClick={handleBack}>
+                        <Button
+                            variant="contained"
+                            sx={{ fontSize: '1rem', bg: 'darkgrey' }}
+                            type="button"
+                            onClick={handleBack}
+                        >
                             Cofnij
                         </Button>
                         {activeStep === steps.length - 2 ? (
-                            <Button sx={{ fontSize: '1rem' }} type="button" onClick={handleSubmit(onSubmit)}>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                sx={{ fontSize: '1rem' }}
+                                type="button"
+                                onClick={handleSubmit(onSubmit)}
+                            >
                                 Wyślij
                             </Button>
                         ) : (
-                            <Button sx={{ fontSize: '1rem' }} type="button" onClick={handleNext}>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                sx={{ fontSize: '1rem' }}
+                                type="button"
+                                onClick={handleNext}
+                            >
                                 Dalej
                             </Button>
                         )}
                     </ButtonContainer>
                 )}
                 {activeStep === steps.length - 1 && (
-                    <Button type="button" onClick={handleBack}>
+                    <Button variant="contained" type="button" onClick={handleBack}>
                         Wróć na start
                     </Button>
                 )}
-            </Flex>
+            </Container>
+            {errors.current && (
+                <Typography
+                    variant="body1"
+                    sx={{ margin: '0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
+                >
+                    Dokumenty nie mogą być takie same!
+                </Typography>
+            )}
+            {(errors.publicationDate || errors.showDate) && (
+                <Typography
+                    variant="body1"
+                    sx={{ margin: '0', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}
+                >
+                    {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
+                        'Data nie może być w przeszłości.'}
+                    {(errors?.publicationDate?.type === 'afterShowDate' ||
+                        errors?.showDate?.type === 'beforePublicationDate') &&
+                        'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
+                </Typography>
+            )}
         </>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Heading, Grid, Label, Button } from 'theme-ui';
+import { Container, Typography, Box, Button } from '@mui/material/';
 import { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
@@ -110,10 +110,11 @@ const NotificationsEdit: React.FC<IProps> = ({
 
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
-                <Heading
-                    m="20px"
+            <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
+                <Typography
+                    variant="h2"
                     sx={{
+                        m: '20px',
                         textAlign: 'center',
                         display: 'flex',
                         justifyContent: 'center',
@@ -121,19 +122,27 @@ const NotificationsEdit: React.FC<IProps> = ({
                     }}
                 >
                     Wersje językowe powiadomienia
-                </Heading>
+                </Typography>
                 <Container>
-                    <Grid gap={2} columns="50px 190px 2fr" marginBottom="10px" sx={{ fontSize: '1.25em' }}>
-                        <Label>Język</Label>
-                        <Label>Tytuł</Label>
-                        <Label>Treść</Label>
-                    </Grid>
+                    <Container
+                        sx={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 2fr 3fr 1fr 1fr',
+                            mb: '10px',
+                            fontSize: '1.25em',
+                            gap: 2,
+                        }}
+                    >
+                        <Typography variant="h5">Język</Typography>
+                        <Typography variant="h5">Tytuł</Typography>
+                        <Typography variant="h5">Treść</Typography>
+                    </Container>
                     {displayEmpty ? (
-                        <Container sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555' }}>
+                        <Box sx={{ textAlign: 'center', fontSize: '1.5em', color: '#555', fontWeight: 300, p: 2 }}>
                             Brak powiadomień
-                        </Container>
+                        </Box>
                     ) : (
-                        <Container>
+                        <Box>
                             {notifications.map((notification) => {
                                 return (
                                     <NotificationsGroupRow
@@ -147,10 +156,10 @@ const NotificationsEdit: React.FC<IProps> = ({
                                     />
                                 );
                             })}
-                        </Container>
+                        </Box>
                     )}
                 </Container>
-                <Container
+                <Box
                     sx={{
                         maxWidth: '1200px',
                         marginTop: '30px',
@@ -159,10 +168,10 @@ const NotificationsEdit: React.FC<IProps> = ({
                         justifyContent: 'flex-end',
                     }}
                 >
-                    <Button onClick={handleOpen} sx={{ textAlign: 'center', fontSize: '1.3em', cursor: 'pointer' }}>
+                    <Button onClick={handleOpen} variant="contained">
                         Dodaj język
                     </Button>
-                </Container>
+                </Box>
                 {modalShow && (
                     <NotificationsForm
                         handleOpen={handleOpen}
@@ -172,17 +181,19 @@ const NotificationsEdit: React.FC<IProps> = ({
                         changeNotification={changeNotification}
                     />
                 )}
-                {formShow && (
-                    <NotificationsGroupForm
-                        notifications={notifications}
-                        langOptions={langOptions}
-                        typeOptions={typeOptions}
-                        preloadedGroupValues={preloadedGroupValues}
-                        handleNotificationGroup={handleNotificationGroup}
-                        editNotificationGroup={editNotificationGroup}
-                        handleExit={handleExit}
-                    />
-                )}
+                <Box sx={{ ml: '48px' }}>
+                    {formShow && (
+                        <NotificationsGroupForm
+                            notifications={notifications}
+                            langOptions={langOptions}
+                            typeOptions={typeOptions}
+                            preloadedGroupValues={preloadedGroupValues}
+                            handleNotificationGroup={handleNotificationGroup}
+                            editNotificationGroup={editNotificationGroup}
+                            handleExit={handleExit}
+                        />
+                    )}
+                </Box>
             </Container>
         </Container>
     );

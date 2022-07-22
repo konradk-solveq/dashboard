@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useEffect, useContext, useState } from 'react';
-import { Container, Heading } from 'theme-ui';
+import { Container, Typography } from '@mui/material/';
 import DocumentUploadContainer, {
     DocumentUploadContext,
 } from '../../../components/contexts/publication/DocumentUpload';
@@ -21,10 +21,10 @@ const DocumentUpload: React.FC = () => {
 
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px', height: '80%' }}>
-                <Heading as="h1" m="20px" sx={{ textAlign: 'center' }}>
+            <Container sx={{ maxWidth: '1200px', height: '80%', p: '30px', marginX: 'auto' }}>
+                <Typography variant="h3" sx={{ textAlign: 'center', m: '20px' }}>
                     Dodaj Dokument
-                </Heading>
+                </Typography>
                 <UploadDocumentForm loadingError={loadingError} />
             </Container>
         </Container>

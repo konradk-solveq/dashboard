@@ -2,7 +2,7 @@ import { useRouter } from 'next/dist/client/router';
 import NextLink from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { AspectImage, Box, Button, Flex } from 'theme-ui';
+import { Box, Button, Container, Typography } from '@mui/material/';
 
 import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
 import fetcher from '../../../helpers/fetcher';
@@ -117,8 +117,9 @@ const Form: React.FC<Props> = (props) => {
     }
 
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
                 width: '100%',
             }}
@@ -134,50 +135,47 @@ const Form: React.FC<Props> = (props) => {
                         borderRadius: '10px',
                     }}
                 >
-                    <Flex
+                    <InputForm title={'Nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze} />
+                    <InputForm
+                        title={'Lokalizacja:'}
+                        value={location}
+                        setValue={(e) => setLocation(e)}
+                        freeze={freeze}
+                    />
+                    <Container
                         sx={{
+                            display: 'flex',
                             justifyContent: 'space-between',
                             flexDirection: ['column', 'column', 'row'],
                         }}
                     >
                         <Box>
+                            <Typography sx={{ color: 'black', fontWeight: 400, fontSize: '24px' }}>Dane:</Typography>
                             <Box>
-                                <DataField title={'id trasy: '} value={id}></DataField>
-                                <DataField title={'id właściciela: '} value={data.ownerId}></DataField>
-                                <DataField title={'autor: '} value={data.author}></DataField>
-                                <DataField title={'utworzona: '} value={getData(data.createdAt)}></DataField>
-                                <DataField title={'dystans: '} value={getDistance(data.distance)}></DataField>
-                                <DataField title={'czas: '} value={getTime(data.time)}></DataField>
-                                <DataField title={'pobrania: '} value={data.downloads}></DataField>
-                                <DataField title={'lajki: '} value={data.reactions.like}></DataField>
-                                {/* <DataField title={'wow: '} value={data.reactions.wow}></DataField> */}
-                                {/* <DataField title={'love: '} value={data.reactions.love}></DataField> */}
-                                <DataField title={'reakcje: '} value={data.reaction}></DataField>
-                                <DataField title={'polecana: '} value={data.isFeatured}></DataField>
+                                <DataField title={'ID trasy: '} value={id}></DataField>
+                                <DataField title={'ID właściciela: '} value={data.ownerId}></DataField>
+                                <DataField title={'Autor: '} value={data.author}></DataField>
+                                <DataField title={'Utworzona: '} value={getData(data.createdAt)}></DataField>
+                                <DataField title={'Dystans: '} value={getDistance(data.distance)}></DataField>
+                                <DataField title={'Czas: '} value={getTime(data.time)}></DataField>
+                                <DataField title={'Pobrania: '} value={data.downloads}></DataField>
+                                <DataField title={'Lajki: '} value={data.reactions.like}></DataField>
+                                <DataField title={'Reakcje: '} value={data.reaction}></DataField>
+                                <DataField title={'Polecana: '} value={data.isFeatured}></DataField>
                             </Box>
                         </Box>
                         {map && map.length > 0 && (
                             <Box sx={{ width: ['100%', '80%', '45%', '35%'], maxWidth: '300px', mb: '15px' }}>
-                                <AspectImage
-                                    sx={
-                                        {
-                                            // width: '100px'
-                                        }
-                                    }
-                                    ratio={1 / 1}
+                                <Box
+                                    component="img"
+                                    sx={{
+                                        width: '300px',
+                                    }}
                                     src={map[0].variants.square[1].url}
-                                ></AspectImage>
+                                ></Box>
                             </Box>
                         )}
-                    </Flex>
-
-                    <InputForm title={'nazwa:'} value={name} setValue={(e) => setName(e)} freeze={freeze} />
-                    <InputForm
-                        title={'lokalizacja:'}
-                        value={location}
-                        setValue={(e) => setLocation(e)}
-                        freeze={freeze}
-                    />
+                    </Container>
 
                     {descriptionShort && descriptionLong && (
                         <Description
@@ -190,32 +188,32 @@ const Form: React.FC<Props> = (props) => {
                         />
                     )}
                     <TextareaForm
-                        title={'opis'}
+                        title={'Opis:'}
                         value={newDescription}
                         setValue={setNewDescription}
                         highlight={true}
                         freeze={freeze}
                     />
 
-                    <SwitchForm title={'rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
-                    <SwitchForm title={'publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />
+                    <SwitchForm title={'Rekomendowane'} checked={recommended} setChecked={(e) => setRecommended(e)} />
+                    <SwitchForm title={'Publiczna'} checked={isPublic} setChecked={(e) => setIsPublic(e)} />
 
                     <CheckboxList
-                        title={'trudność:'}
+                        title={'Trudność:'}
                         listOptions={config.difficulties}
                         values={difficulty}
                         setValues={(e) => setDifficulty(e)}
                     />
 
                     <CheckboxList
-                        title={'nawierzchnia:'}
+                        title={'Nawierzchnia:'}
                         listOptions={config.surfaces}
                         values={surface}
                         setValues={(e) => setSurface(e)}
                     />
 
                     <CheckboxList
-                        title={'tagi:'}
+                        title={'Tagi:'}
                         listOptions={config.tags}
                         values={tags}
                         setValues={(e) => setTags(e)}
@@ -230,8 +228,9 @@ const Form: React.FC<Props> = (props) => {
                     ></Box>
 
                     {images && (
-                        <Flex
+                        <Container
                             sx={{
+                                display: 'flex',
                                 flexWrap: 'wrap',
                             }}
                         >
@@ -245,29 +244,40 @@ const Form: React.FC<Props> = (props) => {
                                     }}
                                     key={'img_' + i}
                                 >
-                                    <AspectImage ratio={1} src={e.variants.square[1].url}></AspectImage>
+                                    <Box
+                                        component="img"
+                                        sx={{ width: '100%', height: '100%' }}
+                                        src={e.variants.square[1].url}
+                                    ></Box>
                                 </Box>
                             ))}
-                        </Flex>
+                        </Container>
                     )}
 
-                    <Flex
+                    <Container
                         sx={{
+                            display: 'flex',
                             width: '100%',
                             justifyContent: 'center',
                             mt: '16px',
                         }}
                     >
                         <NextLink href={backUrl} passHref>
-                            <Button variant="white" className="sys-btn" backgroundColor="gray">
+                            <Button sx={{ color: 'white', backgroundColor: 'gray' }} variant="contained">
                                 Wróć do listy
                             </Button>
                         </NextLink>
 
-                        <Button type="button" sx={{ marginLeft: 1 }} className="sys-btn" onClick={handleSaveData}>
+                        <Button
+                            type="button"
+                            sx={{ marginLeft: 1 }}
+                            onClick={handleSaveData}
+                            variant="contained"
+                            color="success"
+                        >
                             Zmień / Zapisz
                         </Button>
-                    </Flex>
+                    </Container>
                 </Box>
             )}
 
@@ -276,7 +286,7 @@ const Form: React.FC<Props> = (props) => {
             </Box>
 
             {showAlert && <BigAlert text={'Z A P I S A N O'} show={showAlert} />}
-        </Flex>
+        </Container>
     );
 };
 

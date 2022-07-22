@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Spinner, Button } from 'theme-ui';
+import { Box, CircularProgress, Button } from '@mui/material/';
 import { DocumentUploadProgressProps } from '../../typings/PublicationSection';
 
 const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message, setIsLoading }) => {
@@ -21,7 +21,7 @@ const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message
                     <Button onClick={() => setIsLoading(false)}>Dodaj więcej dokumentów</Button>
                 </>
             ) : (
-                <Spinner mt="80px" />
+                <CircularProgress sx={{ mt: '80px' }} />
             )}
         </Box>
     );

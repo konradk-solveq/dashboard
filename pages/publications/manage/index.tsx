@@ -1,10 +1,10 @@
 import { NextPage } from 'next';
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Flex, Spinner } from 'theme-ui';
 import ManagePublicationsContainer, {
     ManagePublicationsContext,
 } from '../../../components/contexts/publication/ManagePublication';
 import ManagePublications from '../../../components/publication/manage/ManagePublications';
+import { Container } from '@mui/material/';
 
 const Manage: React.FC = () => {
     const { getPublications, fetchApis } = useContext(ManagePublicationsContext);
@@ -29,8 +29,10 @@ const Manage: React.FC = () => {
     }
 
     return (
-        <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px', height: '100%' }}>
-            <ManagePublications />
+        <Container>
+            <Container sx={{ maxWidth: '1200px', height: '100%', p: '30px', marginX: 'auto' }}>
+                <ManagePublicationForm />
+            </Container>
         </Container>
     );
 };

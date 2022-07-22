@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Flex, Grid, Heading } from 'theme-ui';
+import { Button, Box, Grid, Typography } from '@mui/material/';
 
 import WebhooksListItem from './WebhookListItem';
 import EditModal from './Modal';
@@ -9,18 +9,21 @@ const WebhooksList = () => {
     const { results, manageModalState, modalType, modalState } = useContext(ManageWebhookContext);
 
     return (
-        <Flex sx={{ flexDirection: 'column', alignItems: 'center' }}>
-            <Heading sx={{ textAlign: 'center', fontSize: '2rem' }}>Webhooks</Heading>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography sx={{ textAlign: 'center', fontSize: '2rem' }}>Webhooks</Typography>
             {modalState.show && <EditModal />}
-            <Grid columns={2} sx={{ gap: '50px', justifyItems: 'center', width: '100%', margin: '80px 0' }}>
-                {results?.webhooks?.map((item) => (
-                    <WebhooksListItem key={item.id} item={item} />
-                ))}
-            </Grid>
-            <Button sx={{ width: '15%' }} onClick={() => manageModalState(modalType[0])}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 2, sm: 4, md: 8 }} justifyContent="center">
+                    {results?.webhooks?.map((item) => (
+                        <WebhooksListItem key={item.id} item={item} />
+                    ))}
+                </Grid>
+            </Box>
+
+            <Button sx={{ width: '15%' }} variant="contained" onClick={() => manageModalState(modalType[0])}>
                 Dodaj
             </Button>
-        </Flex>
+        </Box>
     );
 };
 

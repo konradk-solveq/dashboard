@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { Close, Flex, Heading } from 'theme-ui';
+import { Box, Typography, IconButton } from '@mui/material/';
+import CloseIcon from '@mui/icons-material/Close';
 import { ManageWebhookContext } from '../../contexts/settings/ManageWebhook';
 import EditModalForm from '../EditModalForm';
 
@@ -8,12 +9,14 @@ const EditCreate = () => {
 
     return (
         <>
-            <Flex sx={{ justifyContent: 'center' }}>
-                <Heading p={10} mb={20} sx={{ flexGrow: 1 }}>
+            <Box sx={{ justifyContent: 'center' }}>
+                <Typography variant="h2" textAlign="center">
                     {hookToEdit ? 'Edit' : 'Create'}
-                </Heading>
-                <Close onClick={() => manageModalState()} sx={{ position: 'absolute', right: 10, top: 12 }} />
-            </Flex>
+                </Typography>
+                <IconButton onClick={() => manageModalState()} sx={{ position: 'absolute', right: 10, top: 12 }}>
+                    <CloseIcon />
+                </IconButton>
+            </Box>
             <EditModalForm />
         </>
     );

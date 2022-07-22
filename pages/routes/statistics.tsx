@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Flex, Container } from 'theme-ui';
+import { Box, Container, Typography } from '@mui/material/';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
 import fetcher from '../../helpers/fetcher';
@@ -38,7 +38,7 @@ const Route: React.FC<{ route: any }> = ({ route }) => {
     return (
         <Box
             sx={{
-                bg: image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red',
+                backgroundColor: `${image?.url ? (route.isPublic ? '#68B028' : 'khaki') : 'red'}`,
                 m: '2px',
                 width: '12px',
                 height: '12px',
@@ -84,14 +84,15 @@ const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setCha
 
 const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) => {
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'row',
             }}
         >
             <Box
                 sx={{
-                    bg: color,
+                    backgroundColor: `${color}`,
                     mx: '5px',
                     my: '7px',
                     width: '12px',
@@ -100,7 +101,7 @@ const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) =>
                 }}
             />
             <Box>{title}</Box>
-        </Flex>
+        </Container>
     );
 };
 
@@ -129,10 +130,6 @@ export default function Page({}) {
 
     const [chartData, setChartData] = useState(null);
     const [filteredChartData, setFilteredChartData] = useState(null);
-
-    const [scroll, setScroll] = useState(0);
-    const SCROLL_MOVE = 42 * 8;
-    const barRef = useRef<any>();
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -168,109 +165,119 @@ export default function Page({}) {
         setFilteredChartData(tempChartData);
     }, [chartData, startDate, endDate]);
 
-    const handleScrolLeft = (end: boolean = false) => {
-        const pagesWidth = pages.length * 42;
-        const barWidth = barRef.current.clientWidth;
-        let newPosition = end ? -(pagesWidth - barWidth) : scroll - SCROLL_MOVE;
-
-        if (pagesWidth + newPosition < barWidth) {
-            newPosition = -(pagesWidth - barWidth);
-        }
-        setScroll(newPosition);
-    };
-
-    const handleScrollRight = (end: boolean) => {
-        let newPosition = end ? 0 : scroll + SCROLL_MOVE;
-
-        if (newPosition > 0) {
-            newPosition = 0;
-        }
-        setScroll(newPosition);
-    };
-
     return (
-        <Flex
+        <Box
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
             }}
         >
-            <Container
+            <Box
                 sx={{
-                    px: ['0', '0', '50px', '50px', '50px'],
+                    width: '100%',
+                    m: 2,
                 }}
             >
-                <h1>
+                <Typography variant="h4" textAlign="center">
                     Przeklikaj poszczególne zakładki od 1 - do ostatniej aby zliczyć trasy i zbudować listę nazw tras
                     publicznych
-                </h1>
-            </Container>
-
-            <PagesBar
-                page={page}
-                pages={pages}
-                setPage={setPage}
-                scroll={scroll}
-                handleScrollRight={handleScrollRight}
-                handleScrolLeft={handleScrolLeft}
-                barRef={barRef}
-            />
-
-            <Flex
+                </Typography>
+            </Box>
+            <Box
                 sx={{
-                    position: 'relative',
-                    top: '-20px',
+                    mt: '16px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
             >
-                {total - sumAll.length <= 0 && <Box sx={{ fontFamily: 'din-b' }}>WCZYTANO WSZYSTKIE TRASY</Box>}
-                {total - sumAll.length > 0 && (
-                    <>
-                        <Box>
-                            wszystkich tras: {total}, tras wczytanych: {sumAll.length}
-                        </Box>
-                        <Box sx={{ ml: '20px', fontFamily: 'din-b' }}>
-                            {' '}
-                            posostało do wczytania: {total - sumAll.length}
-                        </Box>
-                    </>
-                )}
-            </Flex>
+                <PagesBar page={page} pages={pages} setPage={setPage} />
 
-            <Flex sx={{ maxHeight: '350px' }}>
-                <Flex
+                <Box
                     sx={{
-                        flexDirection: 'column',
-                        width: '50%',
+                        display: 'flex',
                     }}
                 >
-                    <h2 style={{ textAlign: 'center' }}>ilość wszystkich tras: {allRoutes()}</h2>
-                    <h2 style={{ textAlign: 'center' }}>ilość tras publicznych: {pulicRoutes()}</h2>
-                    <h2 style={{ textAlign: 'center' }}>ilość poprawnych tras: {goodRoutes()}</h2>
-                    <h2 style={{ textAlign: 'center' }}>ilość tras uszkodzonych: {wrongRoutes()}</h2>
-                </Flex>
-                <Box sx={{ width: '50%' }}>
-                    <ChartTypes3D
-                        data={[
-                            ['Trasa', 'ilość danego typu'],
-                            ['prywatne', goodRoutes()],
-                            ['upublicznione', pulicRoutes()],
-                            ['uszkodzone', wrongRoutes()],
-                        ]}
-                        title={'Zestawienie ilości tras'}
+                    {total - sumAll.length <= 0 && <Box>WCZYTANO WSZYSTKIE TRASY</Box>}
+                    {total - sumAll.length > 0 && (
+                        <Box sx={{ ml: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Box>
+                                Wszystkich tras: {total}, Tras wczytanych: {sumAll.length}
+                            </Box>
+                            <Box sx={{ ml: '20px' }}> Posostało do wczytania: {total - sumAll.length}</Box>
+                        </Box>
+                    )}
+                </Box>
+            </Box>
+
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <Box
+                    sx={{
+                        maxHeight: '350px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        mb: 5,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '50%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            mt: 30,
+                        }}
+                    >
+                        <ChartTypes3D
+                            data={[
+                                ['Trasa', 'ilość danego typu'],
+                                ['prywatne', goodRoutes()],
+                                ['upublicznione', pulicRoutes()],
+                                ['uszkodzone', wrongRoutes()],
+                            ]}
+                            title={'Zestawienie ilości tras'}
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '50%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <h2>Ilość wszystkich tras: {allRoutes()}</h2>
+                        <h2>Ilość tras publicznych: {pulicRoutes()}</h2>
+                        <h2>Ilość poprawnych tras: {goodRoutes()}</h2>
+                        <h2>Ilość tras uszkodzonych: {wrongRoutes()}</h2>
+                    </Box>
+                </Box>
+
+                <Box>
+                    <DateInputs
+                        startDate={startDate}
+                        setStartDate={setStartDate}
+                        endDate={endDate}
+                        setEndDate={setEndDate}
+                        veryStartDate={veryStartDate}
+                        veryEndDate={veryEndDate}
                     />
                 </Box>
-            </Flex>
+            </Box>
 
-            <DateInputs
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                veryStartDate={veryStartDate}
-                veryEndDate={veryEndDate}
-            />
-
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     my: '20px',
                     pb: '30px',
                     borderTop: '1px solid #ddd',
@@ -292,12 +299,13 @@ export default function Page({}) {
                 <Box sx={{ width: '500px' }}>
                     <ChartHour data={filteredChartData} title={'Ilość tras według godzin'} page={page} />
                 </Box>
-            </Flex>
+            </Container>
 
-            <Flex
+            <Container
                 sx={{
                     my: '20px',
                     pb: '30px',
+                    display: 'flex',
                     borderTop: '1px solid #ddd',
                     borderBottom: '1px solid #ddd',
                     flexDirection: 'row',
@@ -317,10 +325,11 @@ export default function Page({}) {
                         />
                     </Box>
                 ))}
-            </Flex>
+            </Container>
 
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     flexDirection: 'column',
                     my: '20px',
                 }}
@@ -328,7 +337,8 @@ export default function Page({}) {
                 <Legend color={'khaki'} title={' - trasy prawidłowe'} />
                 <Legend color={'#68B028'} title={' - trasy upublicznione'} />
                 <Legend color={'#cf0f36'} title={' - trasy uszkodzone'} />
-            </Flex>
+            </Container>
+
             {elements?.length === 0 ? null : (
                 <>
                     {elements?.map((el, index) => {
@@ -336,22 +346,30 @@ export default function Page({}) {
                     })}
                 </>
             )}
+
             {sumAll.length === 0 ? null : (
                 <>
-                    <Flex
+                    <Box
                         sx={{
+                            display: 'flex',
+                            p: 1,
+                            alignItems: 'center',
                             margin: 1,
                             flexWrap: 'wrap',
+                            maxWidth: '1300px',
+                            ml: 'auto',
+                            mr: 'auto',
                         }}
                     >
                         {sumAll?.map((el, index) => {
                             return <Route key={'box' + index} route={el}></Route>;
                         })}
-                    </Flex>
+                    </Box>
                 </>
             )}
-            <Flex
+            <Container
                 sx={{
+                    display: 'flex',
                     justifyContent: 'center',
                     width: '100%',
                 }}
@@ -363,7 +381,7 @@ export default function Page({}) {
                     ))}
                     <Box sx={{ mb: '50px' }}>-------------------------------------</Box>
                 </Container>
-            </Flex>
-        </Flex>
+            </Container>
+        </Box>
     );
 }

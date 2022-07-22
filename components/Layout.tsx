@@ -1,13 +1,11 @@
-import { useBreakpointIndex } from '@theme-ui/match-media';
+// import { useBreakpointIndex } from '@@mui/material//match-media';
 import { useEffect, useRef, useState } from 'react';
-import { Flex } from 'theme-ui';
+import { Box } from '@mui/material';
 import Footer from './Footer';
 import Header from './Header';
-import Menu from './Menu';
-import Tester from './Tester';
 
 const Layout: React.FC<{}> = ({ children }) => {
-    const index = useBreakpointIndex();
+    const index = 1;
 
     const [contentH, setContentH] = useState(null);
 
@@ -25,40 +23,23 @@ const Layout: React.FC<{}> = ({ children }) => {
     }, [headerObj.current, footerObj.current]);
 
     return (
-        <Flex
-            sx={{
-                flexDirection: 'column',
-                height: '500px',
-            }}
-        >
-            <div ref={headerObj}>
+        <Box>
+            <Box ref={headerObj} sx={{ m: '0px' }}>
                 <Header />
-            </div>
-            <Flex
+            </Box>
+            <Box
                 sx={{
-                    flexDirection: ['column', 'column', 'row', 'row', 'row'],
-                    alignContent: 'flex-start',
-                    bg: ['#fff', '#fff', '#666', '#666', '#666'],
+                    minHeight: contentH - (index < 2 ? 65 : 0),
+                    pt: 2,
+                    backgroundColor: '#fff',
                 }}
             >
-                <Menu />
-
-                <Flex
-                    sx={{
-                        minHeight: contentH - (index < 2 ? 65 : 0),
-                        width: '100%',
-                        bg: '#fff',
-                        p: 10,
-                    }}
-                >
-                    {children}
-                </Flex>
-            </Flex>
-            <div ref={footerObj}>
+                {children}
+            </Box>
+            <Box ref={footerObj}>
                 <Footer />
-            </div>
-            <Tester />
-        </Flex>
+            </Box>
+        </Box>
     );
 };
 export default Layout;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid, Input, Text } from 'theme-ui';
+import { Button, Container, Input } from '@mui/material/';
 
 const TranslationRow: React.FC<{
     code: string;
@@ -9,13 +9,49 @@ const TranslationRow: React.FC<{
     deleteHandler;
 }> = ({ code, version, controlSum, deleteHandler, translation }) => {
     return (
-        <Grid gap={2} columns="50px 60px 230px 2fr 100px" marginBottom="10px">
-            <Text pt="10px">{code}</Text>
-            <Text pt="10px">{version}</Text>
-            <Text pt="10px">{controlSum}</Text>
-            <Input contentEditable={false} value={translation || ''} onChange={() => {}}></Input>
-            <Button onClick={deleteHandler}>Usuń</Button>
-        </Grid>
+        <Container
+            sx={{
+                display: 'grid',
+                gridTemplateColumns: '0.25fr 0.5fr 2fr 3fr 1fr',
+                mb: '10px',
+                gap: 2,
+                alignItems: 'center',
+            }}
+        >
+            <Input
+                value={code}
+                disableUnderline={true}
+                readOnly={true}
+                className="input-black"
+                sx={{ fontSize: '14px' }}
+            ></Input>
+            <Input
+                value={version}
+                disableUnderline={true}
+                readOnly={true}
+                className="input-black"
+                sx={{ fontSize: '14px' }}
+            ></Input>
+            <Input
+                value={controlSum}
+                readOnly={true}
+                disableUnderline={true}
+                className="input-black"
+                sx={{ fontSize: '14px' }}
+            ></Input>
+            <Input
+                sx={{ fontSize: '14px' }}
+                disableUnderline={true}
+                className="document-select-form input-black"
+                contentEditable={false}
+                readOnly={true}
+                value={translation || ''}
+                onChange={() => {}}
+            ></Input>
+            <Button variant="contained" onClick={deleteHandler}>
+                Usuń
+            </Button>
+        </Container>
     );
 };
 export default TranslationRow;

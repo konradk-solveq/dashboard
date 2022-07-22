@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Grid, Link, AspectImage, Heading, Flex, AspectRatio } from 'theme-ui';
+import { Box, Container, Link, Typography, Card } from '@mui/material/';
+import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import NextLink from 'next/link';
 
 const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ bg, route, page, q }) => {
@@ -8,7 +9,7 @@ const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ b
     const image = squareImages ? squareImages[squareImages.length - 1] : null;
 
     return (
-        <Grid sx={{ bg: bg, m: 1 }} columns={[1, '3fr ']} className="sys-btn">
+        <Container sx={{ bg: bg, m: 1, display: 'grid', gridTemplateColumns: [1, '3fr '] }} className="sys-btn">
             <NextLink
                 href={{
                     pathname: '/routes/edit',
@@ -17,40 +18,43 @@ const Tile: React.FC<{ bg: string; route: any; page: number; q: string }> = ({ b
                 passHref
             >
                 <Link className="sys-btn">
-                    <Box sx={{ overflow: 'hidden', p: 1 }}>
-                        <Heading as="h3" sx={{ textAlign: 'center' }}>
-                            <Box>{route.name}</Box>
-                        </Heading>
-                    </Box>
-                    <Box p={1}>
-                        <Box sx={{ color: '#fff' }}>
-                            {image?.url && <AspectImage ratio={1} src={image?.url}></AspectImage>}
-                            {!image?.url && (
-                                <AspectRatio
-                                    ratio={1}
+                    <Card className="card-route">
+                        <Typography variant="h5" sx={{ fontWeight: 400, textAlign: 'center', p: 1 }}>
+                            {route.name}
+                        </Typography>
+                        <Box sx={{ p: 1 }}>
+                            {image?.url ? (
+                                <Box component="img" sx={{ width: '100%' }} src={image?.url}></Box>
+                            ) : (
+                                <Box
                                     sx={{
-                                        bg: '#555555',
+                                        minHeight: '320px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    <Flex
-                                        sx={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            height: '100%',
-                                        }}
-                                    >
-                                        <Box sx={{ bg: '#313131', p: '10px' }}>no image</Box>
-                                    </Flex>
-                                </AspectRatio>
+                                    <NoPhotographyIcon />
+                                </Box>
                             )}
                         </Box>
-                    </Box>
-                    <Box p={1}>{route.id}</Box>
-                    <Box sx={{ padding: 1 }}>{route.author}</Box>
-                    <Box sx={{ padding: 1 }}>{route.createdAt}</Box>
+                        <Box sx={{ m: 1 }}>
+                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: 300 }}>
+                                ID: {route.id}
+                            </Typography>
+
+                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: 300 }}>
+                                Autor: {route.author ? route.author : 'Brak Danych'}
+                            </Typography>
+
+                            <Typography variant="h5" sx={{ fontSize: '14px', fontWeight: 300 }}>
+                                Data:{route.createdAt}
+                            </Typography>
+                        </Box>
+                    </Card>
                 </Link>
             </NextLink>
-        </Grid>
+        </Container>
     );
 };
 

@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Heading, Divider } from 'theme-ui';
+import { Container, Typography, Box, List, ListItemText } from '@mui/material/';
 import TranslationsContainer, { TranslationsContext, LanguageData } from '../../components/contexts/translation';
 import LanguageTable from '../../components/translation/LanguageTable';
 import TranslationAddForm from '../../components/translation/TranslationAddForm';
@@ -81,11 +81,19 @@ const TranslationMenage: React.FC<{}> = () => {
     if (!languages && !uiTranslations) return <>{message.loading}</>;
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
+            <Container
+                sx={{
+                    maxWidth: '1200px',
+                    p: '30px',
+                    marginX: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
                 {notification && <NotificationBox>{notification}</NotificationBox>}
-                <Heading m="20px" sx={{ textAlign: 'center' }}>
+                <Typography variant="h2" sx={{ textAlign: 'center', m: '20px' }}>
                     Języki
-                </Heading>
+                </Typography>
                 <LanguageTable
                     {...{
                         languageState,
@@ -95,32 +103,106 @@ const TranslationMenage: React.FC<{}> = () => {
                         setLanguageState,
                     }}
                 ></LanguageTable>
-                <p>
+                <Typography variant="h6" sx={{ mt: 2 }}>
                     Podczas pracy może wystąpić błąd. Proszę wówczas sprawdzić, czy wykonywane czynności nie naruszają
                     zasad walidacji.
-                    <ul>
-                        <li>Kod języka musi być poprawny. Posługujemy się ISO 639-1.</li>
-                        <li>Ikona musi być poprawnym kodem svg, minimum to &lt;svg&gt;&lt;/svg&gt;.</li>
-                        <li>Nie można aktywować niekompletnego języka.</li>
-                        <li>Przed usunięciem języka należy usunąć wszystkie tłumaczenia dotyczące tego języka.</li>
-                    </ul>
-                </p>
-                <Divider marginY="60px"></Divider>
-                <Heading m="20px" sx={{ textAlign: 'center' }}>
-                    Tłumaczenia
-                </Heading>
+                    <List>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 300,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Kod języka musi być poprawny. Posługujemy się ISO 639-1.
+                        </ListItemText>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 300,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Ikona musi być poprawnym kodem svg, minimum to &lt;svg&gt;&lt;/svg&gt;.
+                        </ListItemText>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 300,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Nie można aktywować niekompletnego języka.
+                        </ListItemText>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 300,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Przed usunięciem języka należy usunąć wszystkie tłumaczenia dotyczące tego języka.
+                        </ListItemText>
+                    </List>
+                </Typography>
+                <Box
+                    sx={{
+                        width: '80vw',
+                        borderTop: '1px solid #2F4858',
+                        textAlign: 'center',
+                        ml: 'auto',
+                        mr: 'auto',
+                        mt: 2,
+                    }}
+                />
+                <Typography sx={{ textAlign: 'center', m: '20px' }}>Tłumaczenia</Typography>
                 <TranslationAddForm
                     {...{ newUiTranslations, setNewUiTranslationsValue, addUiTranslationAndNotify }}
                 ></TranslationAddForm>
-                <p>
+                <Typography variant="h6" sx={{ mt: 2 }}>
                     Podczas pracy może wystąpić błąd. Proszę wówczas sprawdzić, czy wykonywane czynności nie naruszają
                     zasad walidacji.
-                    <ul>
-                        <li>Kod języka musi być poprawny. Posługujemy się ISO 639-1.</li>
-                        <li>Numer wersji musi być poprawny. Czyli np. 12.0.125.</li>
-                        <li>Plik z tłumaczeniem musi zawierać poprawny obiekt json.</li>
-                    </ul>
-                </p>
+                    <List>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 300,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Kod języka musi być poprawny. Posługujemy się ISO 639-1.
+                        </ListItemText>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 200,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Numer wersji musi być poprawny. Czyli np. 12.0.125.
+                        </ListItemText>
+                        <ListItemText
+                            primaryTypographyProps={{
+                                fontSize: 16,
+                                fontWeight: 200,
+                                letterSpacing: 0,
+                            }}
+                        >
+                            - Plik z tłumaczeniem musi zawierać poprawny obiekt json.
+                        </ListItemText>
+                    </List>
+                </Typography>
+                <Box
+                    sx={{
+                        width: '80vw',
+                        borderTop: '1px solid #2F4858',
+                        textAlign: 'center',
+                        ml: 'auto',
+                        mr: 'auto',
+                        mt: 2,
+                        mb: 2,
+                    }}
+                />
                 <TranslationTable
                     {...{
                         limitAndOffset,

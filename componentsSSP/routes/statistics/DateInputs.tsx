@@ -1,35 +1,22 @@
-import { Box, Flex, Text, Button } from '@theme-ui/components';
+import { Box, Container, Typography, Button } from '@mui/material/';
 import React, { useEffect, useState } from 'react';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-
-
-const Btn: React.FC<{ title: string, onclick: () => void }> = ({
-    title, onclick
-}) => {
-    return (<Button
-        className='sys-btn'
-        type='button'
-        sx={{
-            fontFamily: 'din-r', fontSize: '16px',
-            py: '0px',
-            px: '10px',
-            height: '25px',
-            mr: '5px',
-            bg: 'primary',
-            minWidth: '62px',
-        }}
-        onClick={onclick}
-    >{title}</Button>)
-}
+const Btn: React.FC<{ title: string; onclick: () => void }> = ({ title, onclick }) => {
+    return (
+        <Button variant="contained" type="button" sx={{ fontSize: '12px', mr: '8px' }} onClick={onclick}>
+            {title}
+        </Button>
+    );
+};
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
-    return (<Text sx={{ fontFamily: 'din-b', fontSize: '16px' }}>{title}</Text>)
-}
+    return <Typography sx={{ fontSize: '16px' }}>{title}</Typography>;
+};
 
 interface Props {
-    startDate: Date,
+    startDate: Date;
     setStartDate: (e) => void;
     endDate: Date;
     setEndDate: (e) => void;
@@ -48,20 +35,20 @@ const DateInputs: React.FC<Props> = ({
     const [localStartDate, setLocalStartDate] = useState(startDate);
     const [localEndDate, setLocalEndDate] = useState(endDate);
 
-
-    useEffect(() => { setLocalStartDate(startDate) }, [startDate])
-    useEffect(() => { setLocalEndDate(endDate) }, [endDate])
+    useEffect(() => {
+        setLocalStartDate(startDate);
+    }, [startDate]);
+    useEffect(() => {
+        setLocalEndDate(endDate);
+    }, [endDate]);
 
     return (
-        <Flex sx={{ width: '100%', justifyContent: 'flex-start' }}>
+        <Container sx={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
             <Box sx={{ width: '180px' }}>
-                <Title title={'data początkowa'} />
+                <Title title={'Data początkowa'} />
 
-                <Box>
-                    <Btn
-                        title={'pierwsza'}
-                        onclick={() => setStartDate(veryStartDate)}
-                    />
+                <Box sx={{ mt: '8px', mb: '8px' }}>
+                    <Btn title={'pierwsza'} onclick={() => setStartDate(veryStartDate)} />
                 </Box>
 
                 <DatePicker
@@ -73,17 +60,11 @@ const DateInputs: React.FC<Props> = ({
             </Box>
 
             <Box sx={{ width: '180px' }}>
-                <Title title={'data końcowa'} />
+                <Title title={'Data końcowa'} />
 
-                <Box>
-                    <Btn
-                        title={'teraz'}
-                        onclick={() => setEndDate(new Date())}
-                    />
-                    <Btn
-                        title={'ostatnia'}
-                        onclick={() => setEndDate(veryEndDate)}
-                    />
+                <Box sx={{ mt: '8px', mb: '8px' }}>
+                    <Btn title={'teraz'} onclick={() => setEndDate(new Date())} />
+                    <Btn title={'ostatnia'} onclick={() => setEndDate(veryEndDate)} />
                 </Box>
 
                 <DatePicker
@@ -93,9 +74,8 @@ const DateInputs: React.FC<Props> = ({
                     onChange={(date) => setEndDate(date)}
                 />
             </Box>
-        </Flex>
+        </Container>
     );
 };
 
 export default DateInputs;
-

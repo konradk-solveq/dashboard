@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex } from 'theme-ui';
+import { Container, Typography, Box } from '@mui/material/';
 import fetcher from '../../helpers/fetcher';
 import useSWR from 'swr';
 
@@ -20,13 +20,14 @@ export default function Page({}) {
     const [chosenDate, setChosenDate] = useState(date);
     const { data: reports, error: reportsError } = useSWR<any>(`/api/report/${chosenDate}`, fetcher);
     return (
-        <Flex
+        <Container
             sx={{
+                display: 'flex',
                 flexDirection: 'column',
                 mx: 'auto',
             }}
         >
-            <h1 style={{ textAlign: 'center' }}>Dzienne raporty</h1>
+            <Typography sx={{ textAlign: 'center', mb: '16px' }}>Dzienne raporty</Typography>
             <h4>
                 {dates?.map((date) => (
                     <button key={date} onClick={() => setChosenDate(date)}>
@@ -35,21 +36,23 @@ export default function Page({}) {
                 ))}
             </h4>
             {chosenDate ? (
-                <div>
-                    <h2>{'Raport z dnia: ' + chosenDate}</h2>
-                    <ol>
-                        {reports && reports.length
-                            ? reports.map((report) => (
-                                  <li key={report.key}>
-                                      {names[report.type]}: <strong>{report.value}</strong>
-                                  </li>
-                              ))
-                            : ''}
-                    </ol>{' '}
-                </div>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography>{'Raport z dnia: ' + chosenDate}</Typography>
+                    <Box sx={{ ml: 5, fontSize: '18px', fontFamily: 'inherit' }}>
+                        <ol>
+                            {reports && reports.length
+                                ? reports.map((report) => (
+                                      <li key={report.key}>
+                                          {names[report.type]}: <strong>{report.value}</strong>
+                                      </li>
+                                  ))
+                                : ''}
+                        </ol>{' '}
+                    </Box>
+                </Box>
             ) : (
                 ''
             )}
-        </Flex>
+        </Container>
     );
 }

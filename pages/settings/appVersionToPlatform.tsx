@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Heading } from 'theme-ui';
+import { Container, Typography, Box, CircularProgress } from '@mui/material/';
 import AppVersionToPlatformsContainer, { AppVersionToPlatformsContext } from '../../components/contexts/app-version';
 import NotificationBox from '../../components/translation/NotificationBox';
 import AppVersionToPlatformTable from '../../components/app-version/AppVersionToPlatformTable';
@@ -91,16 +91,21 @@ const AppVersionToPlatform: React.FC<{}> = () => {
         }
     }, [appVersionToPlatforms]);
 
-    if (hasError) return <>{message.loadingError}</>;
-    if (!appVersionToPlatforms) return <>{message.loading}</>;
+    if (hasError) return <Box>{message.loadingError}</Box>;
+    if (!appVersionToPlatforms)
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
 
     return (
         <Container>
-            <Container p="30px" marginX="auto" sx={{ maxWidth: '1200px' }}>
+            <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
                 {notification && <NotificationBox>{notification}</NotificationBox>}
-                <Heading m="20px" sx={{ textAlign: 'center' }}>
+                <Typography variant="h2" sx={{ textAlign: 'center', m: '20px' }}>
                     Wersja Aplikacji - (v.2)
-                </Heading>
+                </Typography>
                 <AppVersionToPlatformTable
                     {...{
                         appVersionToPlatformsState,
@@ -112,7 +117,7 @@ const AppVersionToPlatform: React.FC<{}> = () => {
                         setNewAppVersionToPlatformValue,
                         limitAndOffset,
                         setLimitsAndOffset,
-                        appVersionToPlatformsCount
+                        appVersionToPlatformsCount,
                     }}
                 ></AppVersionToPlatformTable>
             </Container>

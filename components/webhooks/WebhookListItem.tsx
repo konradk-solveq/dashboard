@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Flex, Heading, Text } from 'theme-ui';
+import { Button, Box, Typography, Card, Grid, Divider } from '@mui/material/';
 import { ManageWebhookContext } from '../contexts/settings/ManageWebhook';
 
 const WebhooksListItem = ({ item }) => {
@@ -17,21 +17,33 @@ const WebhooksListItem = ({ item }) => {
 
     return (
         <>
-            <Flex sx={{ gap: '50px', alignItems: 'center', width: '400px', justifyContent: 'space-between' }}>
-                <Flex sx={{ flexDirection: 'column', gap: '10px', maxWidth: '200px' }}>
-                    <Heading>{item.metadata.title}</Heading>
-                    <Text>{item.metadata.description}</Text>
+            <Grid item xs={2} sx={{ m: 2 }}>
+                <Card className="card-route" sx={{ p: 1 }}>
+                    <Box sx={{ maxHeight: '250px', overflowY: 'auto', minHeight: '250px' }}>
+                        <Typography variant="h5">{item.metadata.title}</Typography>
+                        <Divider />
+                        <Typography variant="subtitle2" sx={{ fontWeight: 200, fontSize: '16px' }}>
+                            {item.metadata.description}
+                        </Typography>
 
-                    <Text>Method: {item.verificationType} </Text>
-                    <Text> Event: {item.event}</Text>
-                </Flex>
-                <Flex>
-                    <Button backgroundColor="grey" mr={2} onClick={handleEditClick}>
-                        Edytuj
-                    </Button>
-                    <Button onClick={handleDeleteClick}>Usuń</Button>
-                </Flex>
-            </Flex>
+                        <Typography variant="h6" sx={{ mt: '8px' }}>
+                            <strong>Method:</strong> {item.verificationType}{' '}
+                        </Typography>
+                        <Typography variant="h6" sx={{ mb: '16px' }}>
+                            {' '}
+                            <strong>Event:</strong> {item.event}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 1 }}>
+                        <Button variant="contained" color="success" sx={{ mr: 2 }} onClick={handleEditClick}>
+                            Edytuj
+                        </Button>
+                        <Button variant="contained" color="error" onClick={handleDeleteClick}>
+                            Usuń
+                        </Button>
+                    </Box>
+                </Card>
+            </Grid>
         </>
     );
 };

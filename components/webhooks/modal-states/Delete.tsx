@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Flex, Heading } from 'theme-ui';
+import { Button, Box, Typography } from '@mui/material/';
 import { ManageWebhookContext } from '../../contexts/settings/ManageWebhook';
 
 const Delete = () => {
@@ -11,15 +11,22 @@ const Delete = () => {
     };
 
     return (
-        <>
-            <Heading p={15}>Are you sure you want to delete {hookToEdit?.metadata.title}?</Heading>
-            <Flex sx={{ justifyContent: 'center', gap: '15px', padding: '15px' }}>
-                <Button onClick={() => manageModalState()} bg="grey">
+        <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h2">Are you sure you want to delete {hookToEdit?.metadata.title}?</Typography>
+            <Box sx={{ justifyContent: 'center', padding: '15px' }}>
+                <Button variant="contained" color="success" onClick={() => manageModalState()}>
                     Anuluj
                 </Button>
-                <Button onClick={() => manageDeleteClick(hookToEdit.id)}>Usuń</Button>
-            </Flex>
-        </>
+                <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ ml: '15px' }}
+                    onClick={() => manageDeleteClick(hookToEdit.id)}
+                >
+                    Usuń
+                </Button>
+            </Box>
+        </Box>
     );
 };
 
