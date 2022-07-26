@@ -85,7 +85,7 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
     return (
         <>
             <Box
-                as="form"
+                component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
                     alignItems: 'center',
@@ -208,7 +208,7 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                         }}
                     />
                 </Container>
-                <Box as="label" sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box component="label" sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Controller
                         name="draft"
                         control={control}
