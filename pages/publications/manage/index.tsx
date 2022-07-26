@@ -4,7 +4,7 @@ import ManagePublicationsContainer, {
     ManagePublicationsContext,
 } from '../../../components/contexts/publication/ManagePublication';
 import ManagePublications from '../../../components/publication/manage/ManagePublications';
-import { Container } from '@mui/material/';
+import { Container, Box, CircularProgress } from '@mui/material/';
 
 const Manage: React.FC = () => {
     const { getPublications, fetchApis } = useContext(ManagePublicationsContext);
@@ -22,16 +22,16 @@ const Manage: React.FC = () => {
 
     if (isLoading) {
         return (
-            <Flex sx={{ width: '100%', height: '60%', justifyContent: 'center', alignItems: 'center' }}>
-                <Spinner />
-            </Flex>
+            <Box sx={{ display: 'flex', width: '100%', height: '60%', justifyContent: 'center', alignItems: 'center' }}>
+                <CircularProgress />
+            </Box>
         );
     }
 
     return (
         <Container>
             <Container sx={{ maxWidth: '1200px', height: '100%', p: '30px', marginX: 'auto' }}>
-                <ManagePublicationForm />
+                <ManagePublications />
             </Container>
         </Container>
     );

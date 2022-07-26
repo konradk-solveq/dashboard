@@ -1,7 +1,7 @@
 import { parseJSON } from 'date-fns';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Container, Flex, Grid, Message, Select } from 'theme-ui';
+import { Button, Checkbox, Container, Box, MenuItem, Alert, Select } from '@mui/material';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -12,9 +12,9 @@ import { Results } from '../../../typings/ManagePublications';
 
 const mapOptions = (optionsArray: Results['terms'] | Results['policy']) => {
     optionsArray.map((item) => (
-        <option key={item.id} value={item.id}>
+        <MenuItem style={{ fontSize: '14px' }} key={item.id} value={item.id}>
             {item.name}
-        </option>
+        </MenuItem>
     ));
 };
 
@@ -84,7 +84,7 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
 
     return (
         <>
-            <Grid
+            <Box
                 as="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
@@ -94,9 +94,10 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                     textAlign: 'center',
                     margin: '40px 0 0',
                     height: '47px',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 0.5fr 0.5fr',
+                    gap: 2,
                 }}
-                gap={2}
-                columns="1fr 1fr 1fr 1fr 1fr 60px 0.5fr 0.5fr"
             >
                 <Controller
                     name="type"
@@ -136,6 +137,7 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('oldDocument') } }}
                     render={({ field }) => (
                         <Select
+                            className="document-select-form"
                             defaultValue={item.pair.newDocument.id}
                             onChange={(e) => {
                                 field.onChange(e.target.value);
@@ -206,7 +208,7 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                         }}
                     />
                 </Container>
-                <Flex as="label" sx={{ justifyContent: 'center' }}>
+                <Box as="label" sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Controller
                         name="draft"
                         control={control}
@@ -214,26 +216,30 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                             <Checkbox sx={{ margin: 0 }} defaultChecked={item.draft} onChange={field.onChange} />
                         )}
                     />
-                </Flex>
+                </Box>
                 <Button
                     onClick={handleSubmit(onSubmit)}
                     sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                    bg="grey"
+                    variant="contained"
+                    color="success"
                     type="submit"
                 >
                     Zapisz
                 </Button>
                 <Button
                     sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
+                    variant="contained"
+                    color="error"
                     onClick={() => setEditMode((prev) => !prev)}
                     type="button"
                 >
                     Anuluj
                 </Button>
-            </Grid>
-            <Flex
-                mt={2}
+            </Box>
+            <Box
                 sx={{
+                    display: 'flex',
+                    mt: '2',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -241,14 +247,14 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                 }}
             >
                 {(errors.showDate || errors.publicationDate) && (
-                    <Message bg="lightgrey">
+                    <Alert severity="error">
                         Data pokazania musi być przed datą wygaśnięcia oraz nie może być w przeszłości
-                    </Message>
+                    </Alert>
                 )}
                 {(errors.oldDocument || errors.newDocument) && (
-                    <Message bg="lightgrey">Dokumenty nie mogą być takie same!</Message>
+                    <Alert severity="error">Dokumenty nie mogą być takie same!</Alert>
                 )}
-            </Flex>
+            </Box>
         </>
     );
 };
