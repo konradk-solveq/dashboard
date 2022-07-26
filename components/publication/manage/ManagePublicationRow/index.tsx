@@ -8,19 +8,10 @@ import EditRow from './EditRow';
 
 const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) => {
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [deleteModalState, setDeleteModalState] = useState<boolean>(false);
 
     if (editMode) {
-        return <EditRow item={item} setEditMode={setEditMode} setIsLoading={setIsLoading} />;
-    }
-
-    if (isLoading) {
-        return (
-            <Flex sx={{ justifyContent: 'center', alignContent: 'center', marginTop: '40px' }}>
-                <Spinner m={40} />
-            </Flex>
-        );
+        return <EditRow item={item} setEditMode={setEditMode} />;
     }
 
     return (

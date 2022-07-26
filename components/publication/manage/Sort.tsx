@@ -27,7 +27,7 @@ const orderByOptions = ['showDate', 'publicationDate', 'id'];
 const Sort: React.FC = () => {
     const [openModal, setOpenModal] = useState(false);
 
-    const { getPublications } = useContext(ManagePublicationsContext);
+    const { setParams } = useContext(ManagePublicationsContext);
 
     const { handleSubmit, register } = useForm<SortFormValues>({
         defaultValues: {
@@ -39,7 +39,7 @@ const Sort: React.FC = () => {
 
     const onSubmit = (data: SortFormValues) => {
         const order = data.orderBy.split('_');
-        getPublications(`/api/publications/manage?page=1&limit=${data.limit}`, order[0], order[1], data.type);
+        setParams((prev) => ({ ...prev, limit: data.limit, type: data.type, order: order[0], orderBy: order[1] }));
         setOpenModal((prev) => !prev);
     };
 

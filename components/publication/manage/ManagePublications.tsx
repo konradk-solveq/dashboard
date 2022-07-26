@@ -25,7 +25,7 @@ const PostPublication: React.FC = () => {
 
                 <Sort />
             </Grid>
-            {publications?.map((item) => (
+            {publications?.data?.elements?.map((item) => (
                 <ManagePublicationsRow key={item.id} item={item} />
             ))}
             <ManagePublicationsPagination />

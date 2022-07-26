@@ -1,3 +1,5 @@
+import { UseMutationResult, UseQueryResult } from "@tanstack/react-query"
+import { AxiosResponse } from "axios"
 import React, { SetStateAction } from "react"
 
 export type Publication = {
@@ -43,7 +45,12 @@ export interface ManagePublicationsRowProps {
     item: Publication
 }
 
-export type Results = {
+export interface EditRowProps {
+    item: Publication,
+    setEditMode: React.Dispatch<SetStateAction<boolean>>,
+}
+
+export type Files = {
     terms: {
         id: string,
         name: string,
@@ -58,27 +65,31 @@ export type Results = {
     }[]
 }
 
-export interface ManagePublicationsContextProps {
-    nextPageURL: Object,
-    prevPageURL: Object,
-    publications: Publication[],
-    getPublications: (defaultUrl?: string | Object, sort?: string, sortBy?: string, type?: string) => Promise<void>,
-    isLoading: boolean,
-    fetchApis: () => Promise<void>,
-    results: Results,
-    apiHandler: (res: Response, id?: string, type?: string) => Promise<void> | Publication[],
-    putPublication:(data: object, id: number) => Promise<Response>,
-    deletePublication: (id: string) => Promise<Response>,
-    setIsLoading: React.Dispatch<SetStateAction<Boolean>>,
-    isError: boolean,
-    isSuccess: boolean,
-    setIsSuccess: React.Dispatch<SetStateAction<Boolean>>,
-    errorMessage: {
-        status: number,
-        statusText: string,
-    },
-    setIsError: React.Dispatch<SetStateAction<Boolean>>
+export type Params = {
+    page: number,
+    limit: number,
+    type: string,
+    order: string,
+    orderBy: string,
+}
 
+type Publications = {
+    elements: Publication[],
+    limit: number,
+    links: {
+        prev?: URL,
+        self: URL,
+        next?: URL,
+    }
+    total: number,
+}
+export interface ManagePublicationsContextProps {
+    params: Params,
+    setParams: React.Dispatch<SetStateAction<Params>>,
+    publications: UseQueryResult<Publications>,
+    files: [UseQueryResult<Files['policy']>, UseQueryResult<Files['terms']>],
+    publicationMutation: UseMutationResult,
+    publicationDeletion: UseMutationResult<AxiosResponse, any>,
 }
 
 export type SortFormValues = {
@@ -89,8 +100,8 @@ export type SortFormValues = {
 
 export type EditFormValues = {
     type: string,
-    oldDocument: string,
-    newDocument: string,
+    oldDocument: string | number,
+    newDocument: string | number,
     showDate: Date,
     publicationDate: Date,
     draft: boolean,

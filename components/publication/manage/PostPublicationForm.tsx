@@ -135,7 +135,7 @@ const PostPublicationForm: React.FC = () => {
     return (
         <>
             <Container
-                // as="form"
+                component="form"
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',

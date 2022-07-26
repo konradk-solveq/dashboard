@@ -1,27 +1,30 @@
 import { parseJSON } from 'date-fns';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Container, Flex, Grid, Message, Select } from 'theme-ui';
+import { Button, Checkbox, Container, Flex, Grid, Message, Select, Spinner } from 'theme-ui';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { ManagePublicationsContext } from '../../../contexts/publication/ManagePublication';
-import { EditFormValues } from '../../../typings/ManagePublications';
-import { Results } from '../../../typings/ManagePublications';
+import { EditFormValues, EditRowProps, Files } from '../../../typings/ManagePublications';
 
-const mapOptions = (optionsArray: Results['terms'] | Results['policy']) => {
-    optionsArray.map((item) => (
+const mapOptions = (optionsArray: Files['terms'] | Files['policy']) => {
+    return optionsArray.map((item) => (
         <option key={item.id} value={item.id}>
             {item.name}
         </option>
     ));
 };
 
-const EditRow = ({ item, setEditMode, setIsLoading }) => {
-    const { results, apiHandler, putPublication } = useContext(ManagePublicationsContext);
+const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
+    const { publicationMutation, files } = useContext(ManagePublicationsContext);
+
     const [showDate, setShowDate] = useState<Date>(parseJSON(item.showDate));
     const [publicationDate, setPublicationDate] = useState<Date>(parseJSON(item.publicationDate));
+
+    const policies: Files['policy'] = files[0]?.data[0]?.type === 'policy' ? files[0].data : files[1].data;
+    const terms: Files['terms'] = files[0]?.data[0]?.type === 'terms' ? files[0].data : files[1].data;
 
     const isInitialMount = useRef(true);
 
@@ -57,15 +60,14 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
 
     const handleTypeChange = () => {
         if (publicationType === 'terms') {
-            setValueOfMultiple(['oldDocument', 'newDocument'], results?.terms[0]?.id);
+            setValueOfMultiple(['oldDocument', 'newDocument'], terms[0].id);
         }
         if (publicationType === 'policy') {
-            setValueOfMultiple(['oldDocument', 'newDocument'], results?.policy[0]?.id);
+            setValueOfMultiple(['oldDocument', 'newDocument'], policies[0]?.id);
         }
     };
 
     const onSubmit = async (data: EditFormValues) => {
-        setIsLoading(true);
         const hookToUpload = {
             type: data.type,
             pair: {
@@ -77,10 +79,17 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
             draft: data.draft,
             fallbackLanguage: item.fallbackLanguage,
         };
+        publicationMutation.mutate({ id: item.id, data: hookToUpload });
         setEditMode((prev: boolean) => !prev);
-        await apiHandler(await putPublication(hookToUpload, item.id), item.id, 'update');
-        setIsLoading(false);
     };
+
+    if (publicationMutation.isLoading) {
+        return (
+            <Flex sx={{ justifyContent: 'center', alignContent: 'center', marginTop: '40px' }}>
+                <Spinner m={40} />
+            </Flex>
+        );
+    }
 
     return (
         <>
@@ -125,8 +134,8 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                                 field.onChange(e.target.value);
                             }}
                         >
-                            {publicationType === 'terms' && mapOptions(results.terms)}
-                            {publicationType === 'policy' && mapOptions(results.policy)}
+                            {publicationType === 'terms' && mapOptions(terms)}
+                            {publicationType === 'policy' && mapOptions(policies)}
                         </Select>
                     )}
                 />
@@ -141,18 +150,8 @@ const EditRow = ({ item, setEditMode, setIsLoading }) => {
                                 field.onChange(e.target.value);
                             }}
                         >
-                            {publicationType === 'terms' &&
-                                results.terms.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            {publicationType === 'policy' &&
-                                results.policy.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
+                            {publicationType === 'terms' && mapOptions(terms)}
+                            {publicationType === 'policy' && mapOptions(policies)}
                         </Select>
                     )}
                 />

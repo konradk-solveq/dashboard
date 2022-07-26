@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { format, parseJSON } from 'date-fns';
-import React, { useCallback, useContext, useMemo, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Button, Flex, Heading, Spinner } from 'theme-ui';
 import { ManagePublicationsContext } from '../../../contexts/publication/ManagePublication';
 import { DeleteModalProps } from '../../../typings/ManagePublications';
@@ -30,15 +30,9 @@ const Container = styled.div`
 `;
 
 const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) => {
-    const { apiHandler, deletePublication, isLoading, errorMessage, isError, setIsError, isSuccess, setIsSuccess } =
-        useContext(ManagePublicationsContext);
+    const { publicationDeletion } = useContext(ManagePublicationsContext);
 
     const modalRef = useRef();
-
-    const handleDelete = useCallback(async () => {
-        apiHandler(await deletePublication(item.id), item.id, 'delete');
-        setDeleteModalState(true);
-    }, [item.id]);
 
     const closeModalOnBackgroundClick = (e: React.MouseEvent<HTMLElement>) => {
         if (modalRef.current === e.target) {
@@ -46,17 +40,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         }
     };
 
-    const handleCloseClick = useCallback(() => {
-        if (isSuccess) {
-            setIsSuccess((prev: boolean) => !prev);
-        }
-        if (isError) {
-            setIsError((prev: boolean) => !prev);
-        }
-        setDeleteModalState((prev) => !prev);
-    }, [isError, isSuccess]);
-
-    if (isLoading) {
+    if (publicationDeletion.isLoading) {
         return (
             <Backdrop>
                 <Container>
@@ -66,12 +50,12 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         );
     }
 
-    if (isSuccess) {
+    if (publicationDeletion.isSuccess) {
         return (
             <Backdrop>
                 <Container>
                     <Heading m={10}>Pomyślnie usunięto zaplanowaną publikację</Heading>
-                    <Button sx={{ margin: '30px 0 10px' }} onClick={handleCloseClick}>
+                    <Button sx={{ margin: '30px 0 10px' }} onClick={() => setDeleteModalState((prev) => !prev)}>
                         Wróć
                     </Button>
                 </Container>
@@ -79,14 +63,15 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         );
     }
 
-    if (isError) {
+    if (publicationDeletion.isError) {
+        console.log(publicationDeletion);
         return (
             <Backdrop>
                 <Container>
                     <Heading m={10}>
-                        Nie udało się wysłać publikacji${<br />} {errorMessage.status}: {errorMessage.statusText}
+                        Nie udało się usunąć publikacji {<br />} {publicationDeletion.error.message}
                     </Heading>
-                    <Button sx={{ margin: '30px 0 10px' }} onClick={handleCloseClick}>
+                    <Button sx={{ margin: '30px 0 10px' }} onClick={() => setDeleteModalState((prev) => !prev)}>
                         Wróć
                     </Button>
                 </Container>
@@ -103,10 +88,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
                     {format(parseJSON(item.showDate), 'dd-MM-yyyy HH:mm')}?
                 </Heading>
                 <Flex sx={{ justifyContent: 'center', gap: '15px', margin: '30px 0 10px' }}>
-                    <Button bg="grey" type="button" onClick={handleCloseClick}>
+                    <Button bg="grey" type="button" onClick={() => setDeleteModalState((prev) => !prev)}>
                         Nie
                     </Button>
-                    <Button onClick={handleDelete}>Tak</Button>
+                    <Button onClick={() => publicationDeletion.mutate(item.id)}>Tak</Button>
                 </Flex>
             </Container>
         </Backdrop>
