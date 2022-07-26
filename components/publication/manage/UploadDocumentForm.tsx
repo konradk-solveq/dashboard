@@ -42,7 +42,6 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
         remove();
         append(defaultFormValues.documents[0] as object);
         setIsLoading(true);
-
         const data = await Promise.all(
             formData.documents.map(async (document) => {
                 return {
@@ -91,11 +90,7 @@ const UploadDocumentForm: React.FC<UploadFormProps> = ({ loadingError }) => {
         );
     }
     return (
-        <Box
-            // as="form"
-            sx={{ display: 'flex', flexDirection: 'column' }}
-            onSubmit={handleSubmit(onSubmit)}
-        >
+        <Box component="form" sx={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit(onSubmit)}>
             <Container
                 sx={{
                     display: 'flex',

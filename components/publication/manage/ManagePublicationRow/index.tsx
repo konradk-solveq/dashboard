@@ -52,22 +52,19 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
                 {format(parseJSON(item.publicationDate), 'dd-MM-yyyy HH:mm')}
             </Typography>
             <Checkbox sx={{ margin: '0' }} checked={item.draft} readOnly />
-            <Button
-                sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                variant="contained"
-                onClick={() => setEditMode((prev) => !prev)}
-                type="button"
-            >
-                Edytuj
-            </Button>
-            <Button
-                sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                onClick={() => setDeleteModalState((prev) => !prev)}
-                variant="contained"
-                color="error"
-            >
-                Usuń
-            </Button>
+            <Box>
+                <Button variant="contained" onClick={() => setEditMode((prev) => !prev)} type="button">
+                    Edytuj
+                </Button>
+                <Button
+                    onClick={() => setDeleteModalState((prev) => !prev)}
+                    variant="contained"
+                    color="error"
+                    sx={{ ml: '16px' }}
+                >
+                    Usuń
+                </Button>
+            </Box>
             {deleteModalState && <DeleteModal item={item} setDeleteModalState={setDeleteModalState} />}
         </Box>
     );
