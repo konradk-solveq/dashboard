@@ -1,9 +1,8 @@
 import { format, parseJSON } from 'date-fns';
 import React, { useState } from 'react';
-import { Button, Checkbox, Flex, Grid, Spinner, Text } from 'theme-ui';
+import { Button, Checkbox, Box, CircularProgress, Typography } from '@mui/material';
 import { ManagePublicationsRowProps } from '../../../typings/ManagePublications';
 import DeleteModal from './DeleteModal';
-
 import EditRow from './EditRow';
 
 const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) => {
@@ -15,7 +14,7 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
     }
 
     return (
-        <Grid
+        <Box
             sx={{
                 alignItems: 'center',
                 justifyItems: 'center',
@@ -23,32 +22,42 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
                 textAlign: 'center',
                 margin: '40px 0 0',
                 height: '45px',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 1fr',
+                gap: 2,
             }}
-            gap={2}
-            columns="1fr 1fr 1fr 1fr 1fr 60px 0.5fr 0.5fr"
         >
-            <Text>{item.type === 'policy' ? 'Polityka Prywatności' : 'Regulamin'}</Text>
-            <Text>{item.pair.oldDocument.name}</Text>
-            <Text>{item.pair.newDocument.name}</Text>
-            <Text>{format(parseJSON(item.showDate), 'dd-MM-yyyy HH:mm')}</Text>
-            <Text>{format(parseJSON(item.publicationDate), 'dd-MM-yyyy HH:mm')}</Text>
+            <Typography variant="h6" sx={{ fontWeight: 200 }}>
+                {item.type === 'policy' ? 'Polityka Prywatności' : 'Regulamin'}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 200 }}>
+                {item.pair.oldDocument.name}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 200 }}>
+                {item.pair.newDocument.name}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 200 }}>
+                {format(parseJSON(item.showDate), 'dd-MM-yyyy HH:mm')}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 200 }}>
+                {format(parseJSON(item.publicationDate), 'dd-MM-yyyy HH:mm')}
+            </Typography>
             <Checkbox sx={{ margin: '0' }} checked={item.draft} readOnly />
-            <Button
-                sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                bg="grey"
-                onClick={() => setEditMode((prev) => !prev)}
-                type="button"
-            >
-                Edytuj
-            </Button>
-            <Button
-                sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                onClick={() => setDeleteModalState((prev) => !prev)}
-            >
-                Usuń
-            </Button>
+            <Box>
+                <Button variant="contained" onClick={() => setEditMode((prev) => !prev)} type="button">
+                    Edytuj
+                </Button>
+                <Button
+                    onClick={() => setDeleteModalState((prev) => !prev)}
+                    variant="contained"
+                    color="error"
+                    sx={{ ml: '16px' }}
+                >
+                    Usuń
+                </Button>
+            </Box>
             {deleteModalState && <DeleteModal item={item} setDeleteModalState={setDeleteModalState} />}
-        </Grid>
+        </Box>
     );
 };
 

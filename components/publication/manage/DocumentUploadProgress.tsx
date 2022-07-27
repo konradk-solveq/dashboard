@@ -18,7 +18,9 @@ const DocumentUploadProgress: React.FC<DocumentUploadProgressProps> = ({ message
                     <Box sx={{ marginX: 'auto', marginTop: '50px', fontSize: '1.5rem', marginBottom: '50px' }}>
                         {message}
                     </Box>
-                    <Button onClick={() => setIsLoading(false)}>Dodaj więcej dokumentów</Button>
+                    <Button variant="contained" onClick={() => setIsLoading(false)}>
+                        Dodaj więcej dokumentów
+                    </Button>
                 </>
             ) : (
                 <CircularProgress sx={{ mt: '80px' }} />

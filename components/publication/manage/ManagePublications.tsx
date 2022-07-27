@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Heading } from 'theme-ui';
-
+import { Box, Typography } from '@mui/material';
 import { ManagePublicationsContext } from '../../contexts/publication/ManagePublication';
 import ManagePublicationsRow from './ManagePublicationRow';
 import Sort from './Sort';
@@ -11,20 +10,26 @@ const PostPublication: React.FC = () => {
 
     return (
         <>
-            <Grid
-                gap={2}
-                columns="1fr 1fr 1fr 1fr 1fr 60px 1fr"
-                sx={{ alignItems: 'center', justifyItems: 'center', textAlign: 'center', marginBottom: '40px' }}
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    justifyItems: 'center',
+                    textAlign: 'center',
+                    marginBottom: '40px',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 1fr',
+                    gap: 2,
+                }}
             >
-                <Heading>Typ Publikacji</Heading>
-                <Heading>Aktualny dokument</Heading>
-                <Heading>Nowy dokument</Heading>
-                <Heading>Data pokazania</Heading>
-                <Heading>Data wygaśniecia starego dokumentu</Heading>
-                <Heading>Draft</Heading>
+                <Typography variant="h5">Typ Publikacji</Typography>
+                <Typography variant="h5">Aktualny dokument</Typography>
+                <Typography variant="h5">Nowy dokument</Typography>
+                <Typography variant="h5">Data pokazania</Typography>
+                <Typography variant="h5">Data wygaśniecia starego dokumentu</Typography>
+                <Typography variant="h5">Draft</Typography>
 
                 <Sort />
-            </Grid>
+            </Box>
             {publications?.data?.elements?.map((item) => (
                 <ManagePublicationsRow key={item.id} item={item} />
             ))}

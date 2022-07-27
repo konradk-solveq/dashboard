@@ -1,7 +1,7 @@
 import { parseJSON } from 'date-fns';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Container, Flex, Grid, Message, Select, Spinner } from 'theme-ui';
+import { Button, Checkbox, Container, Box, MenuItem, Alert, Select, CircularProgress } from '@mui/material';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -11,9 +11,9 @@ import { EditFormValues, EditRowProps, Files } from '../../../typings/ManagePubl
 
 const mapOptions = (optionsArray: Files['terms'] | Files['policy']) => {
     return optionsArray.map((item) => (
-        <option key={item.id} value={item.id}>
+        <MenuItem style={{ fontSize: '14px' }} key={item.id} value={item.id}>
             {item.name}
-        </option>
+        </MenuItem>
     ));
 };
 
@@ -85,16 +85,16 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
 
     if (publicationMutation.isLoading) {
         return (
-            <Flex sx={{ justifyContent: 'center', alignContent: 'center', marginTop: '40px' }}>
-                <Spinner m={40} />
-            </Flex>
+            <Box sx={{ justifyContent: 'center', alignContent: 'center', marginTop: '40px' }}>
+                <CircularProgress sx={{ m: 40 }} />
+            </Box>
         );
     }
 
     return (
         <>
-            <Grid
-                as="form"
+            <Box
+                component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
                     alignItems: 'center',
@@ -103,9 +103,10 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     textAlign: 'center',
                     margin: '40px 0 0',
                     height: '47px',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 0.5fr 0.5fr',
+                    gap: 2,
                 }}
-                gap={2}
-                columns="1fr 1fr 1fr 1fr 1fr 60px 0.5fr 0.5fr"
             >
                 <Controller
                     name="type"
@@ -145,6 +146,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('oldDocument') } }}
                     render={({ field }) => (
                         <Select
+                            className="document-select-form"
                             defaultValue={item.pair.newDocument.id}
                             onChange={(e) => {
                                 field.onChange(e.target.value);
@@ -205,7 +207,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                         }}
                     />
                 </Container>
-                <Flex as="label" sx={{ justifyContent: 'center' }}>
+                <Box component="label" sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Controller
                         name="draft"
                         control={control}
@@ -213,26 +215,30 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                             <Checkbox sx={{ margin: 0 }} defaultChecked={item.draft} onChange={field.onChange} />
                         )}
                     />
-                </Flex>
+                </Box>
                 <Button
                     onClick={handleSubmit(onSubmit)}
                     sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                    bg="grey"
+                    variant="contained"
+                    color="success"
                     type="submit"
                 >
                     Zapisz
                 </Button>
                 <Button
                     sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
+                    variant="contained"
+                    color="error"
                     onClick={() => setEditMode((prev) => !prev)}
                     type="button"
                 >
                     Anuluj
                 </Button>
-            </Grid>
-            <Flex
-                mt={2}
+            </Box>
+            <Box
                 sx={{
+                    display: 'flex',
+                    mt: '2',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -240,14 +246,14 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                 }}
             >
                 {(errors.showDate || errors.publicationDate) && (
-                    <Message bg="lightgrey">
+                    <Alert severity="error">
                         Data pokazania musi być przed datą wygaśnięcia oraz nie może być w przeszłości
-                    </Message>
+                    </Alert>
                 )}
                 {(errors.oldDocument || errors.newDocument) && (
-                    <Message bg="lightgrey">Dokumenty nie mogą być takie same!</Message>
+                    <Alert severity="error">Dokumenty nie mogą być takie same!</Alert>
                 )}
-            </Flex>
+            </Box>
         </>
     );
 };

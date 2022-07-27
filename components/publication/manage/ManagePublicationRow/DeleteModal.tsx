@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { format, parseJSON } from 'date-fns';
-import React, { useContext, useRef } from 'react';
-import { Button, Flex, Heading, Spinner } from 'theme-ui';
+import React, { useCallback, useContext, useMemo, useRef } from 'react';
+import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import { ManagePublicationsContext } from '../../../contexts/publication/ManagePublication';
 import { DeleteModalProps } from '../../../typings/ManagePublications';
 
@@ -44,7 +44,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         return (
             <Backdrop>
                 <Container>
-                    <Spinner m={40} />
+                    <CircularProgress sx={{ m: 40 }} />
                 </Container>
             </Backdrop>
         );
@@ -54,8 +54,14 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         return (
             <Backdrop>
                 <Container>
-                    <Heading m={10}>Pomyślnie usunięto zaplanowaną publikację</Heading>
-                    <Button sx={{ margin: '30px 0 10px' }} onClick={() => setDeleteModalState((prev) => !prev)}>
+                    <Typography variant="h3" sx={{ m: 10 }}>
+                        Pomyślnie usunięto zaplanowaną publikację
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        sx={{ margin: '30px 0 10px' }}
+                        onClick={() => setDeleteModalState((prev) => !prev)}
+                    >
                         Wróć
                     </Button>
                 </Container>
@@ -68,10 +74,14 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         return (
             <Backdrop>
                 <Container>
-                    <Heading m={10}>
+                    <Typography variant="h3" sx={{ m: 10 }}>
                         Nie udało się usunąć publikacji {<br />} {publicationDeletion.error.message}
-                    </Heading>
-                    <Button sx={{ margin: '30px 0 10px' }} onClick={() => setDeleteModalState((prev) => !prev)}>
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        sx={{ margin: '30px 0 10px' }}
+                        onClick={() => setDeleteModalState((prev) => !prev)}
+                    >
                         Wróć
                     </Button>
                 </Container>
@@ -82,17 +92,24 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
     return (
         <Backdrop ref={modalRef} onClick={closeModalOnBackgroundClick}>
             <Container>
-                <Heading m={10} sx={{ lineHeight: '50px' }}>
+                <Typography variant="h3" sx={{ m: 10, lineHeight: '50px' }}>
                     Czy jesteś pewien że chcesz usunąć publikację z pliku {item.pair.oldDocument.name} na plik{' '}
                     {item.pair.newDocument.name} <br /> zaplanowaną na{' '}
                     {format(parseJSON(item.showDate), 'dd-MM-yyyy HH:mm')}?
-                </Heading>
-                <Flex sx={{ justifyContent: 'center', gap: '15px', margin: '30px 0 10px' }}>
-                    <Button bg="grey" type="button" onClick={() => setDeleteModalState((prev) => !prev)}>
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', margin: '30px 0 10px' }}>
+                    <Button
+                        variant="contained"
+                        color="success"
+                        type="button"
+                        onClick={() => setDeleteModalState((prev) => !prev)}
+                    >
                         Nie
                     </Button>
-                    <Button onClick={() => publicationDeletion.mutate(item.id)}>Tak</Button>
-                </Flex>
+                    <Button variant="contained" color="error" onClick={() => publicationDeletion.mutate(item.id)}>
+                        Tak
+                    </Button>
+                </Box>
             </Container>
         </Backdrop>
     );

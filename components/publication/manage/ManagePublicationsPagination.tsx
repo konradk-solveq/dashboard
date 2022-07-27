@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Flex } from 'theme-ui';
+import { Button, Box } from '@mui/material';
 import { ManagePublicationsContext } from '../../contexts/publication/ManagePublication';
 
 const ManagePublicationsPagination: React.FC<{}> = ({}) => {
@@ -9,18 +9,18 @@ const ManagePublicationsPagination: React.FC<{}> = ({}) => {
     const handleNextPage = () => setParams((prev) => ({ ...prev, page: prev.page + 1 }));
 
     return (
-        <Flex sx={{ width: '100%', justifyContent: 'center', margin: '20px' }}>
+        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', margin: '20px' }}>
             {params.page > 0 && publications.data.links.prev && (
-                <Button bg="grey" mr="20px" sx={{ cursor: 'pointer' }} onClick={handlePrevPage}>
+                <Button variant="contained" sx={{ mr: '20px' }} onClick={handlePrevPage}>
                     Poprzednia
                 </Button>
             )}
             {!publications.isPreviousData && publications.data.links.next && (
-                <Button sx={{ cursor: 'pointer' }} onClick={handleNextPage}>
+                <Button variant="contained" onClick={handleNextPage}>
                     Następna
                 </Button>
             )}
-        </Flex>
+        </Box>
     );
 };
 
