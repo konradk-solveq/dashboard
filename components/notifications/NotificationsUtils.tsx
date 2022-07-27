@@ -36,7 +36,7 @@ export const sortingTypesDisplay: LabelWithUndefined[] = [
     { value: 'documents', label: 'Dokument' },
     { value: 'info', label: 'Info' },
     { value: 'promo', label: 'Promocja' },
-    { label: 'Wszystkie' },
+    { value: '', label: 'Wszystkie' },
 ];
 
 export const sortingByOrder: LabelTypes[] = [
@@ -101,6 +101,8 @@ export const editedObject = (data, langObjects, typeObjects, undefinedDate) => {
 };
 
 export const displayLanguageLabel = (objects, property) =>
-    objects.find((lang) => lang.value === property.fallbackLanguage || property.language);
+    objects.find((lang) => lang.value === (property.fallbackLanguage || property.language));
 
 export const displayTypeLabel = (objects, property) => objects.find((type) => type.value === property.type);
+
+export const displaySortLabel = (objects, property) => objects.find((el) => el.value === property);

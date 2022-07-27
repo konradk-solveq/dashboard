@@ -2,16 +2,24 @@ import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Divider, Box } from '@mui/material/';
 import Select from 'react-select';
-import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, defaultFormValues } from './NotificationsUtils';
+import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, displaySortLabel } from './NotificationsUtils';
+import { sortParamsType } from '../typings/Notifications';
 import { NotificationsContext } from './NotificationsApi';
 
-const NotificationsSortBar: React.FC<{}> = ({}) => {
+const NotificationsSortBar: React.FC<{ sortParams?: sortParamsType }> = ({ sortParams }) => {
     const { retrieveNotifications } = useContext(NotificationsContext);
-    const { handleSubmit, control } = useForm({ shouldUnregister: true, defaultValues: defaultFormValues });
+
+    const { handleSubmit, control } = useForm({
+        shouldUnregister: true,
+        defaultValues: {
+            type: displaySortLabel(sortingTypesDisplay, sortParams.type),
+            sortOrder: displaySortLabel(sortingByOrder, sortParams.sortOrder),
+            sortTypeOrder: displaySortLabel(sortingByOrderType, sortParams.sortTypeOrder),
+        },
+    });
 
     const onSubmit = (data) => {
-        let url = `/api/notifications/manage?page=1&limit=10`;
-        retrieveNotifications(url, data.sortOrder.value, data.sortTypeOrder.value, data.type.value);
+        retrieveNotifications(data.sortOrder.value, data.sortTypeOrder.value, data.type.value);
     };
 
     return (

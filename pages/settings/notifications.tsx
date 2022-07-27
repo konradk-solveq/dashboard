@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
-import { Container, Typography, Button, Alert, Box } from '@mui/material/';
+import { Container, Typography, Button, Alert, Box, CircularProgress } from '@mui/material/';
 import NotificationsEditPage from '../notifications/NotificationsEdit';
 import NotificationsContainer from '../../components/notifications/NotificationsApi';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
@@ -10,8 +10,15 @@ import NotificationsSortBar from '../../components/notifications/NotificationsSo
 import NotificationsPagination from '../../components/notifications/NotificationsPagination';
 
 const NotificationMenager: React.FC<{}> = ({}) => {
-    const { notifications, postNotifications, deleteNotifications, retrieveNotifications, editNotifications } =
-        useContext(NotificationsContext);
+    const {
+        notifications,
+        postNotifications,
+        deleteNotifications,
+        retrieveNotifications,
+        editNotifications,
+        sortParams,
+        loading,
+    } = useContext(NotificationsContext);
     const [addFormShow, setAddFormShow] = useState(false);
     const [preloadedNotifications, setPreloadedNotifications] = useState([]);
     const [editValues, setEditValues] = useState(null);
@@ -46,21 +53,25 @@ const NotificationMenager: React.FC<{}> = ({}) => {
     };
 
     const handleNotificationGroup = (notificationGroup) => {
-        postNotifications(notificationGroup);
+        postNotifications(notificationGroup).then((res) => {
+            retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
+        });
         setAddFormShow(!addFormShow);
-        retrieveNotifications();
     };
 
     const editNotificationGroup = (notificationGroup, idProperty) => {
-        editNotifications(notificationGroup, idProperty);
+        editNotifications(notificationGroup, idProperty).then((res) => {
+            retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
+        });
         setAddFormShow(!addFormShow);
-        retrieveNotifications();
     };
 
     const confirmDelete = () => {
-        deleteNotifications(deleteId);
+        deleteNotifications(deleteId).then((res) => {
+            retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
+        });
+
         setDeletePopUp(!deletePopUp);
-        retrieveNotifications();
     };
 
     return (
@@ -134,11 +145,25 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             </Button>
                         </Typography>
 
-                        <NotificationsSortBar />
+                        <NotificationsSortBar sortParams={sortParams} />
 
                         <Typography sx={{ m: '20px' }}>Lista Powiadomień</Typography>
 
-                        {preloadedNotifications?.length > 0 ? (
+                        {loading ? (
+                            <Container
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                    fontSize: '2em',
+                                    color: '#555',
+                                    minHeight: '300px',
+                                }}
+                            >
+                                <CircularProgress />
+                            </Container>
+                        ) : preloadedNotifications?.length > 0 ? (
                             <Container sx={{ minHeight: '300px' }}>
                                 {preloadedNotifications.map((notification) => {
                                     return (
@@ -168,7 +193,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             </Container>
                         )}
 
-                        <NotificationsPagination />
+                        <NotificationsPagination sortParams={sortParams} />
                     </>
                 )}
             </Container>

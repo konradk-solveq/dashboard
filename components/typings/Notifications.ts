@@ -20,6 +20,13 @@ export type NotificationsType = {
     fallbackLanguage: string;
 };
 
+export type sortParamsType = {
+    sortOrder: string;
+    sortTypeOrder: string;
+    type: string;
+    defaultURL?: string;
+};
+
 export type LabelWithUndefined = { value?: string; label: string };
 
 export type NotificationObjectType = {

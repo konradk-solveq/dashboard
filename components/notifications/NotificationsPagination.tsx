@@ -1,14 +1,17 @@
 import React, { useContext } from 'react';
 import { Button, Container, Divider } from '@mui/material/';
 import { NotificationsContext } from './NotificationsApi';
+import { sortParamsType } from '../typings/Notifications';
 
-const NotificationsPagination: React.FC<{}> = ({}) => {
+const NotificationsPagination: React.FC<{ sortParams: sortParamsType }> = ({ sortParams }) => {
     const { prevPageURL } = useContext(NotificationsContext);
     const { nextPageURL } = useContext(NotificationsContext);
     const { retrieveNotifications } = useContext(NotificationsContext);
 
-    const handleNextPage = () => retrieveNotifications(nextPageURL);
-    const handlePrevPage = () => retrieveNotifications(prevPageURL);
+    const handleNextPage = () =>
+        retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type, nextPageURL);
+    const handlePrevPage = () =>
+        retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type, prevPageURL);
 
     return (
         <Container>

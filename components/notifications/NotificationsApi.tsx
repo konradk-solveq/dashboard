@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { LanguageType, NotificationsType } from '../typings/Notifications';
+import { LanguageType, NotificationsType, sortParamsType } from '../typings/Notifications';
 
 interface IProps {
     availableLanguages?: LanguageType[];
@@ -10,6 +10,9 @@ interface IProps {
     retrieveNotifications: (url?: string, sortOrder?: string, sortTypeOrder?: string, type?: string) => Promise<void>;
     deleteNotifications: (id: number) => Promise<void>;
     editNotifications: (data: object, id: number) => Promise<void>;
+    sortParams?: sortParamsType;
+    loading?: boolean;
+    error?: boolean;
 }
 
 export const NotificationsContext = createContext<IProps>(null!);
@@ -19,35 +22,44 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
     const [notifications, setNotifications] = useState<NotificationsType[] | undefined>();
     const [prevPageURL, setPrevPageURL] = useState();
     const [nextPageURL, setNextPageURL] = useState();
+    const [sortParams, setSortParams] = useState({
+        sortOrder: `ASC`,
+        sortTypeOrder: `name`,
+        type: '',
+        defaultUrl: `/api/notifications/manage?page=1&limit=10`,
+    });
+    const [loading, setLoading] = useState(false);
 
     const retrieveNotifications = async (
-        defaultUrl?: string,
         sortOrder?: string,
         sortTypeOrder?: string,
         type?: string,
+        defaultUrl?: string,
     ) => {
         if (!defaultUrl) {
-            defaultUrl = `/api/notifications/manage?page=1&limit=10`;
+            defaultUrl = sortParams.defaultUrl;
         }
         if (!sortOrder) {
-            sortOrder = `ASC`;
+            sortOrder = sortParams.sortOrder;
         }
 
         if (!sortTypeOrder) {
-            sortTypeOrder = `name`;
+            sortTypeOrder = sortParams.sortTypeOrder;
         }
 
         const dataWithPage = await fetch(
-            `${defaultUrl}&${type ? `type=${type}` : ''}&order=${sortOrder}&orderBy=${sortTypeOrder}`,
+            `${defaultUrl}&${type ? `type=${type}&` : ''}order=${sortOrder}&orderBy=${sortTypeOrder}`,
         );
         const resultData = await dataWithPage.json();
 
+        setSortParams({ sortOrder: sortOrder, sortTypeOrder: sortTypeOrder, type: type, defaultUrl: defaultUrl });
         setNextPageURL(resultData?.links.next);
         setPrevPageURL(resultData?.links.prev);
         setNotifications(resultData.elements);
     };
 
     const postNotifications = async (data: object) => {
+        setLoading(true);
         const settings = {
             method: 'POST',
             body: JSON.stringify(data),
@@ -56,14 +68,17 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
         try {
             const fetchResponse = await fetch(`/api/notifications/manage`, settings);
             const data = await fetchResponse.json();
+            setLoading(false);
             return data;
-        } catch (error) {
-            console.log(error);
-            return error;
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return err;
         }
     };
 
     const editNotifications = async (data: object, id: number) => {
+        setLoading(true);
         const settings = {
             method: 'PUT',
             body: JSON.stringify(data),
@@ -72,23 +87,28 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
         try {
             const fetchResponse = await fetch(`/api/notifications/manage/${id}`, settings);
             const data = await fetchResponse.json();
+            setLoading(false);
             return data;
-        } catch (error) {
-            console.log(error);
-            return error;
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return err;
         }
     };
 
     const deleteNotifications = async (id: number) => {
+        setLoading(true);
         try {
             const fetchResponse = await fetch(`/api/notifications/manage/${id}`, {
                 method: 'DELETE',
             });
             const data = await fetchResponse.json();
+            setLoading(false);
             return data;
-        } catch (error) {
-            console.log(error);
-            return error;
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return err;
         }
     };
 
@@ -100,7 +120,7 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
 
     useEffect(() => {
         getAvailableLanguages();
-        retrieveNotifications();
+        retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
     }, []);
     return (
         <NotificationsContext.Provider
@@ -113,6 +133,8 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
                 retrieveNotifications,
                 deleteNotifications,
                 editNotifications,
+                sortParams,
+                loading,
             }}
         >
             {children}

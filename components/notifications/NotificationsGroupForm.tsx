@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Button, Typography, Alert, Box, IconButton } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
@@ -39,6 +39,12 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         defaultValues: preloadedGroupValues,
     });
     const [alert, setAlert] = useState(false);
+    const [currentDate, setCurrentDate] = useState<Date>();
+    const getDate = () => setCurrentDate(new Date());
+
+    useEffect(() => {
+        getDate();
+    }, []);
 
     const handleClick = (data) => {
         const mainNotification = notifications.find((el) => el.language === data.fallbackLanguage.value);
@@ -128,6 +134,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                             render={({ field }) => (
                                 <DatePicker
                                     wrapperClassName="date-picker"
+                                    minDate={currentDate}
                                     placeholderText="Wybierz datę"
                                     onChange={(date) => field.onChange(date)}
                                     selected={field.value}
@@ -144,6 +151,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                             render={({ field }) => (
                                 <DatePicker
                                     wrapperClassName="date-picker"
+                                    minDate={currentDate}
                                     placeholderText="Wybierz datę"
                                     onChange={(date) => field.onChange(date)}
                                     selected={field.value}
