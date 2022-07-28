@@ -127,7 +127,7 @@ const NotificationsEdit: React.FC<IProps> = ({
                     <Container
                         sx={{
                             display: 'grid',
-                            gridTemplateColumns: '1fr 2fr 3fr 1fr 1fr',
+                            gridTemplateColumns: '1fr 2fr 3fr 1fr',
                             mb: '10px',
                             fontSize: '1.25em',
                             gap: 2,

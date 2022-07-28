@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Container, Box } from '@mui/material/';
-import rowStyle from '../../styles/NotificationsGroupRow.module.css';
+import { Button, Box } from '@mui/material/';
 
 const NotificationsGroupRow: React.FC<{
     language: string;
@@ -11,19 +10,31 @@ const NotificationsGroupRow: React.FC<{
     editHandler;
 }> = ({ id, language, title, text, deleteHandler, editHandler }) => {
     return (
-        <Container className={rowStyle.container}>
-            <Box className={rowStyle.language}>{language}</Box>
-            <Box className={rowStyle.title}>{title}</Box>
-            <Box className={rowStyle.text}>{text}</Box>
-            <div className={rowStyle.buttons}>
-                <Button className={rowStyle.button} onClick={() => editHandler(id)} variant="contained" color="success">
+        <Box display="grid" gridTemplateColumns="1fr 2fr 3fr 1fr" gap={2} width="100%" ml="24px" mb={2}>
+            <Box className="notifications-item" sx={{ maxHeight: '35px', maxWidth: '40px' }}>
+                {language}
+            </Box>
+            <Box
+                className="notifications-item"
+                sx={{ maxWidth: '200px', maxHeight: '100px', overflowY: 'auto', wordBreak: 'break-all' }}
+            >
+                {title}
+            </Box>
+            <Box
+                className="notifications-item"
+                sx={{ maxWidth: '300px', maxHeight: '100px', overflowY: 'auto', wordBreak: 'break-all' }}
+            >
+                {text}
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2, maxHeight: '35px' }}>
+                <Button onClick={() => editHandler(id)} variant="contained" color="success">
                     Edytuj
                 </Button>
-                <Button className={rowStyle.button} onClick={() => deleteHandler(id)} variant="contained" color="error">
+                <Button onClick={() => deleteHandler(id)} variant="contained" color="error">
                     Usuń
                 </Button>
-            </div>
-        </Container>
+            </Box>
+        </Box>
     );
 };
 
