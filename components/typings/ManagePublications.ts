@@ -52,16 +52,34 @@ export interface EditRowProps {
 
 export type Files = {
     terms: {
-        id: string,
+        id: number,
         name: string,
         type: string,
-        contents: object[]
+        contents: [{language: string;
+            documentType: 'terms' | 'policy';
+            documentName: string;
+            file: string;
+            actions: {
+                type: 'internal_uri',
+                value: string,
+                text: string,
+                match: string,
+            }[]}]
     }[],
     policy: {
-        id: string,
+        id: number,
         name: string,
         type: string,
-        contents: object[]
+        contents: [{language: string;
+            documentType: 'terms' | 'policy';
+            documentName: string;
+            file: string;
+            actions: {
+                type: 'internal_uri',
+                value: string,
+                text: string,
+                match: string,
+            }[]}]
     }[]
 }
 
@@ -87,7 +105,10 @@ export interface ManagePublicationsContextProps {
     params: Params,
     setParams: React.Dispatch<SetStateAction<Params>>,
     publications: UseQueryResult<Publications>,
-    files: [UseQueryResult<Files['policy']>, UseQueryResult<Files['terms']>],
+    files: {
+        policy: UseQueryResult<Files['policy']>
+        terms: UseQueryResult<Files['terms']>
+    },
     publicationMutation: UseMutationResult,
     publicationDeletion: UseMutationResult<AxiosResponse, any>,
 }

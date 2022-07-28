@@ -23,8 +23,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
     const [showDate, setShowDate] = useState<Date>(parseJSON(item.showDate));
     const [publicationDate, setPublicationDate] = useState<Date>(parseJSON(item.publicationDate));
 
-    const policies: Files['policy'] = files[0]?.data[0]?.type === 'policy' ? files[0].data : files[1].data;
-    const terms: Files['terms'] = files[0]?.data[0]?.type === 'terms' ? files[0].data : files[1].data;
+    const { terms, policy } = files;
 
     const isInitialMount = useRef(true);
 
@@ -63,7 +62,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
             setValueOfMultiple(['oldDocument', 'newDocument'], terms[0].id);
         }
         if (publicationType === 'policy') {
-            setValueOfMultiple(['oldDocument', 'newDocument'], policies[0]?.id);
+            setValueOfMultiple(['oldDocument', 'newDocument'], policy[0]?.id);
         }
     };
 
@@ -135,8 +134,8 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                                 field.onChange(e.target.value);
                             }}
                         >
-                            {publicationType === 'terms' && mapOptions(terms)}
-                            {publicationType === 'policy' && mapOptions(policies)}
+                            {publicationType === 'terms' && mapOptions(terms.data)}
+                            {publicationType === 'policy' && mapOptions(policy.data)}
                         </Select>
                     )}
                 />
@@ -152,8 +151,8 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                                 field.onChange(e.target.value);
                             }}
                         >
-                            {publicationType === 'terms' && mapOptions(terms)}
-                            {publicationType === 'policy' && mapOptions(policies)}
+                            {publicationType === 'terms' && mapOptions(terms.data)}
+                            {publicationType === 'policy' && mapOptions(policy.data)}
                         </Select>
                     )}
                 />

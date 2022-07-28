@@ -1,11 +1,12 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Typography, CircularProgress, Box, Button, Container } from '@mui/material/';
 import styled from '@emotion/styled';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { errorHandler } from '../../contexts/translation';
 import { Step0, Step1, Step2, Step3, Step4, Submitted } from './steps';
 import { PostPublicationContext } from '../../contexts/publication/PostPublication';
 import { PublishFormSubmission, PublishFormValues, ActiveSteps, Steps } from '../../typings/PublicationSection';
+import { Files } from '../../typings/ManagePublications';
 
 const ButtonContainer = styled.div`
     display: flex;
@@ -15,10 +16,11 @@ const ButtonContainer = styled.div`
 `;
 
 const PostPublicationForm: React.FC = () => {
-    const { publishFormMethods, postPublication, getAvailableFiles } = useContext(PostPublicationContext);
-    const [activeStep, setActiveStep] = useState<Number>(0);
-    const [isError, setIsError] = useState<Boolean>(false);
-    const [isLoading, setIsLoading] = useState<Boolean>(false);
+    const { publishFormMethods, postPublicationMutation, files } = useContext(PostPublicationContext);
+    const [activeStep, setActiveStep] = useState<number>(0);
+    const [activeFiles, setActiveFiles] = useState<Files['policy'] | Files['terms']>();
+
+    const queryClient = useQueryClient();
 
     const {
         handleSubmit,
@@ -29,26 +31,26 @@ const PostPublicationForm: React.FC = () => {
         clearErrors,
     } = publishFormMethods;
 
-    const handlePublicationTypeSelect = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handlePublicationTypeSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
         reset();
-        setIsLoading(true);
-        try {
-            await getAvailableFiles((e.target as HTMLButtonElement).value as 'terms' | 'privacy');
-        } catch (error) {
-            setIsError(true);
-        }
-        setValue('publicationType', (e.target as HTMLButtonElement).value);
-        setIsLoading(false);
+        const type = (e.target as HTMLButtonElement).value;
+        setActiveFiles(files[type].data);
+        setValue('publicationType', type);
         setActiveStep((prevStep: ActiveSteps) => prevStep + 1);
     };
 
+    const isLoading = () => files.policy.isLoading || files.terms.isLoading || postPublicationMutation.isLoading;
+
+    console.log(files.policy.isLoading || files.terms.isLoading || postPublicationMutation.isLoading);
+
     const steps: Steps = [
+        // todo : check why useCallback doesn't trace dependencies required
         <Step0 handlePublicationTypeSelect={handlePublicationTypeSelect} />,
-        <Step1 />,
+        <Step1 activeFiles={activeFiles} />,
         <Step2 />,
-        <Step3 />,
+        <Step3 activeFiles={activeFiles} />,
         <Step4 />,
-        <Submitted isError={isError} />,
+        <Submitted isError={postPublicationMutation.isError} />,
     ];
 
     const renderStep = useCallback(() => {
@@ -68,7 +70,7 @@ const PostPublicationForm: React.FC = () => {
             default:
                 return null;
         }
-    }, [activeStep]);
+    }, [activeStep, files]);
 
     const handleNext = async () => {
         const isStepValid = await trigger();
@@ -77,14 +79,13 @@ const PostPublicationForm: React.FC = () => {
 
     const handleBack = () => {
         clearErrors();
-        setIsError(false);
+        queryClient.invalidateQueries(['files']);
         if (activeStep != steps.length - 1) setActiveStep((prevActiveStep: ActiveSteps) => prevActiveStep - 1);
         else setActiveStep(0);
     };
 
     const onSubmit = async (data: PublishFormValues) => {
-        setIsLoading(true);
-        const objToUpload: PublishFormSubmission = {
+        const hookToUpload: PublishFormSubmission = {
             type: data.publicationType,
             pair: {
                 oldDocumentId: data.current,
@@ -95,18 +96,11 @@ const PostPublicationForm: React.FC = () => {
             publicationDate: data.publicationDate,
             fallbackLanguage: data.fallbackLanguage,
         };
-        try {
-            const response = await postPublication(objToUpload);
-            errorHandler(response);
-        } catch (error) {
-            setIsError(true);
-        }
-
+        postPublicationMutation.mutate({ data: hookToUpload });
         setActiveStep((prevStep: ActiveSteps) => prevStep + 1);
-        setIsLoading(false);
     };
 
-    if (isError) {
+    if (files.policy.isError || files.terms.isError) {
         return (
             <Box
                 sx={{
@@ -145,8 +139,22 @@ const PostPublicationForm: React.FC = () => {
                 }}
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {isLoading ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
-                {activeStep > 0 && activeStep < steps.length - 1 && (
+                {isLoading() ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
+                {errors.current && (
+                    <Typography sx={{ marginBottom: '20px', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                        Dokumenty nie mogą być takie same!
+                    </Typography>
+                )}
+                {(errors.publicationDate || errors.showDate) && (
+                    <Typography sx={{ marginBottom: '20px', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                        {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
+                            'Data nie może być w przeszłości.'}
+                        {(errors?.publicationDate?.type === 'afterShowDate' ||
+                            errors?.showDate?.type === 'beforePublicationDate') &&
+                            'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
+                    </Typography>
+                )}
+                {!isLoading() && activeStep > 0 && activeStep < steps.length - 1 && (
                     <ButtonContainer>
                         <Button
                             variant="contained"
@@ -179,7 +187,7 @@ const PostPublicationForm: React.FC = () => {
                         )}
                     </ButtonContainer>
                 )}
-                {activeStep === steps.length - 1 && (
+                {!isLoading() && activeStep === steps.length - 1 && (
                     <Button variant="contained" type="button" onClick={handleBack}>
                         Wróć na start
                     </Button>

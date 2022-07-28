@@ -6,7 +6,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styled from '@emotion/styled';
 
 import { PostPublicationContext } from '../../../contexts/publication/PostPublication';
-import { AvailableFiles, Step0Props, SubmittedProps } from '../../../typings/PublicationSection';
+import {
+    AvailableFiles,
+    Step0Props,
+    Step1Props,
+    Step3Props,
+    SubmittedProps,
+} from '../../../typings/PublicationSection';
+import { Files } from '../../../typings/ManagePublications';
 
 const NestedLabel = styled.label`
     display: flex;
@@ -70,16 +77,17 @@ export const Step0: React.FC<Step0Props> = ({ handlePublicationTypeSelect }) => 
     );
 };
 
-export const Step1: React.FC = () => {
-    const { availableFiles, publishFormMethods } = useContext(PostPublicationContext);
-    console.log(availableFiles);
-
-    const { control, getValues, setValue } = publishFormMethods;
+export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
+    const {
+        publishFormMethods: { control, getValues, setValue },
+    } = useContext(PostPublicationContext);
 
     useEffect(() => {
-        setValue('current', availableFiles[0]?.id);
-        setValue('next', availableFiles[0]?.id);
-    }, []);
+        if (activeFiles) {
+            setValue('current', activeFiles[0]?.id);
+            setValue('next', activeFiles[0]?.id);
+        }
+    }, [activeFiles]);
     return (
         <>
             <Box mb="80px">
@@ -98,7 +106,7 @@ export const Step1: React.FC = () => {
                                 sx={{ width: '200px', textAlign: 'center' }}
                                 onChange={field.onChange}
                             >
-                                {availableFiles?.map((file: AvailableFiles) => (
+                                {activeFiles?.map((file: AvailableFiles) => (
                                     <MenuItem style={{ fontSize: '14px' }} key={file.id} value={file.id}>
                                         {file.name}
                                     </MenuItem>
@@ -119,7 +127,7 @@ export const Step1: React.FC = () => {
                                 sx={{ width: '200px', textAlign: 'center' }}
                                 onChange={field.onChange}
                             >
-                                {availableFiles?.map((file: AvailableFiles) => (
+                                {activeFiles?.map((file: AvailableFiles) => (
                                     <MenuItem style={{ fontSize: '14px' }} key={file.id} value={file.id}>
                                         {file.name}
                                     </MenuItem>
@@ -134,8 +142,9 @@ export const Step1: React.FC = () => {
 };
 
 export const Step2: React.FC = () => {
-    const { publishFormMethods } = useContext(PostPublicationContext);
-    const { control, getValues } = publishFormMethods;
+    const {
+        publishFormMethods: { control, getValues },
+    } = useContext(PostPublicationContext);
 
     return (
         <>
@@ -198,19 +207,19 @@ export const Step2: React.FC = () => {
     );
 };
 
-export const Step3 = () => {
-    const { availableFiles, publishFormMethods } = useContext(PostPublicationContext);
-
-    const { getValues, register, setValue } = publishFormMethods;
+export const Step3: React.FC<Step3Props> = ({ activeFiles }) => {
+    const {
+        publishFormMethods: { getValues, register, setValue },
+    } = useContext(PostPublicationContext);
 
     const [fallbackLanguages, setFallbackLanguages] = useState<String[]>([]);
 
-    const getFallbackLanguages = (files: AvailableFiles[]) => {
+    const getFallbackLanguages = (files: Files['policy'] | Files['policy']) => {
         setFallbackLanguages(files.find((file) => file.id == getValues('next')).contents.map((item) => item.language));
     };
 
     useEffect(() => {
-        getFallbackLanguages(availableFiles);
+        getFallbackLanguages(activeFiles);
     }, []);
 
     useEffect(() => {
@@ -244,8 +253,9 @@ export const Step3 = () => {
 };
 
 export const Step4 = () => {
-    const { publishFormMethods } = useContext(PostPublicationContext);
-    const { register } = publishFormMethods;
+    const {
+        publishFormMethods: { register },
+    } = useContext(PostPublicationContext);
 
     return (
         <>

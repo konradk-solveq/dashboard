@@ -5,8 +5,8 @@ import ManagePublicationsRow from './ManagePublicationRow';
 import Sort from './Sort';
 import ManagePublicationsPagination from './ManagePublicationsPagination';
 
-const PostPublication: React.FC = () => {
-    const { publications } = useContext(ManagePublicationsContext);
+
+const PostPublication = () => {
 
     return (
         <>

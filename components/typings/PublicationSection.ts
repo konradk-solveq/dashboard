@@ -1,5 +1,7 @@
+import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import React, { SetStateAction } from "react";
 import {  DeepRequired, FieldArrayWithId, FieldError,  FieldErrorsImpl,  FieldValue, UseFormRegister, UseFormReturn} from "react-hook-form";
+import { Files } from "./ManagePublications";
 
 export interface DocumentUploadProgressProps {
     message: String,
@@ -37,12 +39,11 @@ export interface DocumentUploadContextProps {
 export interface UploadFormProps {
     loadingError: Boolean
 }
+
 export interface PostPublicationContextProps {
     defaultValues: PublishFormValues;
-    availableFiles: AvailableFiles[],
-    setAvailableFiles: React.Dispatch<React.SetStateAction<AvailableFiles[]>>;
-    postPublication(data: PublishFormSubmission): Promise<Response>;
-    getAvailableFiles(type: 'privacy' | 'terms'): Promise<void>;
+    files: {policy: UseQueryResult<Files['policy']>, terms: UseQueryResult<Files['terms']>},
+    postPublicationMutation: UseMutationResult,
     publishFormMethods: UseFormReturn<PublishFormValues>
 };
 
@@ -59,13 +60,13 @@ export interface PublishFormValues {
 export interface AvailableFiles {
     id: number,
     name: string,
-    type: 'terms' | 'policy',
+    type: string,
     contents: {language: string;
-    documentType: 'terms' | 'policy';
+    documentType: string;
     documentName: string;
     file: string;
     actions: {
-        type: 'internal_uri',
+        type: string,
         value: string,
         text: string,
         match: string,
@@ -89,11 +90,15 @@ export type ActiveSteps = 0 | 1 | 2 | 3 | 4 | 5
 export type Steps = [React.ReactElement<Step0Props>, React.ReactElement, React.ReactElement, React.ReactElement, React.ReactElement, React.ReactElement<SubmittedProps>]
 
 export type Step0Props = {
-    handlePublicationTypeSelect(e: React.MouseEvent<HTMLButtonElement>): Promise<void>
+    handlePublicationTypeSelect(e: React.MouseEvent<HTMLButtonElement>): void
 }
 
 export type Step1Props = {
-    availableFiles: AvailableFiles
+    activeFiles: Files['policy'] | Files['terms']
+}
+
+export type Step3Props = {
+    activeFiles: Files['policy'] | Files['terms']
 }
 
 export type SubmittedProps = {

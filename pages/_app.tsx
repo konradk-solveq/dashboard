@@ -9,6 +9,7 @@ import Layout from '../components/Layout';
 
 import { cache } from '../helpers/cache';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const getConfig = cache(async () => {
     const data = await fetch(`${process.env.NEXT_PUBLIC_URL || ''}/api/application/config`);
@@ -30,15 +31,14 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
             }}
         >
             <ApiContextContainer config={pageProps.config}>
-            <QueryClientProvider client={queryClient}>
-
-                <ThemeProvider theme={mdTheme}>
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
-                </ThemeProvider>
-            </QueryClientProvider>
-
+                <QueryClientProvider client={queryClient}>     
+                    <ThemeProvider theme={mdTheme}>
+                        <Layout>
+                          <Component {...pageProps} />
+                        </Layout>
+                    </ThemeProvider>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
             </ApiContextContainer>
         </Provider>
     );

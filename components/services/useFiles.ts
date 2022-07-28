@@ -1,7 +1,13 @@
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import config from "../../helpers/queryConfig";
 import endpoints from "../utils/apiEndpoints";
 import getQueryFn from './../utils/getQueryFn'
 
-const useFiles = () => useQueries({queries: [{queryKey: ['policy'], queryFn: () => getQueryFn(endpoints.policy)}, {queryKey: ['terms'], queryFn: () => getQueryFn(endpoints.terms)}]})
+const useFiles = () => {
+    return {
+        policy: useQuery(['policy'], () => getQueryFn(endpoints.policy), {...config}),
+        terms: useQuery(['terms'], () => getQueryFn(endpoints.terms), {...config}),
+    }
+}
 
 export default useFiles

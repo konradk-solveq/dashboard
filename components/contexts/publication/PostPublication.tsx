@@ -1,12 +1,11 @@
-import React, { createContext, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import React, { createContext } from 'react';
 import { useForm } from 'react-hook-form';
+import useFiles from '../../services/useFiles';
 
-import {
-    PublishFormValues,
-    PublishFormSubmission,
-    AvailableFiles,
-    PostPublicationContextProps,
-} from '../../typings/PublicationSection';
+import { PublishFormValues, PostPublicationContextProps } from '../../typings/PublicationSection';
+import endpoints from '../../utils/apiEndpoints';
 
 const defaultValues: PublishFormValues = {
     publicationType: '',
@@ -18,23 +17,16 @@ const defaultValues: PublishFormValues = {
     fallbackLanguage: '',
 };
 
-const postPublication = async (data: PublishFormSubmission) =>
-    await fetch(`/api/publications/manage`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'content-type': 'application/json' },
-    });
+const postPublication = ({ data }) => {
+    return axios.post(`${endpoints.publications}`, data);
+};
 
 export const PostPublicationContext = createContext<PostPublicationContextProps>(null!);
 
 const PostPublicationContainer: React.FC = ({ children }) => {
-    const [availableFiles, setAvailableFiles] = useState<AvailableFiles[]>([]);
+    const files = useFiles();
 
-    const getAvailableFiles = async (type: 'privacy' | 'terms') => {
-        const data = await fetch(`/api/publications/manage/documents?type=${type}`);
-        const result = await data.json();
-        setAvailableFiles(await result);
-    };
+    const postPublicationMutation = useMutation(postPublication);
 
     const publishFormMethods = useForm({
         defaultValues: defaultValues,
@@ -43,12 +35,10 @@ const PostPublicationContainer: React.FC = ({ children }) => {
     return (
         <PostPublicationContext.Provider
             value={{
-                availableFiles,
-                setAvailableFiles,
+                files,
                 publishFormMethods,
                 defaultValues,
-                postPublication,
-                getAvailableFiles,
+                postPublicationMutation,
             }}
         >
             {children}

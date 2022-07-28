@@ -87,7 +87,7 @@ const EditModalForm = () => {
             >
                 {results.auth.verificationMethods.map((event) =>
                     event ? (
-                        <MenuItem style={{ fontSize: '14px' }} key={event} value={event}>
+                        <MenuItem style={{ fontSize: '14px' }} key={event} value={event.split(/(?=[A-Z])/)}>
                             {event}
                         </MenuItem>
                     ) : null,
