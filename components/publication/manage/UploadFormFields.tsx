@@ -39,24 +39,44 @@ const UploadFormFields: React.FC<UploadFormFieldsProps> = ({
                             </MenuItem>
                         ))}
                     </Select>
-                    <Input
-                        className="document-select-form document-input-form"
-                        disableUnderline={true}
+                    <input
                         {...register(`documents.${index}.file`)}
                         type="file"
                         accept="*/.json"
                         multiple={false}
                         required
+                        hidden
+                        id="file"
                     />
-                    <Input
-                        className="document-select-form document-input-form"
-                        disableUnderline={true}
+                    <label htmlFor="file">
+                        <Button
+                            sx={{ width: '100%' }}
+                            variant="contained"
+                            component="span"
+                            className="document-select-form document-input-form"
+                        >
+                            Dodaj plik
+                        </Button>
+                    </label>
+                    <input
                         {...register(`documents.${index}.actions`)}
                         type="file"
                         accept="*/.json"
                         multiple={false}
                         required
+                        hidden
+                        id="actions"
                     />
+                    <label htmlFor="actions">
+                        <Button
+                            sx={{ width: '100%' }}
+                            variant="contained"
+                            component="span"
+                            className="document-select-form document-input-form"
+                        >
+                            Dodaj plik
+                        </Button>
+                    </label>
                     {index >= 1 && (
                         <Button variant="contained" color="error" type="button" onClick={() => remove(index)}>
                             Usuń

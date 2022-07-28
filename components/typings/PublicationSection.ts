@@ -1,5 +1,5 @@
 import React, { SetStateAction } from "react";
-import {  FieldArrayWithId, FieldError,  FieldValue, UseFormRegister, UseFormReturn} from "react-hook-form";
+import {  DeepRequired, FieldArrayWithId, FieldError,  FieldErrorsImpl,  FieldValue, UseFormRegister, UseFormReturn} from "react-hook-form";
 
 export interface DocumentUploadProgressProps {
     message: String,
@@ -109,18 +109,5 @@ export interface UploadFormFieldsProps {
         displayName: String;
     }[],
     getValues(arg0: string): string | number | boolean,
- errors: {
-        documentType?: FieldError;
-        documentName?: FieldError;
-        documents?: {
-            language?: FieldError;
-            file?: FieldError;
-            actions?: {
-                type?: FieldError;
-                value?: FieldError;
-                text?: FieldError;
-                match?: FieldError;
-            }[];
-        }[];
-    }
+ errors: FieldErrorsImpl<DeepRequired<UploadFormValues>>
 }

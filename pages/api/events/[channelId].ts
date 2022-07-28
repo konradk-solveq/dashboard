@@ -10,7 +10,7 @@ async function getHandler(req: NextApiRequest & ExtendedApiRequest, res: NextApi
     const { channelId } = req.query;
     const { apiUrl } = req.locals;
     const source = new EventSource(`${apiUrl}/events/${channelId}`);
-    const bypassMessage: EventListener = (ev) => {
+    const bypassMessage: any = (ev) => {
         try {
             if (typeof ev === 'object') {
                 res.write(`data: ${ev.data}\n\n`);

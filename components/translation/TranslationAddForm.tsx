@@ -24,14 +24,26 @@ const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addU
                     value={version}
                     onChange={(e) => setNewUiTranslationsValue('version')(e.target.value)}
                 ></Input>
-                <Input
-                    className="document-input-form document-select-form"
-                    disableUnderline={true}
+                <input
                     type="file"
-                    accept="application/json"
+                    accept="application/.json"
                     multiple={false}
+                    required
+                    hidden
+                    value={version}
+                    id="file"
                     onChange={(e) => setNewUiTranslationsValue('file')(e.target.files[0])}
-                ></Input>
+                />
+                <label htmlFor="file">
+                    <Button
+                        sx={{ width: '20%' }}
+                        variant="contained"
+                        component="span"
+                        className="document-select-form document-input-form"
+                    >
+                        Dodaj Plik
+                    </Button>
+                </label>
             </Container>
             <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
