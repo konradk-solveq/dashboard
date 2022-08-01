@@ -91,19 +91,14 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
     }
 
     return (
-        <>
+        <Box>
             <Box
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{
                     alignItems: 'center',
-                    justifyItems: 'center',
-                    fontSize: '1rem',
-                    textAlign: 'center',
-                    margin: '40px 0 0',
-                    height: '47px',
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 0.5fr 0.5fr',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 0.1fr 1fr',
                     gap: 2,
                 }}
             >
@@ -112,13 +107,18 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     control={control}
                     render={({ field }) => (
                         <Select
+                            className="document-select-form"
                             onChange={async (e) => {
                                 field.onChange(e.target.value);
                             }}
                             defaultValue={item.type}
                         >
-                            <option value="terms">Regulamin</option>
-                            <option value="policy">Polityka Prywatności</option>
+                            <MenuItem sx={{ fontSize: '14px' }} value="terms">
+                                Regulamin
+                            </MenuItem>
+                            <MenuItem sx={{ fontSize: '14px' }} value="policy">
+                                Polityka Prywatności
+                            </MenuItem>
                         </Select>
                     )}
                 />
@@ -129,6 +129,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('newDocument') } }}
                     render={({ field }) => (
                         <Select
+                            className="document-select-form"
                             defaultValue={item.pair.oldDocument.id}
                             onChange={(e) => {
                                 field.onChange(e.target.value);
@@ -156,7 +157,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                         </Select>
                     )}
                 />
-                <Container>
+                <Box className="datepicker">
                     <Controller
                         name="showDate"
                         control={control}
@@ -180,8 +181,8 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                             },
                         }}
                     />
-                </Container>
-                <Container>
+                </Box>
+                <Box className="datepicker">
                     <Controller
                         name="publicationDate"
                         control={control}
@@ -205,7 +206,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                             },
                         }}
                     />
-                </Container>
+                </Box>
                 <Box component="label" sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Controller
                         name="draft"
@@ -215,24 +216,20 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                         )}
                     />
                 </Box>
-                <Button
-                    onClick={handleSubmit(onSubmit)}
-                    sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                    variant="contained"
-                    color="success"
-                    type="submit"
-                >
-                    Zapisz
-                </Button>
-                <Button
-                    sx={{ width: '100%', height: '40px', padding: 0, fontSize: '1rem' }}
-                    variant="contained"
-                    color="error"
-                    onClick={() => setEditMode((prev) => !prev)}
-                    type="button"
-                >
-                    Anuluj
-                </Button>
+                <Box display="flex">
+                    <Button onClick={handleSubmit(onSubmit)} variant="contained" color="success" type="submit">
+                        Zapisz
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => setEditMode((prev) => !prev)}
+                        type="button"
+                        sx={{ ml: 2 }}
+                    >
+                        Anuluj
+                    </Button>
+                </Box>
             </Box>
             <Box
                 sx={{
@@ -253,7 +250,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     <Alert severity="error">Dokumenty nie mogą być takie same!</Alert>
                 )}
             </Box>
-        </>
+        </Box>
     );
 };
 

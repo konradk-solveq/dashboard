@@ -8,6 +8,7 @@ import { NotificationsContext } from '../../components/notifications/Notificatio
 import { getNotifications } from '../../components/notifications/NotificationsUtils';
 import NotificationsSortBar from '../../components/notifications/NotificationsSortBar';
 import NotificationsPagination from '../../components/notifications/NotificationsPagination';
+import BigListItem from '../../assets/BigListItem';
 
 const NotificationMenager: React.FC<{}> = ({}) => {
     const {
@@ -164,19 +165,21 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                                 <CircularProgress />
                             </Container>
                         ) : preloadedNotifications?.length > 0 ? (
-                            <Container sx={{ minHeight: '300px' }}>
+                            <Box sx={{ minHeight: '300px' }}>
                                 {preloadedNotifications.map((notification) => {
                                     return (
-                                        <NotificationsRow
-                                            id={notification.id}
-                                            key={notification.id}
-                                            title={notification.groupTitle}
-                                            deleteHandler={deleteHandler}
-                                            editHandler={editHandler}
-                                        />
+                                        <BigListItem hover={true}>
+                                            <NotificationsRow
+                                                id={notification.id}
+                                                key={notification.id}
+                                                title={notification.groupTitle}
+                                                deleteHandler={deleteHandler}
+                                                editHandler={editHandler}
+                                            />
+                                        </BigListItem>
                                     );
                                 })}
-                            </Container>
+                            </Box>
                         ) : (
                             <Container
                                 sx={{

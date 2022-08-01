@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container, Box } from '@mui/material/';
+import { Button, Box, Typography } from '@mui/material/';
 
 const NotificationsRow: React.FC<{
     title: string;
@@ -9,16 +9,19 @@ const NotificationsRow: React.FC<{
     editHandler;
 }> = ({ id, title, deleteHandler, editHandler }) => {
     return (
-        <Container sx={{ display: 'grid', gridTemplateColumns: '4fr 1fr 1fr', gap: '10px', margin: '20px' }}>
-            <Box>{title}</Box>
-
-            <Button variant="contained" color="success" onClick={() => editHandler(id)}>
-                Edytuj
-            </Button>
-            <Button variant="contained" color="error" onClick={() => deleteHandler(id)}>
-                Usuń
-            </Button>
-        </Container>
+        <Box display="flex" sx={{ ml: '24px', mr: '24px', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h5" fontWeight={200}>
+                {title}
+            </Typography>
+            <Box display="flex">
+                <Button variant="contained" color="success" onClick={() => editHandler(id)}>
+                    Edytuj
+                </Button>
+                <Button variant="contained" color="error" onClick={() => deleteHandler(id)} sx={{ ml: '16px' }}>
+                    Usuń
+                </Button>
+            </Box>
+        </Box>
     );
 };
 

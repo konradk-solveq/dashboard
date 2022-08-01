@@ -54,9 +54,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         return (
             <Backdrop>
                 <Container>
-                    <Typography variant="h3" sx={{ m: 10 }}>
-                        Pomyślnie usunięto zaplanowaną publikację
-                    </Typography>
+                    <Typography variant="h5">Pomyślnie usunięto zaplanowaną publikację</Typography>
                     <Button
                         variant="contained"
                         sx={{ margin: '30px 0 10px' }}
@@ -74,7 +72,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         return (
             <Backdrop>
                 <Container>
-                    <Typography variant="h3" sx={{ m: 10 }}>
+                    <Typography variant="h5">
                         Nie udało się usunąć publikacji {<br />} {publicationDeletion.error.message}
                     </Typography>
                     <Button
@@ -92,12 +90,12 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
     return (
         <Backdrop ref={modalRef} onClick={closeModalOnBackgroundClick}>
             <Container>
-                <Typography variant="h3" sx={{ m: 10, lineHeight: '50px' }}>
+                <Typography variant="h5" sx={{ lineHeight: '50px' }}>
                     Czy jesteś pewien że chcesz usunąć publikację z pliku {item.pair.oldDocument.name} na plik{' '}
                     {item.pair.newDocument.name} <br /> zaplanowaną na{' '}
                     {format(parseJSON(item.showDate), 'dd-MM-yyyy HH:mm')}?
                 </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', margin: '30px 0 10px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', m: 1 }}>
                     <Button
                         variant="contained"
                         color="success"

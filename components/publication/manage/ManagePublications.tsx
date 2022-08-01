@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { ManagePublicationsContext } from '../../contexts/publication/ManagePublication';
 import ManagePublicationsRow from './ManagePublicationRow';
 import Sort from './Sort';
 import ManagePublicationsPagination from './ManagePublicationsPagination';
+import BigListItem from '../../../assets/BigListItem';
 
 
 const PostPublication = () => {
@@ -15,9 +16,8 @@ const PostPublication = () => {
                     alignItems: 'center',
                     justifyItems: 'center',
                     textAlign: 'center',
-                    marginBottom: '40px',
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 1fr',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 0.6fr 1fr',
                     gap: 2,
                 }}
             >
@@ -31,8 +31,11 @@ const PostPublication = () => {
                 <Sort />
             </Box>
             {publications?.data?.elements?.map((item) => (
-                <ManagePublicationsRow key={item.id} item={item} />
+                <BigListItem>
+                    <ManagePublicationsRow key={item.id} item={item} />
+                </BigListItem>
             ))}
+
             <ManagePublicationsPagination />
         </>
     );

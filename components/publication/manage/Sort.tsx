@@ -20,6 +20,7 @@ const Container = styled.form`
     justify-content: center;
     gap: 15px;
     text-align: center;
+    z-index: 999;
 `;
 
 const orderOptions = ['ASC', 'DESC'];

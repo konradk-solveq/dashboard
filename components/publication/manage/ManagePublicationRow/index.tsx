@@ -17,13 +17,8 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
         <Box
             sx={{
                 alignItems: 'center',
-                justifyItems: 'center',
-                fontSize: '1.2rem',
-                textAlign: 'center',
-                margin: '40px 0 0',
-                height: '45px',
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 60px 1fr',
+                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 0.1fr 1fr',
                 gap: 2,
             }}
         >
@@ -43,7 +38,7 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
                 {format(parseJSON(item.publicationDate), 'dd-MM-yyyy HH:mm')}
             </Typography>
             <Checkbox sx={{ margin: '0' }} checked={item.draft} readOnly />
-            <Box>
+            <Box sx={{ display: 'flex' }}>
                 <Button variant="contained" onClick={() => setEditMode((prev) => !prev)} type="button">
                     Edytuj
                 </Button>
