@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ManagePublicationsContext } from '../../contexts/publication/ManagePublication';
 import ManagePublicationsRow from './ManagePublicationRow';
 import Sort from './Sort';
 import ManagePublicationsPagination from './ManagePublicationsPagination';
 import BigListItem from '../../../assets/BigListItem';
 
-
 const PostPublication = () => {
-
+    const { publications } = useContext(ManagePublicationsContext);
     return (
         <>
             <Box
