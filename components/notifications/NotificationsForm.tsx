@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Box, Input, Typography } from '@mui/material/';
 import Select from 'react-select';
-import notificationStyle from '../../styles/NotificationsForm.module.css';
 import { FormValues } from '../typings/Notifications';
+import Modal from '../../assets/components/modal';
 
 interface IProps {
     langOptions: { value: string; label: string }[];
@@ -27,6 +27,13 @@ const NotificationsForm: React.FC<IProps> = ({
         control,
         reset,
     } = useForm<FormValues>({ shouldUnregister: true, defaultValues: preloadedValues });
+    const modalRef = useRef<HTMLInputElement | null>(null);
+
+    const closeModal = (e: React.MouseEvent<HTMLElement>) => {
+        if (modalRef.current === e.target) {
+            handleOpen();
+        }
+    };
 
     const handleClick = (data) => {
         preloadedValues ? changeNotification(data, preloadedValues.id) : newNotificationHandler(data);
@@ -36,60 +43,84 @@ const NotificationsForm: React.FC<IProps> = ({
     const onSubmit = (data) => handleClick(data);
 
     return (
-        <form className={notificationStyle.content} onSubmit={handleSubmit(onSubmit)}>
-            <Box className={notificationStyle.contentblock}>
-                <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
-                    <Typography variant="h5">Tytuł</Typography>
-                    <Box>
-                        <Input
-                            className={notificationStyle.title}
-                            type="text"
-                            {...register('title', { required: true })}
-                        />
-                        <Box>{errors.title && <Typography variant="caption">Tytuł jest wymagany.</Typography>}</Box>
-                    </Box>
-                </Box>
-                <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
-                    <Typography variant="h5">Treść</Typography>
-                    <Box>
-                        <textarea {...register('message', { required: true })} />
-                        <Box>{errors.message && <Typography variant="caption">Treść jest wymagana.</Typography>}</Box>
-                    </Box>
-                </Box>
-
-                <Box sx={{ display: 'flex', width: '400px', justifyContent: 'space-between', mt: 2 }}>
-                    <Typography variant="h5">Język</Typography>
-                    <Box sx={{ width: '320px', fontSize: '16px', fontWeight: 300 }}>
-                        <Controller
-                            control={control}
-                            rules={{ required: 'Język jest wymagany.' }}
-                            name="language"
-                            render={({ field }) => (
-                                <Select
-                                    instanceId="language"
-                                    placeholder="Wybierz..."
-                                    options={langOptions}
-                                    {...field}
-                                />
-                            )}
-                        />
-                        <Box sx={{ mt: 1 }}>
-                            {errors.language && (
-                                <Typography variant="caption">{(errors.language as any).message}</Typography>
-                            )}
+        <Modal
+            title="Dodaj Powiadomienie"
+            closeIcon={true}
+            onClickRef={closeModal}
+            refProps={modalRef}
+            onCloseFunction={handleOpen}
+        >
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Box>
+                    <Box sx={{ display: 'flex', width: '350px', justifyContent: 'space-between', mt: 2 }}>
+                        <Typography variant="h5">Tytuł</Typography>
+                        <Box>
+                            <Input
+                                sx={{ fontSize: '16px', width: '250px' }}
+                                disableUnderline={true}
+                                className="document-input-form"
+                                type="text"
+                                {...register('title', { required: true })}
+                            />
+                            <Box>{errors.title && <Typography variant="caption">Tytuł jest wymagany.</Typography>}</Box>
                         </Box>
                     </Box>
+                    <Box sx={{ display: 'flex', width: '350px', justifyContent: 'space-between', mt: 2 }}>
+                        <Typography variant="h5">Treść</Typography>
+                        <Box>
+                            <Input
+                                className="document-input-form"
+                                disableUnderline={true}
+                                multiline
+                                sx={{
+                                    fontSize: '16px',
+                                    minHeight: '35px',
+                                    maxHeight: '30vh',
+                                    overflowY: 'scroll',
+                                    width: '250px',
+                                    display: 'flex',
+                                    fontWeight: 300,
+                                }}
+                                {...register('message', { required: true })}
+                            />
+                            <Box>
+                                {errors.message && <Typography variant="caption">Treść jest wymagana.</Typography>}
+                            </Box>
+                        </Box>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', width: '350px', justifyContent: 'space-between', mt: 2, mb: 2 }}>
+                        <Typography variant="h5">Język</Typography>
+                        <Box sx={{ width: '250px', fontSize: '16px', fontWeight: 300 }}>
+                            <Controller
+                                control={control}
+                                rules={{ required: 'Język jest wymagany.' }}
+                                name="language"
+                                render={({ field }) => (
+                                    <Select
+                                        instanceId="language"
+                                        className="document-select-form"
+                                        placeholder="Wybierz..."
+                                        options={langOptions}
+                                        {...field}
+                                    />
+                                )}
+                            />
+                            <Box sx={{ mt: 1 }}>
+                                {errors.language && (
+                                    <Typography variant="caption">{(errors.language as any).message}</Typography>
+                                )}
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button variant="contained" color="success" type="submit">
+                            Zapisz
+                        </Button>
+                    </Box>
                 </Box>
-                <Box className={notificationStyle.buttonContainer}>
-                    <Button variant="contained" color="error" onClick={handleOpen}>
-                        Wyjdź
-                    </Button>
-                    <Button variant="contained" color="success" type="submit">
-                        Zapisz
-                    </Button>
-                </Box>
-            </Box>
-        </form>
+            </form>
+        </Modal>
     );
 };
 

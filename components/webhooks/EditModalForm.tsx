@@ -43,6 +43,7 @@ const EditModalForm = () => {
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Input
                 className="document-input-form document-select-form"
+                sx={{ minWidth: '250px', fontWeight: 200 }}
                 disableUnderline={true}
                 placeholder="Title"
                 {...register('title')}
@@ -60,6 +61,7 @@ const EditModalForm = () => {
                     minHeight: '35px',
                     maxHeight: '30vh',
                     overflowY: 'scroll',
+                    fontWeight: 200,
                 }}
                 defaultValue={hookToEdit?.metadata?.description}
                 required
@@ -87,7 +89,7 @@ const EditModalForm = () => {
             >
                 {results.auth.verificationMethods.map((event) =>
                     event ? (
-                        <MenuItem style={{ fontSize: '14px' }} key={event} value={event.split(/(?=[A-Z])/)}>
+                        <MenuItem style={{ fontSize: '14px', fontWeight: 200 }} key={event} value={event}>
                             {event}
                         </MenuItem>
                     ) : null,
@@ -106,6 +108,7 @@ const EditModalForm = () => {
                             minHeight: '35px',
                             maxHeight: '30vh',
                             overflowY: 'scroll',
+                            fontWeight: 200,
                         }}
                         required
                     />
