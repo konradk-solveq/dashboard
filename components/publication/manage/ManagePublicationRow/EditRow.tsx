@@ -7,14 +7,28 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { ManagePublicationsContext } from '../../../contexts/publication/ManagePublication';
-import { EditFormValues, EditRowProps, Files } from '../../../typings/ManagePublications';
+import { EditFormValues, EditRowProps, Files, Publication } from '../../../typings/ManagePublications';
 
 const mapOptions = (optionsArray: Files['terms'] | Files['policy']) => {
     return optionsArray.map((item) => (
-        <MenuItem style={{ fontSize: '14px' }} key={item.id} value={item.id}>
+        <MenuItem sx={{ fontSize: '14px' }} key={item.id} value={item.id}>
             {item.name}
         </MenuItem>
     ));
+};
+
+const mapLanguageOptions = (publication: Publication) => {
+    const languageArray = publication.pair.newDocument.contents
+        .map((content) => content.language)
+        .concat(publication.pair.oldDocument.contents.map((content) => content.language));
+    // Returns all duplicates - available languages for both old and new document
+    return languageArray
+        .filter((item, index) => languageArray.indexOf(item) !== index)
+        .map((language) => (
+            <MenuItem sx={{ fontSize: '14px' }} key={language} value={language}>
+                {language.toUpperCase()}
+            </MenuItem>
+        ));
 };
 
 const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
@@ -59,7 +73,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
 
     const handleTypeChange = () => {
         if (publicationType === 'terms') {
-            setValueOfMultiple(['oldDocument', 'newDocument'], terms[0].id);
+            setValueOfMultiple(['oldDocument', 'newDocument'], terms[0]?.id);
         }
         if (publicationType === 'policy') {
             setValueOfMultiple(['oldDocument', 'newDocument'], policy[0]?.id);
@@ -76,7 +90,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
             showDate: data.showDate,
             publicationDate: data.publicationDate,
             draft: data.draft,
-            fallbackLanguage: item.fallbackLanguage,
+            fallbackLanguage: data.fallbackLanguage,
         };
         publicationMutation.mutate({ id: item.id, data: hookToUpload });
         setEditMode((prev: boolean) => !prev);
@@ -98,7 +112,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                 sx={{
                     alignItems: 'center',
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 0.1fr 1fr',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 80px 40px 176px',
                     gap: 2,
                 }}
             >
@@ -164,6 +178,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                         render={({ field }) => (
                             <DatePicker
                                 showTimeSelect
+                                wrapperClassName="date-picker"
                                 timeIntervals={15}
                                 timeFormat="HH:mm"
                                 dateFormat="dd/MM/yyyy HH:mm"
@@ -190,6 +205,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                             <DatePicker
                                 showTimeSelect
                                 timeIntervals={15}
+                                wrapperClassName="date-picker"
                                 timeFormat="HH:mm"
                                 dateFormat="dd/MM/yyyy HH:mm"
                                 selected={publicationDate}
@@ -207,6 +223,19 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                         }}
                     />
                 </Box>
+                <Controller
+                    name="fallbackLanguage"
+                    control={control}
+                    render={({ field }) => (
+                        <Select
+                            defaultValue={item.fallbackLanguage}
+                            className="document-select-form"
+                            onChange={field.onChange}
+                        >
+                            {mapLanguageOptions(item)}
+                        </Select>
+                    )}
+                />
                 <Box component="label" sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Controller
                         name="draft"
@@ -217,7 +246,13 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     />
                 </Box>
                 <Box display="flex">
-                    <Button onClick={handleSubmit(onSubmit)} variant="contained" color="success" type="submit">
+                    <Button
+                        onClick={handleSubmit(onSubmit)}
+                        variant="contained"
+                        sx={{ width: '80px' }}
+                        color="success"
+                        type="submit"
+                    >
                         Zapisz
                     </Button>
                     <Button
@@ -225,7 +260,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                         color="error"
                         onClick={() => setEditMode((prev) => !prev)}
                         type="button"
-                        sx={{ ml: 2 }}
+                        sx={{ ml: 2, width: '80px' }}
                     >
                         Anuluj
                     </Button>

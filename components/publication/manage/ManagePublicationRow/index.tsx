@@ -18,7 +18,7 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
             sx={{
                 alignItems: 'center',
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 0.1fr 1fr',
+                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 80px 40px 176px',
                 gap: 2,
             }}
         >
@@ -37,16 +37,24 @@ const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) =
             <Typography variant="h6" sx={{ fontWeight: 200 }}>
                 {format(parseJSON(item.publicationDate), 'dd-MM-yyyy HH:mm')}
             </Typography>
-            <Checkbox sx={{ margin: '0' }} checked={item.draft} readOnly />
+            <Typography variant="h6" sx={{ fontWeight: 200 }}>
+                {item.fallbackLanguage.toUpperCase()}
+            </Typography>
+            <Checkbox sx={{ margin: '0' }} checked={item.draft} disabled />
             <Box sx={{ display: 'flex' }}>
-                <Button variant="contained" onClick={() => setEditMode((prev) => !prev)} type="button">
+                <Button
+                    variant="contained"
+                    onClick={() => setEditMode((prev) => !prev)}
+                    sx={{ width: '80px' }}
+                    type="button"
+                >
                     Edytuj
                 </Button>
                 <Button
                     onClick={() => setDeleteModalState((prev) => !prev)}
                     variant="contained"
                     color="error"
-                    sx={{ ml: '16px' }}
+                    sx={{ ml: '16px', width: '80px' }}
                 >
                     Usuń
                 </Button>

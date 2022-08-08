@@ -7,7 +7,11 @@ import ManagePublicationsPagination from './ManagePublicationsPagination';
 import BigListItem from '../../../assets/BigListItem';
 
 const PostPublication = () => {
-    const { publications } = useContext(ManagePublicationsContext);
+    const {
+        publications: {
+            data: { elements },
+        },
+    } = useContext(ManagePublicationsContext);
     return (
         <>
             <Box
@@ -16,8 +20,10 @@ const PostPublication = () => {
                     justifyItems: 'center',
                     textAlign: 'center',
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 0.6fr 1fr',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 80px 40px 176px',
                     gap: 2,
+                    margin: '16px',
+                    padding: '8px 16px',
                 }}
             >
                 <Typography variant="h5">Typ Publikacji</Typography>
@@ -25,11 +31,11 @@ const PostPublication = () => {
                 <Typography variant="h5">Nowy dokument</Typography>
                 <Typography variant="h5">Data pokazania</Typography>
                 <Typography variant="h5">Data wygaśniecia starego dokumentu</Typography>
+                <Typography variant="h5">Domyślny Język</Typography>
                 <Typography variant="h5">Draft</Typography>
-
                 <Sort />
             </Box>
-            {publications?.data?.elements?.map((item) => (
+            {elements?.map((item) => (
                 <BigListItem>
                     <ManagePublicationsRow key={item.id} item={item} />
                 </BigListItem>

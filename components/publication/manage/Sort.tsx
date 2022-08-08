@@ -33,9 +33,9 @@ const Sort: React.FC = () => {
 
     const { handleSubmit, register } = useForm<SortFormValues>({
         defaultValues: {
-            type: 'policy',
+            type: '',
             limit: 10,
-            orderBy: `${orderOptions[0]}_${orderByOptions[0]}`,
+            orderBy: `${orderOptions[1]}_${orderByOptions[0]}`,
         },
     });
 
@@ -57,7 +57,7 @@ const Sort: React.FC = () => {
             }}
         >
             <Button variant="contained" onClick={() => setOpenModal((prev) => !prev)}>
-                Opcje
+                Sortuj
             </Button>
 
             {openModal && (
@@ -75,7 +75,12 @@ const Sort: React.FC = () => {
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center', mt: '2' }}>
                         <label htmlFor="limit">Limit publikacji na stronie</label>
-                        <Select {...register('limit')} sx={{ width: '210px' }} className="document-select-form">
+                        <Select
+                            {...register('limit')}
+                            sx={{ width: '210px' }}
+                            defaultValue={10}
+                            className="document-select-form"
+                        >
                             <MenuItem style={{ fontSize: '14px' }} value="10">
                                 10
                             </MenuItem>
@@ -92,24 +97,29 @@ const Sort: React.FC = () => {
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center', mt: '2' }}>
                         <label htmlFor="order">Sortowanie</label>
-                        <Select {...register('orderBy')} sx={{ width: '210px' }} className="document-select-form">
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[0]}`}>
-                                Data pokazania rosnąco
-                            </MenuItem>
+                        <Select
+                            {...register('orderBy')}
+                            sx={{ width: '210px' }}
+                            defaultValue={`${orderOptions[1]}_${orderByOptions[0]}`}
+                            className="document-select-form"
+                        >
                             <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[1]}_${orderByOptions[0]}`}>
                                 Data pokazania malejąco
                             </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[1]}`}>
-                                Data publikacji rosnąco
+                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[0]}`}>
+                                Data pokazania rosnąco
                             </MenuItem>
                             <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[1]}_${orderByOptions[1]}`}>
                                 Data publikacji malejąco
                             </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[2]}`}>
-                                ID rosnąco
+                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[1]}`}>
+                                Data publikacji rosnąco
                             </MenuItem>
                             <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[1]}_${orderByOptions[2]}`}>
                                 ID malejąco
+                            </MenuItem>
+                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[2]}`}>
+                                ID rosnąco
                             </MenuItem>
                         </Select>
                     </Box>

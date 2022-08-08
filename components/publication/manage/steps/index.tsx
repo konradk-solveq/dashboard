@@ -167,6 +167,7 @@ export const Step2: React.FC = () => {
                             render={({ field }) => (
                                 <DatePicker
                                     selected={field.value}
+                                    wrapperClassName="date-picker"
                                     onChange={(date: Date) => field.onChange(date)}
                                     showTimeSelect
                                     timeIntervals={15}
@@ -194,6 +195,7 @@ export const Step2: React.FC = () => {
                                     selected={field.value}
                                     onChange={(date: Date) => field.onChange(date)}
                                     showTimeSelect
+                                    wrapperClassName="date-picker"
                                     timeIntervals={15}
                                     timeFormat="HH:mm"
                                     dateFormat="dd/MM/yyyy HH:mm"

@@ -18,8 +18,16 @@ const Manage: React.FC = () => {
     }
 
     return (
-        <Container>
-            <Container sx={{ maxWidth: '1200px', height: '100%', p: '30px', marginX: 'auto' }}>
+        <Container maxWidth={false}>
+            <Container
+                maxWidth={false}
+                sx={{
+                    minWidth: '950px',
+                    maxWidth: '1400px',
+                    p: '30px',
+                    textAlign: 'center',
+                }}
+            >
                 <ManagePublications />
             </Container>
         </Container>
