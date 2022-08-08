@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Container, Typography, Box, Button } from '@mui/material/';
-import { NotificationsContext } from '../../components/notifications/NotificationsApi';
 import NotificationsGroupForm from '../../components/notifications/NotificationsGroupForm';
 import NotificationsForm from '../../components/notifications/NotificationsForm';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
@@ -8,34 +7,29 @@ import {
     getAvailableLanguages,
     typeOptions,
     langOffline,
-    editedObject,
+    parseNotification,
     displayLanguageLabel,
 } from '../../components/notifications/NotificationsUtils';
 
-import { LabelTypes } from '../../components/typings/Notifications';
+import { NotificationsContext } from '../../components/contexts/notifications';
+import { ContentType, FormValues, GroupFormValues } from '../../components/typings/Notifications';
+import useAppConfig from '../../components/services/useConfig';
 
-interface IProps {
-    handleNotificationGroup: (object: object) => void;
-    editNotificationGroup: (object: object, id: number) => void;
-    editValues: any;
-    handleExit: () => void;
-}
+const EditNotification: React.FC = () => {
+    const { editValues } = useContext(NotificationsContext);
 
-const NotificationsEdit: React.FC<IProps> = ({
-    handleNotificationGroup,
-    editNotificationGroup,
-    editValues,
-    handleExit,
-}) => {
-    const { availableLanguages } = useContext(NotificationsContext);
-    const [modalShow, setModalShow] = useState(false);
-    const [formShow, setFormShow] = useState(false);
-    const [preloadedValues, setPreloadedValues] = useState(null);
-    const [preloadedGroupValues, setPreloadedGroupValues] = useState(editValues);
-    const [notifications, setNotifications] = useState([]);
-    const [displayEmpty, setDisplayEmpty] = useState(false);
+    const [modalShow, setModalShow] = useState<boolean>(false);
+    const [formShow, setFormShow] = useState<boolean>(false);
+    const [notificationTranslation, setNotificationTranslation] = useState<FormValues>(null);
+    const [notificationAggregate, setNotificationAggregate] = useState<GroupFormValues>();
+    const [notifications, setNotifications] = useState<ContentType[]>([]);
+    const [displayEmpty, setDisplayEmpty] = useState<boolean>(false);
 
-    const langOptions: LabelTypes[] = getAvailableLanguages([...availableLanguages]);
+    const {
+        data: { langs },
+    } = useAppConfig();
+
+    const langOptions = getAvailableLanguages(langs);
 
     useEffect(() => {
         if (editValues === null) {
@@ -46,9 +40,9 @@ const NotificationsEdit: React.FC<IProps> = ({
                 undefinedDate = true;
             }
 
-            const editedGroup = editedObject(editValues, langOptions, typeOptions, undefinedDate);
-            setNotifications(editValues.notifications);
-            setPreloadedGroupValues(editedGroup);
+            const editedGroup = parseNotification(editValues, langOptions, typeOptions, undefinedDate);
+            setNotifications(editValues.contents);
+            setNotificationAggregate(editedGroup);
             setFormShow(true);
         }
     }, [editValues]);
@@ -57,7 +51,7 @@ const NotificationsEdit: React.FC<IProps> = ({
         notifications?.length > 0 ? setDisplayEmpty(false) : setDisplayEmpty(true);
     }, [notifications]);
 
-    const newNotificationHandler = (data) => {
+    const newNotificationTranslation = (data: FormValues) => {
         setModalShow(!modalShow);
         const newNotification = {
             id: Date.now(),
@@ -68,22 +62,22 @@ const NotificationsEdit: React.FC<IProps> = ({
     };
 
     const handleOpen = (): void => {
-        setPreloadedValues('');
+        setNotificationTranslation(null);
         setModalShow(!modalShow);
     };
-    const handleEdit = (idProperty: number) => {
-        const object = findId(idProperty);
-        const newPreloadedValue = {
-            id: object.id,
-            language: displayLanguageLabel(langOptions, object),
-            title: object.data.title,
-            message: object.data.text,
+    const handleEdit = (id: number) => {
+        const notificationData = findId(id);
+        const newTranslation = {
+            id: notificationData.id,
+            language: displayLanguageLabel(langOptions, notificationData),
+            title: notificationData.data.title,
+            message: notificationData.data.text,
         };
-        setPreloadedValues(newPreloadedValue);
+        setNotificationTranslation(newTranslation);
         setModalShow(!modalShow);
     };
 
-    const changeNotification = (editedNotification, preId: number) => {
+    const changeNotificationTranslation = (editedNotification: FormValues, preId: number) => {
         const edited = {
             id: preId,
             language: editedNotification.language.value,
@@ -102,7 +96,7 @@ const NotificationsEdit: React.FC<IProps> = ({
         setModalShow(!modalShow);
     };
 
-    const handleDelete = (idProperty: number) => setNotifications(filterId(idProperty));
+    const handleDelete = (id: number) => setNotifications(filterId(id));
 
     const findId = (idElement: number) => notifications.find((x) => x.id === idElement);
 
@@ -146,11 +140,8 @@ const NotificationsEdit: React.FC<IProps> = ({
                             {notifications.map((notification) => {
                                 return (
                                     <NotificationsGroupRow
-                                        id={notification.id}
+                                        notification={notification}
                                         key={notification.id}
-                                        language={notification.language}
-                                        title={notification.data.title}
-                                        text={notification.data.text}
                                         editHandler={handleEdit}
                                         deleteHandler={handleDelete}
                                     />
@@ -176,9 +167,9 @@ const NotificationsEdit: React.FC<IProps> = ({
                     <NotificationsForm
                         handleOpen={handleOpen}
                         langOptions={langOptions}
-                        newNotificationHandler={newNotificationHandler}
-                        preloadedValues={preloadedValues}
-                        changeNotification={changeNotification}
+                        newNotificationTranslation={newNotificationTranslation}
+                        notificationTranslation={notificationTranslation}
+                        changeNotificationTranslation={changeNotificationTranslation}
                     />
                 )}
                 <Box sx={{ ml: '48px' }}>
@@ -187,10 +178,7 @@ const NotificationsEdit: React.FC<IProps> = ({
                             notifications={notifications}
                             langOptions={langOptions}
                             typeOptions={typeOptions}
-                            preloadedGroupValues={preloadedGroupValues}
-                            handleNotificationGroup={handleNotificationGroup}
-                            editNotificationGroup={editNotificationGroup}
-                            handleExit={handleExit}
+                            notificationAggregate={notificationAggregate}
                         />
                     )}
                 </Box>
@@ -199,4 +187,4 @@ const NotificationsEdit: React.FC<IProps> = ({
     );
 };
 
-export default NotificationsEdit;
+export default EditNotification;

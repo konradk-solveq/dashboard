@@ -41,8 +41,6 @@ const PostPublicationForm: React.FC = () => {
 
     const isLoading = () => files.policy.isLoading || files.terms.isLoading || postPublicationMutation.isLoading;
 
-    console.log(files.policy.isLoading || files.terms.isLoading || postPublicationMutation.isLoading);
-
     const steps: Steps = [
         // todo : check why useCallback doesn't trace dependencies required
         <Step0 handlePublicationTypeSelect={handlePublicationTypeSelect} />,

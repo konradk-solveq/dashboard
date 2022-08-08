@@ -8,17 +8,17 @@ import Modal from '../../assets/components/modal';
 interface IProps {
     langOptions: { value: string; label: string }[];
     handleOpen(): void;
-    newNotificationHandler: (data: object) => void;
-    preloadedValues: FormValues;
-    changeNotification: (data: object, id: number) => void;
+    newNotificationTranslation: (data: object) => void;
+    notificationTranslation: FormValues;
+    changeNotificationTranslation: (data: object, id: number) => void;
 }
 
 const NotificationsForm: React.FC<IProps> = ({
     langOptions,
     handleOpen,
-    newNotificationHandler,
-    preloadedValues,
-    changeNotification,
+    newNotificationTranslation,
+    notificationTranslation,
+    changeNotificationTranslation,
 }) => {
     const {
         register,
@@ -26,7 +26,7 @@ const NotificationsForm: React.FC<IProps> = ({
         formState: { errors },
         control,
         reset,
-    } = useForm<FormValues>({ shouldUnregister: true, defaultValues: preloadedValues });
+    } = useForm<FormValues>({ shouldUnregister: true, defaultValues: notificationTranslation });
     const modalRef = useRef<HTMLInputElement | null>(null);
 
     const closeModal = (e: React.MouseEvent<HTMLElement>) => {
@@ -35,12 +35,12 @@ const NotificationsForm: React.FC<IProps> = ({
         }
     };
 
-    const handleClick = (data) => {
-        preloadedValues ? changeNotification(data, preloadedValues.id) : newNotificationHandler(data);
+    const onSubmit = (data: FormValues) => {
+        notificationTranslation
+            ? changeNotificationTranslation(data, notificationTranslation.id)
+            : newNotificationTranslation(data);
         reset(data);
     };
-
-    const onSubmit = (data) => handleClick(data);
 
     return (
         <Modal

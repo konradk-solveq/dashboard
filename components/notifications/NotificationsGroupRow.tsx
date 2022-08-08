@@ -1,14 +1,20 @@
 import React from 'react';
 import { Button, Box } from '@mui/material/';
+import { ContentType } from '../typings/Notifications';
 
 const NotificationsGroupRow: React.FC<{
-    language: string;
-    title: string;
-    text: string;
-    id: number;
-    deleteHandler;
-    editHandler;
-}> = ({ id, language, title, text, deleteHandler, editHandler }) => {
+    notification: ContentType;
+    deleteHandler: (id: number) => void;
+    editHandler: (id: number) => void;
+}> = ({
+    notification: {
+        id,
+        language,
+        data: { title, text },
+    },
+    deleteHandler,
+    editHandler,
+}) => {
     return (
         <Box display="grid" gridTemplateColumns="1fr 2fr 3fr 1fr" gap={2} width="100%" ml="24px" mb={2}>
             <Box className="notifications-item" sx={{ maxHeight: '35px', maxWidth: '40px' }}>

@@ -3,7 +3,8 @@ export interface LanguageType {
     displayName: string;
 }
 
-export type NotificationsType = {
+
+export interface Notification {
     id: number;
     type: string;
     name: string;
@@ -20,12 +21,16 @@ export type NotificationsType = {
     fallbackLanguage: string;
 };
 
-export type sortParamsType = {
-    sortOrder: string;
-    sortTypeOrder: string;
-    type: string;
-    defaultURL?: string;
-};
+export type Notifications = {
+    elements: Notification[],
+    limit: number,
+    links: {
+        prev?: URL,
+        self: URL,
+        next?: URL,
+    }
+    total: number,
+}
 
 export type LabelWithUndefined = { value?: string; label: string };
 
@@ -33,14 +38,15 @@ export type NotificationObjectType = {
     id?: number;
     type: 'promo' | 'info' | 'documents';
     name: string;
-    contents: contentType[];
+    contents: ContentType[];
     showDate: Date;
     expirationDate: Date;
     draft: boolean;
     fallbackLanguage: string;
 };
 
-export type contentType = {
+export type ContentType = {
+    id: number;
     language: string;
     data: { title: string; text: string };
     actions?: actionsType[];
@@ -55,7 +61,7 @@ export type actionsType = {
 
 export type SingleNotification = {
     id: number;
-} & contentType;
+} & ContentType;
 
 export type GroupFormValues = {
     fallbackLanguage: LabelTypes;
@@ -81,3 +87,37 @@ export type FormValues = {
 export type notificationActionType = 'internal_uri' | 'external_uri' | 'email';
 
 export type notificationDataType = Omit<NotificationObjectType, 'name' | 'contents'>;
+
+export type Config = {
+    name: string,
+    lang: string,
+    langs: {
+        name:string,
+        displayName: string,
+    }[],
+    tags: {
+        enumValue: string,
+        i18nValue: string,
+    }[],
+    surfaces: {
+        enumValue: string,
+        i18nValue: string,
+    }[],
+    difficulties: {
+        enumValue: string,
+        i18nValue: string,
+    }[],
+    version: string,
+    reactions: {
+        enumValue: string,
+        i18nValue: string,
+    }[],
+    uiTranslations: {
+        controlSums: {
+            code: string,
+            controlSum: string
+        }[],
+        codes: string[]
+    },
+    ads: object,
+}

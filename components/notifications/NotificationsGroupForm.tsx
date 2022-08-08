@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Button, Typography, Alert, Box, IconButton } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,25 +8,20 @@ import { notificationObject } from './NotificationsUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { LabelTypes, SingleNotification, GroupFormValues } from '../typings/Notifications';
+import { NotificationsContext } from '../contexts/notifications';
 
 interface IProps {
     langOptions: LabelTypes[];
     typeOptions: LabelTypes[];
     notifications: SingleNotification[];
-    preloadedGroupValues: GroupFormValues;
-    handleNotificationGroup: (object: object) => void;
-    editNotificationGroup: (object: object, id: number) => void;
-    handleExit: () => void;
+    notificationAggregate: GroupFormValues;
 }
 
 const NotificationsGroupForm: React.FC<IProps> = ({
     typeOptions,
     langOptions,
     notifications,
-    preloadedGroupValues,
-    handleNotificationGroup,
-    editNotificationGroup,
-    handleExit,
+    notificationAggregate,
 }) => {
     const {
         register,
@@ -36,17 +31,15 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         reset,
     } = useForm<GroupFormValues>({
         shouldUnregister: true,
-        defaultValues: preloadedGroupValues,
+        defaultValues: notificationAggregate,
     });
     const [alert, setAlert] = useState(false);
-    const [currentDate, setCurrentDate] = useState<Date>();
-    const getDate = () => setCurrentDate(new Date());
 
-    useEffect(() => {
-        getDate();
-    }, []);
+    const { putNotificationAggregate, postNotificationAggregate, exitModal } = useContext(NotificationsContext);
 
-    const handleClick = (data) => {
+    const currentDate = new Date();
+
+    const onSubmit: SubmitHandler<GroupFormValues> = (data: GroupFormValues) => {
         const mainNotification = notifications.find((el) => el.language === data.fallbackLanguage.value);
         if (!mainNotification) {
             setAlert(true);
@@ -58,19 +51,20 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                 expirationDate: data.expDate,
                 fallbackLanguage: data.fallbackLanguage.value,
                 showDate: data.showDate,
-                type: data.type.value,
+                type: data.type.value as 'promo' | 'info' | 'documents',
             },
             mainNotification.data.title,
             notifications,
         );
 
-        preloadedGroupValues ? editNotificationGroup(object, preloadedGroupValues.id) : handleNotificationGroup(object);
+        notificationAggregate
+            ? putNotificationAggregate(object, notificationAggregate.id)
+            : postNotificationAggregate(object);
         reset(data);
     };
 
-    const handleExitClick = () => handleExit();
+    const handleExitClick = () => exitModal();
 
-    const onSubmit: SubmitHandler<GroupFormValues> = (data) => handleClick(data);
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Box>

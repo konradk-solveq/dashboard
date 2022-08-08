@@ -3,7 +3,6 @@ import axios from 'axios';
 import React, { createContext, useState } from 'react';
 import useFiles from '../../services/useFiles';
 import usePaginatedQuery from '../../services/usePaginatedQuery';
-import usePublications from '../../services/usePublications';
 import { ManagePublicationsContextProps } from '../../typings/ManagePublications';
 import endpoints from '../../utils/apiEndpoints';
 
@@ -28,16 +27,10 @@ const ManagePublicationsContainer: React.FC = ({ children }) => {
         limit: 10,
     });
 
+    const { page, limit, type, order, orderBy } = params;
+
     const files = useFiles();
-    const publications = usePaginatedQuery(
-        'publications',
-        endpoints.publications,
-        params.page,
-        params.limit,
-        params.type,
-        params.order,
-        params.orderBy,
-    );
+    const publications = usePaginatedQuery('publications', endpoints.publications, page, limit, type, order, orderBy);
 
     const publicationMutation = useMutation(putPublication, {
         onSuccess: () => {

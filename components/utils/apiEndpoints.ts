@@ -1,10 +1,14 @@
 const API_PATH = '/api'
 const PUBLICATIONS_PATH = `${API_PATH}/publications`
+const NOTIFICATIONS_PATH = `${API_PATH}/notifications`
+const APPLICATION_PATH = `${API_PATH}/application`
 
 const endpoints = {
     policy: `${PUBLICATIONS_PATH}/manage/documents?type=policy`,
     terms: `${PUBLICATIONS_PATH}/manage/documents?type=terms`,
-    publications: `${PUBLICATIONS_PATH}/manage`
+    publications: `${PUBLICATIONS_PATH}/manage`,
+    notifications: `${NOTIFICATIONS_PATH}/manage`,
+    config: `${APPLICATION_PATH}/config`
 }
 
 export default endpoints

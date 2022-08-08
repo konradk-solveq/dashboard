@@ -68,7 +68,6 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
     }
 
     if (publicationDeletion.isError) {
-        console.log(publicationDeletion);
         return (
             <Backdrop>
                 <Container>

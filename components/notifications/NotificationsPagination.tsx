@@ -1,28 +1,23 @@
 import React, { useContext } from 'react';
 import { Button, Container, Divider } from '@mui/material/';
-import { NotificationsContext } from './NotificationsApi';
-import { sortParamsType } from '../typings/Notifications';
+import { NotificationsContext } from '../contexts/notifications';
 
-const NotificationsPagination: React.FC<{ sortParams: sortParamsType }> = ({ sortParams }) => {
-    const { prevPageURL } = useContext(NotificationsContext);
-    const { nextPageURL } = useContext(NotificationsContext);
-    const { retrieveNotifications } = useContext(NotificationsContext);
+const NotificationsPagination: React.FC = () => {
+    const { setSortParams, notificationsQuery, sortParams } = useContext(NotificationsContext);
 
-    const handleNextPage = () =>
-        retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type, nextPageURL);
-    const handlePrevPage = () =>
-        retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type, prevPageURL);
+    const handlePrevPage = () => setSortParams((prev) => ({ ...prev, page: prev.page - 1 }));
+    const handleNextPage = () => setSortParams((prev) => ({ ...prev, page: prev.page + 1 }));
 
     return (
         <Container>
             <Divider />
             <Container sx={{ m: '10px 20px' }}>
-                {prevPageURL && (
+                {sortParams.page > 0 && notificationsQuery.data?.links?.prev && (
                     <Button variant="contained" sx={{ mr: '20px' }} onClick={handlePrevPage}>
                         Poprzednia
                     </Button>
                 )}
-                {nextPageURL && (
+                {!notificationsQuery.isPreviousData && notificationsQuery.data?.links?.next && (
                     <Button variant="contained" onClick={handleNextPage}>
                         Następna
                     </Button>

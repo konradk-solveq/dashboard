@@ -1,133 +1,54 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { NextPage } from 'next';
-import { Container, Typography, Button, Alert, Box, CircularProgress } from '@mui/material/';
-import NotificationsEditPage from '../notifications/NotificationsEdit';
-import NotificationsContainer from '../../components/notifications/NotificationsApi';
+import { Container, Typography, Button, CircularProgress, Box } from '@mui/material/';
+import EditNotification from '../notifications';
 import NotificationsRow from '../../components/notifications/NotificationsRow';
-import { NotificationsContext } from '../../components/notifications/NotificationsApi';
-import { getNotifications } from '../../components/notifications/NotificationsUtils';
 import NotificationsSortBar from '../../components/notifications/NotificationsSortBar';
 import NotificationsPagination from '../../components/notifications/NotificationsPagination';
 import BigListItem from '../../assets/BigListItem';
+import { Notification } from '../../components/typings/Notifications';
+import NotificationsContainer, { NotificationsContext } from '../../components/contexts/notifications';
+import ConfirmDeleteModal from '../../components/notifications/ConfirmDeleteModal';
 
-const NotificationMenager: React.FC<{}> = ({}) => {
+const NotificationManager: React.FC<{}> = ({}) => {
     const {
-        notifications,
-        postNotifications,
-        deleteNotifications,
-        retrieveNotifications,
-        editNotifications,
-        sortParams,
-        loading,
+        notificationsQuery,
+        checkLoading,
+        deleteNotificationMutation,
+        handleAddNotificationClick,
+        addNotificationFormState,
     } = useContext(NotificationsContext);
-    const [addFormShow, setAddFormShow] = useState(false);
-    const [preloadedNotifications, setPreloadedNotifications] = useState([]);
-    const [editValues, setEditValues] = useState(null);
-    const [deletePopUp, setDeletePopUp] = useState(false);
-    const [deleteId, setDeleteId] = useState();
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [deleteId, setDeleteId] = useState<number>(null);
 
-    useEffect(() => {
-        notifications && setPreloadedNotifications(getNotifications(notifications));
-    }, [notifications]);
+    let notifications = notificationsQuery?.data?.elements;
 
-    function editHandler(idProperty) {
-        const object = preloadedNotifications.find((x) => x.id === idProperty);
-        setEditValues(object);
-        setAddFormShow(!addFormShow);
+    function openDeleteModal(id: Notification['id']) {
+        setDeleteId(id);
+        setDeleteModal(!deleteModal);
     }
-
-    function deleteHandler(idProperty) {
-        const object = preloadedNotifications.find((x) => x.id === idProperty);
-        setDeleteId(object.id);
-        setDeletePopUp(!deletePopUp);
-    }
-
-    const handleClick = (e) => {
-        e.preventDefault();
-        setEditValues(null);
-        setAddFormShow(!addFormShow);
-    };
-
-    const handleExit = () => {
-        setEditValues(null);
-        setAddFormShow(!addFormShow);
-    };
-
-    const handleNotificationGroup = (notificationGroup) => {
-        postNotifications(notificationGroup).then((res) => {
-            retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
-        });
-        setAddFormShow(!addFormShow);
-    };
-
-    const editNotificationGroup = (notificationGroup, idProperty) => {
-        editNotifications(notificationGroup, idProperty).then((res) => {
-            retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
-        });
-        setAddFormShow(!addFormShow);
-    };
 
     const confirmDelete = () => {
-        deleteNotifications(deleteId).then((res) => {
-            retrieveNotifications(sortParams.sortOrder, sortParams.sortTypeOrder, sortParams.type);
-        });
+        deleteNotificationMutation.mutate(deleteId);
+        setDeleteModal(!deleteModal);
+    };
 
-        setDeletePopUp(!deletePopUp);
+    const changeDeleteModalState = () => {
+        setDeleteModal((prev) => !prev);
     };
 
     return (
         <Container>
             <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
-                {addFormShow ? (
-                    <NotificationsEditPage
-                        handleNotificationGroup={handleNotificationGroup}
-                        editNotificationGroup={editNotificationGroup}
-                        editValues={editValues}
-                        handleExit={handleExit}
-                    />
+                {addNotificationFormState ? (
+                    <EditNotification />
                 ) : (
                     <>
-                        {deletePopUp && (
-                            <Alert
-                                severity="error"
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                                action={
-                                    <Box>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            sx={{ width: '120px', ml: 'auto', mr: '30px' }}
-                                            onClick={confirmDelete}
-                                        >
-                                            Tak
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="success"
-                                            sx={{ width: '120px' }}
-                                            onClick={() => setDeletePopUp(!deletePopUp)}
-                                        >
-                                            Nie
-                                        </Button>
-                                    </Box>
-                                }
-                            >
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                    }}
-                                >
-                                    <Typography variant="h5" style={{ fontWeight: 300 }}>
-                                        Czy na pewno chcesz usunąć grupę powiadomień?
-                                    </Typography>
-                                </Box>
-                            </Alert>
+                        {deleteModal && (
+                            <ConfirmDeleteModal
+                                confirmDelete={confirmDelete}
+                                changeDeleteModalState={changeDeleteModalState}
+                            />
                         )}
 
                         <Typography
@@ -141,16 +62,16 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             }}
                         >
                             Powiadomienia
-                            <Button variant="contained" onClick={handleClick}>
+                            <Button variant="contained" type="button" onClick={() => handleAddNotificationClick()}>
                                 Dodaj Powiadomienie
                             </Button>
                         </Typography>
 
-                        <NotificationsSortBar sortParams={sortParams} />
+                        <NotificationsSortBar />
 
                         <Typography sx={{ m: '20px' }}>Lista Powiadomień</Typography>
 
-                        {loading ? (
+                        {checkLoading() ? (
                             <Container
                                 sx={{
                                     display: 'flex',
@@ -164,21 +85,17 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             >
                                 <CircularProgress />
                             </Container>
-                        ) : preloadedNotifications?.length > 0 ? (
+                        ) : notifications.length > 0 ? (
                             <Box sx={{ minHeight: '300px' }}>
-                                {preloadedNotifications.map((notification) => {
-                                    return (
-                                        <BigListItem hover={true}>
-                                            <NotificationsRow
-                                                id={notification.id}
-                                                key={notification.id}
-                                                title={notification.groupTitle}
-                                                deleteHandler={deleteHandler}
-                                                editHandler={editHandler}
-                                            />
-                                        </BigListItem>
-                                    );
-                                })}
+                                {notifications.map((notification) => (
+                                    <BigListItem hover={true}>
+                                        <NotificationsRow
+                                            notification={notification}
+                                            key={notification.id}
+                                            openDeleteModal={openDeleteModal}
+                                        />
+                                    </BigListItem>
+                                ))}
                             </Box>
                         ) : (
                             <Container
@@ -196,7 +113,7 @@ const NotificationMenager: React.FC<{}> = ({}) => {
                             </Container>
                         )}
 
-                        <NotificationsPagination sortParams={sortParams} />
+                        <NotificationsPagination />
                     </>
                 )}
             </Container>
@@ -208,7 +125,7 @@ const NotificationsPage: NextPage<{}> = ({}) => {
     return (
         <>
             <NotificationsContainer>
-                <NotificationMenager />
+                <NotificationManager />
             </NotificationsContainer>
         </>
     );

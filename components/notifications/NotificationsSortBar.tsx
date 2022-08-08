@@ -2,24 +2,35 @@ import React, { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Divider, Box } from '@mui/material/';
 import Select from 'react-select';
-import { sortingTypesDisplay, sortingByOrder, sortingByOrderType, displaySortLabel } from './NotificationsUtils';
-import { sortParamsType } from '../typings/Notifications';
-import { NotificationsContext } from './NotificationsApi';
+import { sortingTypesDisplay, orderByOptions, orderOptions, displaySortLabel } from './NotificationsUtils';
+import { NotificationsContext } from '../contexts/notifications';
+import { LabelWithUndefined } from '../typings/Notifications';
 
-const NotificationsSortBar: React.FC<{ sortParams?: sortParamsType }> = ({ sortParams }) => {
-    const { retrieveNotifications } = useContext(NotificationsContext);
+type FormValues = {
+    type: LabelWithUndefined;
+    order: LabelWithUndefined;
+    orderBy: LabelWithUndefined;
+};
 
-    const { handleSubmit, control } = useForm({
+const NotificationsSortBar: React.FC = () => {
+    const { sortParams, setSortParams } = useContext(NotificationsContext);
+
+    const { handleSubmit, control } = useForm<FormValues>({
         shouldUnregister: true,
         defaultValues: {
             type: displaySortLabel(sortingTypesDisplay, sortParams.type),
-            sortOrder: displaySortLabel(sortingByOrder, sortParams.sortOrder),
-            sortTypeOrder: displaySortLabel(sortingByOrderType, sortParams.sortTypeOrder),
+            order: displaySortLabel(orderOptions, sortParams.order),
+            orderBy: displaySortLabel(orderByOptions, sortParams.orderBy),
         },
     });
 
-    const onSubmit = (data) => {
-        retrieveNotifications(data.sortOrder.value, data.sortTypeOrder.value, data.type.value);
+    const onSubmit = (data: FormValues) => {
+        setSortParams((prev) => ({
+            ...prev,
+            order: data.order.value,
+            orderBy: data.orderBy.value,
+            type: data.type.value,
+        }));
     };
 
     return (
@@ -60,27 +71,17 @@ const NotificationsSortBar: React.FC<{ sortParams?: sortParamsType }> = ({ sortP
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="sortOrder"
+                        name="order"
                         render={({ field }) => (
-                            <Select
-                                options={sortingByOrder}
-                                placeholder="Wybierz..."
-                                instanceId="sortOrder"
-                                {...field}
-                            />
+                            <Select options={orderOptions} placeholder="Wybierz..." instanceId="order" {...field} />
                         )}
                     />
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="sortTypeOrder"
+                        name="orderBy"
                         render={({ field }) => (
-                            <Select
-                                options={sortingByOrderType}
-                                placeholder="Wybierz..."
-                                instanceId="sortTypeOrder"
-                                {...field}
-                            />
+                            <Select options={orderByOptions} placeholder="Wybierz..." instanceId="orderBy" {...field} />
                         )}
                     />
                 </Box>

@@ -28,7 +28,7 @@ const EditModal: React.FC = () => {
     }
 
     return (
-        <Modal refProps={modalRef} onClick={closeModal}>
+        <Modal refProps={modalRef} onClickRef={closeModal}>
             {modalState.type === modalType[0] && <EditCreate />}
             {modalState.type === modalType[1] && <Delete />}
             {modalState.type === modalType[2] && <Error />}

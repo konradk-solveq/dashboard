@@ -1,29 +1,16 @@
 import { parseISO } from 'date-fns';
 import {
     LanguageType,
-    NotificationsType,
     LabelTypes,
     NotificationObjectType,
-    contentType,
+    ContentType,
     notificationDataType,
     LabelWithUndefined,
+    GroupFormValues,
 } from '../typings/Notifications';
 
-export const getAvailableLanguages = (langTypes?: LanguageType[]) => {
-    return langTypes?.map((lang) => ({ value: lang.name, label: lang.displayName }));
-};
-
-export const getNotifications = (notificationsTypes: NotificationsType[]) => {
-    return notificationsTypes.map((el) => ({
-        id: el.id,
-        fallbackLanguage: el.fallbackLanguage,
-        type: el.type,
-        expirationDate: el.expirationDate,
-        showDate: el.showDate,
-        notifications: el.contents,
-        groupTitle: el.name,
-        draft: el.draft,
-    }));
+export const getAvailableLanguages = (availableLangsArray?: LanguageType[]) => {
+    return availableLangsArray?.map((lang) => ({ value: lang.name, label: lang.displayName }));
 };
 
 export const typeOptions: LabelTypes[] = [
@@ -39,12 +26,12 @@ export const sortingTypesDisplay: LabelWithUndefined[] = [
     { value: '', label: 'Wszystkie' },
 ];
 
-export const sortingByOrder: LabelTypes[] = [
+export const orderOptions: LabelTypes[] = [
     { value: 'DESC', label: 'Malejąco' },
     { value: 'ASC', label: 'Rosnąco' },
 ];
 
-export const sortingByOrderType: LabelTypes[] = [
+export const orderByOptions: LabelTypes[] = [
     { value: 'name', label: 'Nazwa' },
     { value: 'showDate', label: 'Data Pokazania' },
     { value: 'expirationDate', label: 'Data Wygaśnięcia' },
@@ -68,7 +55,7 @@ export let defaultFormValues = {
 export const notificationObject = (
     data: notificationDataType,
     notificationTitle: string,
-    notifications: contentType[],
+    notifications: ContentType[],
 ): NotificationObjectType => {
     const object = {
         type: data.type,
@@ -82,14 +69,22 @@ export const notificationObject = (
     return object;
 };
 
-export const editedObject = (data, langObjects, typeObjects, undefinedDate) => {
-    let object;
+export const parseNotification = (
+    data: NotificationObjectType,
+    langObjects: {
+        value: string;
+        label: string;
+    }[],
+    typeObjects: LabelTypes[],
+    undefinedDate: boolean,
+) => {
+    let object: GroupFormValues;
     try {
         object = {
             id: data.id,
             fallbackLanguage: displayLanguageLabel(langObjects, data),
-            showDate: new Date(parseISO(data.showDate)),
-            expDate: undefinedDate ? undefined : new Date(parseISO(data.expirationDate)),
+            showDate: new Date(parseISO(data.showDate as any) as Date),
+            expDate: undefinedDate ? undefined : new Date(parseISO(data.expirationDate as any) as Date),
             type: displayTypeLabel(typeObjects, data),
             draft: data.draft,
         };
@@ -100,9 +95,16 @@ export const editedObject = (data, langObjects, typeObjects, undefinedDate) => {
     return object;
 };
 
-export const displayLanguageLabel = (objects, property) =>
-    objects.find((lang) => lang.value === (property.fallbackLanguage || property.language));
+export const displayLanguageLabel = (
+    objects: {
+        value: string;
+        label: string;
+    }[],
+    property: any,
+) => objects.find((lang) => lang.value === (property.fallbackLanguage || property.language));
 
-export const displayTypeLabel = (objects, property) => objects.find((type) => type.value === property.type);
+export const displayTypeLabel = (objects: LabelTypes[], property: NotificationObjectType) =>
+    objects.find((type) => type.value === property.type);
 
-export const displaySortLabel = (objects, property) => objects.find((el) => el.value === property);
+export const displaySortLabel = (objects: LabelWithUndefined[], property: string) =>
+    objects.find((el) => el.value === property);

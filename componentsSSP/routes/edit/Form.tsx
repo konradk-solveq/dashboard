@@ -104,7 +104,6 @@ const Form: React.FC<Props> = (props) => {
             body.description = newDescription;
         }
         manage.updateMetadata(id, body as any);
-        console.log(data.isPublic, isPublic);
         if (data.isPublic !== isPublic) {
             isPublic ? manage.publish(id) : manage.unpublish(id);
         }

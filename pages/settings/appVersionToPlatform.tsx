@@ -85,7 +85,6 @@ const AppVersionToPlatform: React.FC<{}> = () => {
     }, [notification]);
 
     useEffect(() => {
-        console.log(appVersionToPlatforms);
         if (appVersionToPlatforms && appVersionToPlatforms.length) {
             setAppVersionToPlatformsState([...appVersionToPlatforms]);
         }

@@ -17,7 +17,6 @@ async function createAppVersionHandler(req: NextApiRequest & ExtendedApiRequest,
     const { axios } = req.locals;
     const { body } = req;
     const { status, data } = await axios.post(`/app-version/manage`, body);
-    console.log('ee',status, data);
 
     return res.status(status).json({});
 }
