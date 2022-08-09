@@ -7,6 +7,7 @@ const endpoints = {
     policy: `${PUBLICATIONS_PATH}/manage/documents?type=policy`,
     terms: `${PUBLICATIONS_PATH}/manage/documents?type=terms`,
     publications: `${PUBLICATIONS_PATH}/manage`,
+    documents: `${PUBLICATIONS_PATH}/manage/documents`,
     notifications: `${NOTIFICATIONS_PATH}/manage`,
     config: `${APPLICATION_PATH}/config`
 }

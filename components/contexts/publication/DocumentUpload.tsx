@@ -1,10 +1,15 @@
-import React, { createContext, useState } from 'react';
+import { useMutation, UseMutationResult, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import axios from 'axios';
+import React, { createContext } from 'react';
+import useAppConfig from '../../services/useConfig';
+import { Config } from '../../typings/Notifications';
 
-import { UploadFormValues, DocumentUploadContextProps, AvailableLanguages } from '../../typings/PublicationSection';
+import { UploadFormValues } from '../../typings/PublicationSection';
+import endpoints from '../../utils/apiEndpoints';
 
 const defaultFormValues: UploadFormValues = {
     documentName: '',
-    documentType: '',
+    documentType: 'terms',
     documents: [
         {
             language: 'pl',
@@ -21,37 +26,33 @@ const defaultFormValues: UploadFormValues = {
     ],
 };
 
-const postLegalDocument = async (data: object) =>
-    await fetch(`/api/publications/manage/documents`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'content-type': 'application/json' },
-    });
+interface IProps {
+    defaultFormValues: UploadFormValues;
+    appConfig: UseQueryResult<Config>;
+    newDocument: UseMutationResult;
+}
 
-export const DocumentUploadContext = createContext<DocumentUploadContextProps>(null!);
+const postLegalDocument = async ({ data }) => axios.post(endpoints.documents, data);
 
-const getAvailableLanguages = async (setter: React.Dispatch<React.SetStateAction<AvailableLanguages[]>>) => {
-    const data = await fetch(`/api/application/config`);
-    const result = await data.json();
-    return setter(result.langs);
-};
+export const DocumentUploadContext = createContext<IProps>(null!);
 
 const DocumentUploadContainer: React.FC = ({ children }) => {
-    const [availableLanguages, setAvailableLanguages] = useState<AvailableLanguages[]>([
-        {
-            name: '',
-            displayName: '',
+    const queryClient = useQueryClient();
+    const appConfig = useAppConfig();
+
+    const newDocument = useMutation(postLegalDocument, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['policies']);
+            queryClient.invalidateQueries(['terms']);
         },
-    ]);
+    });
 
     return (
         <DocumentUploadContext.Provider
             value={{
                 defaultFormValues,
-                availableLanguages,
-                setAvailableLanguages,
-                getAvailableLanguages,
-                postLegalDocument,
+                appConfig,
+                newDocument,
             }}
         >
             {children}

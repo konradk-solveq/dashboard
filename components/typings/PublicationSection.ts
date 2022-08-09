@@ -1,19 +1,14 @@
 import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
-import React, { SetStateAction } from "react";
-import {  DeepRequired, FieldArrayWithId, FieldError,  FieldErrorsImpl,  FieldValue, UseFormRegister, UseFormReturn} from "react-hook-form";
+import React from "react";
+import {  UseFormReturn} from "react-hook-form";
 import { Files } from "./ManagePublications";
-
-export interface DocumentUploadProgressProps {
-    message: String,
-    setIsLoading: React.Dispatch<React.SetStateAction<any>>
-}
 
 export interface UploadFormValues {
     documentName: string,
     documentType: string,
     documents: {
         language: string;
-        file: string;
+        file: FileResult;
         actions: {
             type: 'internal_uri',
             value: string,
@@ -24,17 +19,19 @@ export interface UploadFormValues {
 };
 
 export interface AvailableLanguages {
-   name: String,
-    displayName: String
+   name: string,
+    displayName: string
 }
 
-export interface DocumentUploadContextProps {
-    defaultFormValues: UploadFormValues;
-    availableLanguages: AvailableLanguages[],
-    setAvailableLanguages: React.Dispatch<React.SetStateAction<AvailableLanguages[]>>;
-    postLegalDocument(data: object): void;
-    getAvailableLanguages(setter: React.Dispatch<SetStateAction<AvailableLanguages[]>>): Promise<void>;
-};
+export type FileResult = {
+    data: object,
+    actions: {
+        type: 'internal_uri',
+        value: string,
+        text: string,
+        match: string,
+    }[]
+}
 
 export interface UploadFormProps {
     loadingError: Boolean
@@ -103,16 +100,4 @@ export type Step3Props = {
 
 export type SubmittedProps = {
     isError: Boolean
-}
-export interface UploadFormFieldsProps {
-    fields: FieldArrayWithId<FieldValue<String>>[],
-    register: UseFormRegister<UploadFormValues>,
-    remove(index: number): void,
-    availableLanguages: 
-    {
-        name: String;
-        displayName: String;
-    }[],
-    getValues(arg0: string): string | number | boolean,
- errors: FieldErrorsImpl<DeepRequired<UploadFormValues>>
 }

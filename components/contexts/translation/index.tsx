@@ -94,7 +94,7 @@ const TranslationsContainer: React.FC<{}> = ({ children }) => {
         </TranslationsContext.Provider>
     );
 };
-export function errorHandler({ status, statusText }) {
+function errorHandler({ status, statusText }) {
     if (status >= 400) {
         throw new Error(statusText);
     }
