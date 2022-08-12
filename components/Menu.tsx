@@ -41,7 +41,7 @@ const MenuDrawer: React.FC<{}> = ({ children }) => {
                     <Item text="Lista Tras" target="/routes/list" />
                     <Item text="Wyróżnione Trasy" target="/routes/featured" />
                     <Item text="Statystyki Tras" target="/routes/statistics" />
-                    <Item text="Raporty" target="/routes/raports" />
+                    <Item text="Raporty" target="/routes/reports" />
                 </List>
                 <Divider textAlign="left" sx={{ fontSize: 18 }}>
                     Publikacje

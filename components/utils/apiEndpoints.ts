@@ -16,6 +16,7 @@ const endpoints = {
     webhooks: `${WEBHOOKS_PATH}/manage`,
     auth: `${WEBHOOKS_PATH}/manage/verification-method-list`,
     events: `${WEBHOOKS_PATH}/manage/event-list`,
+    report: `${API_PATH}/report`
 }
 
 export default endpoints

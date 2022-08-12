@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box } from '@mui/material/';
-import fetcher from '../../helpers/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+import getQueryFn from '../../components/utils/getQueryFn';
+import endpoints from '../../components/utils/apiEndpoints';
+import config from '../../helpers/queryConfig';
 
 export default function Page({}) {
     enum ReportType {
@@ -15,10 +17,16 @@ export default function Page({}) {
         [ReportType.NUMBER_OF_ACCOUNTS]: 'Liczba kont',
     };
 
-    const { data: dates, error: errorDates } = useSWR<any>('/api/report', fetcher);
+    const { data: dates, error: errorDates } = useQuery<any>(['reports'], () => getQueryFn(endpoints.report), {
+        ...config,
+    });
     const date = dates ? dates[0] : undefined;
     const [chosenDate, setChosenDate] = useState(date);
-    const { data: reports, error: reportsError } = useSWR<any>(`/api/report/${chosenDate}`, fetcher);
+    const { data: reports, error: reportsError } = useQuery<any>(
+        ['reports', chosenDate],
+        () => getQueryFn(`${endpoints.report}/${chosenDate}`),
+        { ...config },
+    );
     return (
         <Container
             sx={{
