@@ -1,8 +1,10 @@
 import { createContext, useCallback, useState } from 'react';
-import useSWR from 'swr';
 import qs from 'querystring';
-
-const fetcher = (url) => fetch(url).then((r) => r.json());
+import axios, { AxiosResponse } from 'axios';
+import endpoints from '../../utils/apiEndpoints';
+import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query';
+import getQueryFn from '../../utils/getQueryFn';
+import config from '../../../helpers/queryConfig';
 
 export interface LanguageData {
     id?: number;
@@ -16,12 +18,12 @@ export type LanguagesGetData = LanguageData[];
 type LimitAndOffset = { limit: number; offset: number };
 interface TranslationsContextProps {
     languages: LanguagesGetData;
-    updateLanguages: (data: LanguageData) => {};
-    deleteLanguage: (code: string) => {};
+    updateLanguages: UseMutationResult<AxiosResponse<LanguageData>>;
+    deleteLanguage: UseMutationResult;
     uiTranslations: any;
     uiTranslationCount: number;
-    updateUiTranslation: (data: any) => {};
-    deleteUiTranslation: (id: number) => {};
+    updateUiTranslation: UseMutationResult;
+    deleteUiTranslation: UseMutationResult;
     setLimitsAndOffset: (limitAndOffset: LimitAndOffset) => void;
     limitAndOffset: LimitAndOffset;
     hasError: boolean;
@@ -29,22 +31,50 @@ interface TranslationsContextProps {
 
 export const TranslationsContext = createContext<TranslationsContextProps>(null!);
 
+const updateLanguageHandler = ({ data: { code, name, icon, isActive } }) =>
+    axios.post(endpoints.languages, { code, name, icon, isActive });
+
+const deleteLanguageHandler = ({ code }) => axios.delete(`${endpoints.languages}/${code}`);
+
+const updateUiTranslationHandler = ({ data }) => axios.post(endpoints.uiTranslation, data);
+
+const deleteUiTranslationHandler = ({ id }) => axios.delete(`${endpoints.uiTranslation}/${id}`);
+
 const TranslationsContainer: React.FC<{}> = ({ children }) => {
     const [limitAndOffset, setLimitAndOffsetState] = useState<LimitAndOffset>({ limit: 5, offset: 0 });
     const {
         data: languages,
-        revalidate: revalidateLanguages,
-        error: errorLanguage,
-    } = useSWR<LanguagesGetData>('/api/application/languages/manage', fetcher);
+        refetch: revalidateLanguages,
+        isError: errorLanguage,
+    } = useQuery(['languages'], () => getQueryFn(endpoints.languages), { ...config });
+
     const {
         data: uiTranslations,
-        revalidate: revalidateUiTranslations,
-        error: errorUiTranslations,
-    } = useSWR(`/api/application/ui-translation/manage?${qs.stringify(limitAndOffset)}`, fetcher);
-    const updateLanguages = useCallback(
-        (data: LanguageData) => updateLanguageHandler(data).then(errorHandler).then(revalidateLanguages),
-        [revalidateLanguages],
-    );
+        refetch: revalidateUiTranslations,
+        isError: errorUiTranslations,
+    } = useQuery(['uiTranslation'], () => getQueryFn(`${endpoints.uiTranslation}?${qs.stringify(limitAndOffset)}`), {
+        ...config,
+    });
+
+    const updateLanguages = useMutation(updateLanguageHandler, {
+        onSuccess: () => revalidateLanguages(),
+    });
+    const deleteLanguage = useMutation(deleteLanguageHandler, {
+        onSuccess: () => revalidateLanguages(),
+    });
+    const updateUiTranslation = useMutation(updateUiTranslationHandler, {
+        onSuccess: () => {
+            revalidateLanguages();
+            revalidateUiTranslations();
+        },
+    });
+    const deleteUiTranslation = useMutation(deleteUiTranslationHandler, {
+        onSuccess: () => {
+            revalidateLanguages();
+            revalidateUiTranslations();
+        },
+    });
+
     const setLimitsAndOffset = useCallback(
         (limitAndOffset: LimitAndOffset) => {
             setLimitAndOffsetState(limitAndOffset);
@@ -52,29 +82,7 @@ const TranslationsContainer: React.FC<{}> = ({ children }) => {
         },
         [revalidateUiTranslations],
     );
-    const deleteLanguage = useCallback(
-        (code: string) => deleteLanguageHandler(code).then(errorHandler).then(revalidateLanguages),
-        [revalidateLanguages],
-    );
-    const updateUiTranslation = useCallback(
-        (data) =>
-            updateUiTranslationHandler(data)
-                .then(errorHandler)
-                .then(() => {
-                    revalidateUiTranslations();
-                    revalidateLanguages();
-                }),
-        [revalidateUiTranslations, revalidateLanguages],
-    );
-    const deleteUiTranslation = useCallback(
-        (id: number) =>
-            deleteUiTranslationHandler(id)
-                .then(errorHandler)
-                .then(() => {
-                    revalidateUiTranslations();
-                }),
-        [revalidateUiTranslations],
-    );
+
     return (
         <TranslationsContext.Provider
             value={{
@@ -99,27 +107,5 @@ function errorHandler({ status, statusText }) {
         throw new Error(statusText);
     }
 }
-function updateLanguageHandler(data: LanguageData) {
-    const { code, name, isActive, icon } = data;
-    return fetch(`/api/application/languages/manage`, {
-        method: 'POST',
-        body: JSON.stringify({ code, name, isActive, icon }),
-    });
-}
-function deleteLanguageHandler(code: string) {
-    return fetch(`/api/application/languages/manage/${code}`, {
-        method: 'DELETE',
-    });
-}
-function updateUiTranslationHandler(data) {
-    return fetch(`/api/application/ui-translation/manage`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-    });
-}
-function deleteUiTranslationHandler(id: number) {
-    return fetch(`/api/application/ui-translation/manage/${id}`, {
-        method: 'DELETE',
-    });
-}
+
 export default TranslationsContainer;

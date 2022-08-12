@@ -30,17 +30,11 @@ const TranslationAddForm = ({ newUiTranslations, setNewUiTranslationsValue, addU
                     multiple={false}
                     required
                     hidden
-                    value={version}
                     id="file"
                     onChange={(e) => setNewUiTranslationsValue('file')(e.target.files[0])}
                 />
                 <label htmlFor="file">
-                    <Button
-                        sx={{ width: '20%' }}
-                        variant="contained"
-                        component="span"
-                        className="document-select-form document-input-form"
-                    >
+                    <Button sx={{ width: '20%' }} variant="contained" component="span">
                         Dodaj Plik
                     </Button>
                 </label>

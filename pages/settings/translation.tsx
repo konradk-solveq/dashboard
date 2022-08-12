@@ -46,25 +46,38 @@ const TranslationMenage: React.FC<{}> = () => {
     };
     const useNotification =
         (fn, message, errMessage) =>
-        async (...args) => {
+        (...args) => {
             try {
-                await fn(...args);
+                fn(...args);
                 setNotification(message);
             } catch (err) {
                 setNotification(errMessage);
             }
         };
-    const updateLanguagesAndNotify = useNotification(updateLanguages, message.save, message.error);
-    const deleteLanguageAndNotify = useNotification(deleteLanguage, message.delete, message.error);
+    const updateLanguagesAndNotify = useNotification(
+        ({ data }) => updateLanguages.mutate({ data }),
+
+        message.save,
+        message.error,
+    );
+    const deleteLanguageAndNotify = useNotification(
+        ({ code }) => deleteLanguage.mutate({ code }),
+        message.delete,
+        message.error,
+    );
     const addUiTranslationAndNotify = useNotification(
         async ({ version, code, file }) => {
             const data = await readFromFile(file);
-            await updateUiTranslation({ version, code, translation: data });
+            updateUiTranslation.mutate({ data: { version, code, translation: data } });
         },
         message.save,
         message.error,
     );
-    const deleteUiTranslationAndNotify = useNotification(deleteUiTranslation, message.delete, message.error);
+    const deleteUiTranslationAndNotify = useNotification(
+        ({ id }) => deleteUiTranslation.mutate({ id }),
+        message.delete,
+        message.error,
+    );
     useEffect(() => {
         if (notification) {
             const id = setTimeout(() => setNotification(''), 2000);

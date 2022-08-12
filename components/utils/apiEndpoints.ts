@@ -9,7 +9,9 @@ const endpoints = {
     publications: `${PUBLICATIONS_PATH}/manage`,
     documents: `${PUBLICATIONS_PATH}/manage/documents`,
     notifications: `${NOTIFICATIONS_PATH}/manage`,
-    config: `${APPLICATION_PATH}/config`
+    config: `${APPLICATION_PATH}/config`,
+    languages: `${APPLICATION_PATH}/languages/manage`,
+    uiTranslation: `${APPLICATION_PATH}/ui-translation/manage`,
 }
 
 export default endpoints

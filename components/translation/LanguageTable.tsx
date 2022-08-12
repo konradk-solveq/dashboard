@@ -37,15 +37,14 @@ const LanguageTable = ({
                               isActive={isActive}
                               icon={icon}
                               setter={setLanguagesValue(id)}
-                              saveHandler={() =>
-                                  updateLanguagesAndNotify(
-                                      languageState.reduce((previous, current) =>
-                                          current.code === code ? current : previous,
-                                      ),
-                                  )
-                              }
+                              saveHandler={() => {
+                                  const data = languageState.reduce((previous, current) =>
+                                      current.code === code ? current : previous,
+                                  );
+                                  updateLanguagesAndNotify({ data });
+                              }}
                               deleteHandler={() => {
-                                  deleteLanguageAndNotify(code);
+                                  deleteLanguageAndNotify({ code });
                               }}
                           />
                       );

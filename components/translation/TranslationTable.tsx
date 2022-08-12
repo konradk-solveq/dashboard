@@ -18,6 +18,7 @@ const TranslationTable = ({
                         <Select
                             className="document-select-form"
                             value={limitAndOffset.limit}
+                            defaultValue=""
                             onChange={(e) => {
                                 setLimitsAndOffset({ limit: parseInt(e.target.value), offset: 0 });
                             }}
@@ -67,7 +68,7 @@ const TranslationTable = ({
                 uiTranslationsState.map(({ controlSum, id, version, code, translation }) => (
                     <TranslationRow
                         controlSum={controlSum}
-                        deleteHandler={() => deleteUiTranslationAndNotify(id)}
+                        deleteHandler={() => deleteUiTranslationAndNotify({ id })}
                         code={code}
                         version={version}
                         key={id}
