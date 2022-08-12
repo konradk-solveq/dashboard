@@ -8,7 +8,7 @@ import Success from './modal-states/Success';
 import Modal from '../../assets/components/modal';
 
 const EditModal: React.FC = () => {
-    const { manageModalState, modalState, modalType, isLoading } = useContext(ManageWebhookContext);
+    const { manageModalState, modalState, modalType, checkLoading } = useContext(ManageWebhookContext);
     const modalRef = useRef<HTMLInputElement | null>(null);
 
     const closeModal = (e: React.MouseEvent<HTMLElement>) => {
@@ -17,7 +17,7 @@ const EditModal: React.FC = () => {
         }
     };
 
-    if (isLoading) {
+    if (checkLoading) {
         return (
             <Box className="content">
                 <Box>

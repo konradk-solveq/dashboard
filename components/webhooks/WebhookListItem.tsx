@@ -19,7 +19,7 @@ const WebhooksListItem = ({ item }) => {
         <>
             <Grid item xs={2} sx={{ m: 2 }}>
                 <Card className="card-route" sx={{ p: 1 }}>
-                    <Box sx={{ maxHeight: '250px', overflowY: 'auto', minHeight: '250px' }}>
+                    <Box sx={{ height: '250px', overflowY: 'auto' }}>
                         <Typography variant="h5">{item.metadata.title}</Typography>
                         <Divider />
                         <Typography variant="subtitle2" sx={{ fontWeight: 200, fontSize: '16px' }}>

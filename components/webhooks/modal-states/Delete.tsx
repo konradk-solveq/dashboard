@@ -3,11 +3,11 @@ import { Button, Box, Typography } from '@mui/material/';
 import { ManageWebhookContext } from '../../contexts/settings/ManageWebhook';
 
 const Delete = () => {
-    const { hookToEdit, manageModalState, setIsLoading, apiHandler, deleteWebhook } = useContext(ManageWebhookContext);
+    const { hookToEdit, manageModalState, confirmDelete } = useContext(ManageWebhookContext);
 
-    const manageDeleteClick = async (id: string) => {
-        setIsLoading(true);
-        apiHandler(await deleteWebhook(id), id, 'delete');
+    const manageDeleteClick = () => {
+        confirmDelete.mutate({ id: hookToEdit.id });
+        manageModalState;
     };
 
     return (
@@ -17,12 +17,7 @@ const Delete = () => {
                 <Button variant="contained" color="success" onClick={() => manageModalState()}>
                     Anuluj
                 </Button>
-                <Button
-                    variant="contained"
-                    color="error"
-                    sx={{ ml: '15px' }}
-                    onClick={() => manageDeleteClick(hookToEdit.id)}
-                >
+                <Button variant="contained" color="error" sx={{ ml: '15px' }} onClick={manageDeleteClick}>
                     Usuń
                 </Button>
             </Box>

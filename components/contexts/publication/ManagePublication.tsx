@@ -1,12 +1,24 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import React, { createContext, useState } from 'react';
+import { useMutation, UseMutationResult, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import axios, { AxiosResponse } from 'axios';
+import React, { createContext, SetStateAction, useState } from 'react';
 import useFiles from '../../services/useFiles';
 import usePaginatedQuery from '../../services/usePaginatedQuery';
-import { ManagePublicationsContextProps } from '../../typings/ManagePublications';
+import { Files, Params, Publications } from '../../typings/ManagePublications';
 import endpoints from '../../utils/apiEndpoints';
 
-export const ManagePublicationsContext = createContext<ManagePublicationsContextProps>(null!);
+interface IProps {
+    params: Params;
+    setParams: React.Dispatch<SetStateAction<Params>>;
+    publications: UseQueryResult<Publications>;
+    files: {
+        policy: UseQueryResult<Files['policy']>;
+        terms: UseQueryResult<Files['terms']>;
+    };
+    publicationMutation: UseMutationResult;
+    publicationDeletion: UseMutationResult<AxiosResponse, any>;
+}
+
+export const ManagePublicationsContext = createContext<IProps>(null!);
 
 const putPublication = ({ id, data }) => {
     return axios.put(`${endpoints.publications}/${id}`, data);

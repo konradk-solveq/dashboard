@@ -36,7 +36,7 @@ const PostPublication = () => {
                 <Sort />
             </Box>
             {elements?.map((item) => (
-                <BigListItem>
+                <BigListItem key={item.id}>
                     <ManagePublicationsRow key={item.id} item={item} />
                 </BigListItem>
             ))}

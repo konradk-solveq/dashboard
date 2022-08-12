@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Select, TextField, Alert, Box, MenuItem } from '@mui/material/';
+import { Button, Input, Select, Alert, Box, MenuItem } from '@mui/material/';
 import { ManageWebhookContext } from '../contexts/settings/ManageWebhook';
 import { DefaultWebhookFormValues } from '../typings/Webhooks';
 
@@ -15,11 +15,9 @@ const Form = styled.form`
 
 const EditModalForm = () => {
     const { register, handleSubmit, watch } = useForm<DefaultWebhookFormValues>();
-    const { results, hookToEdit, manageModalState, apiHandler, setIsLoading, putWebhook, postWebhook } =
-        useContext(ManageWebhookContext);
+    const { hookToEdit, manageModalState, newWebhook, editWebhook, webhooksData } = useContext(ManageWebhookContext);
 
     const onSubmit = async (data: DefaultWebhookFormValues) => {
-        setIsLoading(true);
         const hookToUpload = {
             metadata: {
                 title: data.title,
@@ -31,11 +29,13 @@ const EditModalForm = () => {
         };
 
         if (!hookToEdit) {
-            apiHandler(await postWebhook(hookToUpload));
+            newWebhook.mutate({ data: hookToUpload });
         } else {
-            apiHandler(await putWebhook(hookToUpload, hookToEdit.id), hookToEdit.id, 'update');
+            editWebhook.mutate({ data: hookToUpload, id: hookToEdit.id });
         }
     };
+
+    const { events, auth } = webhooksData;
 
     const watchAuthType = watch('authType');
 
@@ -74,7 +74,7 @@ const EditModalForm = () => {
                 defaultValue={hookToEdit?.event}
                 required
             >
-                {results.events.events.map((event) => (
+                {events.data?.events.map((event: 'updateSettings' | 'createAppVersionToPlatform') => (
                     <MenuItem style={{ fontSize: '14px' }} key={event} value={event}>
                         {event}
                     </MenuItem>
@@ -87,10 +87,10 @@ const EditModalForm = () => {
                 defaultValue={hookToEdit?.verificationType}
                 required
             >
-                {results.auth.verificationMethods.map((event) =>
-                    event ? (
-                        <MenuItem style={{ fontSize: '14px', fontWeight: 200 }} key={event} value={event}>
-                            {event}
+                {auth.data?.verificationMethods.map((method) =>
+                    method ? (
+                        <MenuItem style={{ fontSize: '14px', fontWeight: 200 }} key={method} value={method}>
+                            {method}
                         </MenuItem>
                     ) : null,
                 )}

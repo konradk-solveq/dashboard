@@ -91,7 +91,7 @@ export type Params = {
     orderBy: string,
 }
 
-type Publications = {
+export type Publications = {
     elements: Publication[],
     limit: number,
     links: {
@@ -100,17 +100,6 @@ type Publications = {
         next?: URL,
     }
     total: number,
-}
-export interface ManagePublicationsContextProps {
-    params: Params,
-    setParams: React.Dispatch<SetStateAction<Params>>,
-    publications: UseQueryResult<Publications>,
-    files: {
-        policy: UseQueryResult<Files['policy']>
-        terms: UseQueryResult<Files['terms']>
-    },
-    publicationMutation: UseMutationResult,
-    publicationDeletion: UseMutationResult<AxiosResponse, any>,
 }
 
 export type SortFormValues = {

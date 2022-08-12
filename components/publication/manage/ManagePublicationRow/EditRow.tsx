@@ -1,7 +1,17 @@
 import { parseJSON } from 'date-fns';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Container, Box, MenuItem, Alert, Select, CircularProgress } from '@mui/material';
+import {
+    Button,
+    Checkbox,
+    Container,
+    Box,
+    MenuItem,
+    Alert,
+    Select,
+    CircularProgress,
+    FormControl,
+} from '@mui/material';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -39,8 +49,6 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
 
     const { terms, policy } = files;
 
-    const isInitialMount = useRef(true);
-
     const {
         handleSubmit,
         control,
@@ -61,24 +69,6 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
     });
 
     const publicationType = watch('type');
-
-    useEffect(() => {
-        if (isInitialMount.current) isInitialMount.current = false;
-        else handleTypeChange();
-    }, [publicationType]);
-
-    const setValueOfMultiple = (names: ['oldDocument', 'newDocument'], value: string) => {
-        names.forEach((name) => setValue(name, value));
-    };
-
-    const handleTypeChange = () => {
-        if (publicationType === 'terms') {
-            setValueOfMultiple(['oldDocument', 'newDocument'], terms[0]?.id);
-        }
-        if (publicationType === 'policy') {
-            setValueOfMultiple(['oldDocument', 'newDocument'], policy[0]?.id);
-        }
-    };
 
     const onSubmit = async (data: EditFormValues) => {
         const hookToUpload = {
@@ -120,13 +110,7 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     name="type"
                     control={control}
                     render={({ field }) => (
-                        <Select
-                            className="document-select-form"
-                            onChange={async (e) => {
-                                field.onChange(e.target.value);
-                            }}
-                            defaultValue={item.type}
-                        >
+                        <Select className="document-select-form" onChange={field.onChange} defaultValue={item.type}>
                             <MenuItem sx={{ fontSize: '14px' }} value="terms">
                                 Regulamin
                             </MenuItem>
@@ -143,11 +127,9 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('newDocument') } }}
                     render={({ field }) => (
                         <Select
-                            className="document-select-form"
                             defaultValue={item.pair.oldDocument.id}
-                            onChange={(e) => {
-                                field.onChange(e.target.value);
-                            }}
+                            className="document-select-form"
+                            onChange={field.onChange}
                         >
                             {publicationType === 'terms' && mapOptions(terms.data)}
                             {publicationType === 'policy' && mapOptions(policy.data)}
@@ -160,11 +142,9 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('oldDocument') } }}
                     render={({ field }) => (
                         <Select
-                            className="document-select-form"
                             defaultValue={item.pair.newDocument.id}
-                            onChange={(e) => {
-                                field.onChange(e.target.value);
-                            }}
+                            className="document-select-form"
+                            onChange={field.onChange}
                         >
                             {publicationType === 'terms' && mapOptions(terms.data)}
                             {publicationType === 'policy' && mapOptions(policy.data)}
