@@ -14,6 +14,7 @@ import {
     SubmittedProps,
 } from '../../../typings/PublicationSection';
 import { Files } from '../../../typings/ManagePublications';
+import add from 'date-fns/add';
 
 const NestedLabel = styled.label`
     display: flex;
@@ -85,9 +86,10 @@ export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
     useEffect(() => {
         if (activeFiles) {
             setValue('current', activeFiles[0]?.id);
-            setValue('next', activeFiles[0]?.id);
+            setValue('next', activeFiles[1]?.id);
         }
     }, [activeFiles]);
+
     return (
         <>
             <Box mb="80px">
@@ -105,6 +107,7 @@ export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
                                 className="document-select-form"
                                 sx={{ width: '200px', textAlign: 'center' }}
                                 onChange={field.onChange}
+                                defaultValue={activeFiles[0]?.id}
                             >
                                 {activeFiles?.map((file: AvailableFiles) => (
                                     <MenuItem style={{ fontSize: '14px' }} key={file.id} value={file.id}>
@@ -126,6 +129,7 @@ export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
                                 className="document-select-form"
                                 sx={{ width: '200px', textAlign: 'center' }}
                                 onChange={field.onChange}
+                                defaultValue={activeFiles[1]?.id}
                             >
                                 {activeFiles?.map((file: AvailableFiles) => (
                                     <MenuItem style={{ fontSize: '14px' }} key={file.id} value={file.id}>
@@ -143,8 +147,20 @@ export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
 
 export const Step2: React.FC = () => {
     const {
-        publishFormMethods: { control, getValues },
+        publishFormMethods: { control, getValues, setValue },
     } = useContext(PostPublicationContext);
+
+    const dateNow = new Date();
+    const showDate = add(dateNow, { minutes: 1 });
+    const publicationDate = add(dateNow, { minutes: 2 });
+
+    useEffect(() => {
+        setValue('showDate', showDate);
+        setValue('publicationDate', publicationDate);
+    }, []);
+
+    console.log(getValues('showDate'));
+    console.log(getValues('publicationDate'));
 
     return (
         <>
@@ -166,7 +182,7 @@ export const Step2: React.FC = () => {
                             }}
                             render={({ field }) => (
                                 <DatePicker
-                                    selected={field.value}
+                                    selected={showDate}
                                     wrapperClassName="date-picker"
                                     onChange={(date: Date) => field.onChange(date)}
                                     showTimeSelect
@@ -192,7 +208,7 @@ export const Step2: React.FC = () => {
                             }}
                             render={({ field }) => (
                                 <DatePicker
-                                    selected={field.value}
+                                    selected={publicationDate}
                                     onChange={(date: Date) => field.onChange(date)}
                                     showTimeSelect
                                     wrapperClassName="date-picker"

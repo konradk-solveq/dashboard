@@ -4,18 +4,19 @@ import NotificationsGroupForm from '../../components/notifications/Notifications
 import NotificationsForm from '../../components/notifications/NotificationsForm';
 import NotificationsGroupRow from '../../components/notifications/NotificationsGroupRow';
 import {
-    getAvailableLanguages,
     typeOptions,
-    langOffline,
     parseNotification,
     displayLanguageLabel,
 } from '../../components/notifications/NotificationsUtils';
 
 import { NotificationsContext } from '../../components/contexts/notifications';
-import { ContentType, FormValues, GroupFormValues } from '../../components/typings/Notifications';
-import useAppConfig from '../../components/services/useConfig';
+import { ContentType, FormValues, GroupFormValues, LabelTypes } from '../../components/typings/Notifications';
 
-const EditNotification: React.FC = () => {
+interface IProps {
+    langOptions: LabelTypes[];
+}
+
+const EditNotification: React.FC<IProps> = ({ langOptions }) => {
     const { editValues } = useContext(NotificationsContext);
 
     const [modalShow, setModalShow] = useState<boolean>(false);
@@ -24,12 +25,6 @@ const EditNotification: React.FC = () => {
     const [notificationAggregate, setNotificationAggregate] = useState<GroupFormValues>();
     const [notifications, setNotifications] = useState<ContentType[]>([]);
     const [displayEmpty, setDisplayEmpty] = useState<boolean>(false);
-
-    const {
-        data: { langs },
-    } = useAppConfig();
-
-    const langOptions = getAvailableLanguages(langs);
 
     useEffect(() => {
         if (editValues === null) {
@@ -58,7 +53,7 @@ const EditNotification: React.FC = () => {
             language: data.language.value,
             data: { title: data.title, text: data.message },
         };
-        setNotifications([...notifications, newNotification]);
+        setNotifications((prev) => [...prev, newNotification]);
     };
 
     const handleOpen = (): void => {
@@ -170,6 +165,7 @@ const EditNotification: React.FC = () => {
                         newNotificationTranslation={newNotificationTranslation}
                         notificationTranslation={notificationTranslation}
                         changeNotificationTranslation={changeNotificationTranslation}
+                        notifications={notifications}
                     />
                 )}
                 <Box sx={{ ml: '48px' }}>

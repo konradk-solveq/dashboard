@@ -29,6 +29,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
         formState: { errors },
         control,
         reset,
+        getValues,
     } = useForm<GroupFormValues>({
         shouldUnregister: true,
         defaultValues: notificationAggregate,
@@ -56,6 +57,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
             mainNotification.data.title,
             notifications,
         );
+        console.log(object);
 
         notificationAggregate
             ? putNotificationAggregate(object, notificationAggregate.id)
@@ -117,27 +119,39 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                                 />
                             )}
                         />
-                        {errors.type && <p>{(errors.type as any).message}</p>}
+                        {errors.type && <p>{(errors.type as any)?.message}</p>}
                     </Box>
-                    <Box className={notificationGroupStyle.container}>
+                    <Box className={notificationGroupStyle.container} sx={{ maxWidth: '200px' }}>
                         <Typography variant="h5">Data pokazania powiadomienia</Typography>
                         <Controller
                             control={control}
                             name="showDate"
-                            rules={{ required: 'Data pokazania jest wymagana.' }}
                             render={({ field }) => (
                                 <DatePicker
                                     wrapperClassName="date-picker"
                                     minDate={currentDate}
+                                    showTimeSelect
+                                    timeIntervals={15}
+                                    timeFormat="HH:mm"
+                                    dateFormat="dd/MM/yyyy HH:mm"
                                     placeholderText="Wybierz datę"
                                     onChange={(date) => field.onChange(date)}
                                     selected={field.value}
                                 />
                             )}
+                            rules={{
+                                required: 'Data pokazania jest wymagana.',
+                                validate: {
+                                    afterNow: (v) => v > new Date() || 'Data pokazania nie może być w przeszłości!',
+
+                                    beforeExpDate: (v) =>
+                                        v <= getValues('expDate') || 'Data pokazanie nie może być po dacie wygaśnięcia',
+                                },
+                            }}
                         />
-                        {errors.showDate && <p>{(errors.showDate as any).message}</p>}
+                        {errors.showDate && <Box sx={{ mt: 2 }}>{(errors.showDate as any)?.message}</Box>}
                     </Box>
-                    <Box className={notificationGroupStyle.container}>
+                    <Box sx={{ maxWidth: '200px' }} className={notificationGroupStyle.container}>
                         <Typography variant="h5">Data wygaśnięcia powiadomienia</Typography>
                         <Controller
                             control={control}
@@ -145,13 +159,26 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                             render={({ field }) => (
                                 <DatePicker
                                     wrapperClassName="date-picker"
+                                    showTimeSelect
+                                    timeIntervals={15}
+                                    timeFormat="HH:mm"
+                                    dateFormat="dd/MM/yyyy HH:mm"
                                     minDate={currentDate}
                                     placeholderText="Wybierz datę"
                                     onChange={(date) => field.onChange(date)}
                                     selected={field.value}
                                 />
                             )}
+                            rules={{
+                                validate: {
+                                    afterNow: (v) => v > new Date() || 'Data wygaśnięcia nie może być w przeszłości!',
+                                    afterShowDate: (v) =>
+                                        v >= getValues('showDate') ||
+                                        'Data wygaśnięcia nie może być przed datą publikacji',
+                                },
+                            }}
                         />
+                        {errors.expDate && <Box sx={{ mt: 2 }}>{(errors.showDate as any)?.message}</Box>}
                     </Box>
                 </Box>
                 <Box className={notificationGroupStyle.buttonContainer}>
@@ -164,7 +191,7 @@ const NotificationsGroupForm: React.FC<IProps> = ({
                             {...register('draft', {})}
                         />
                     </Box>
-                    <Box>
+                    <Box sx={{ m: 2 }}>
                         <Button onClick={handleExitClick} variant="contained">
                             Wyjdź
                         </Button>

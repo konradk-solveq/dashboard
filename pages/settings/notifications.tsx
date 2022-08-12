@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Container, Typography, Button, CircularProgress, Box } from '@mui/material/';
 import EditNotification from '../notifications';
@@ -6,9 +6,11 @@ import NotificationsRow from '../../components/notifications/NotificationsRow';
 import NotificationsSortBar from '../../components/notifications/NotificationsSortBar';
 import NotificationsPagination from '../../components/notifications/NotificationsPagination';
 import BigListItem from '../../assets/BigListItem';
-import { Notification } from '../../components/typings/Notifications';
+import { LabelTypes, Notification } from '../../components/typings/Notifications';
 import NotificationsContainer, { NotificationsContext } from '../../components/contexts/notifications';
 import ConfirmDeleteModal from '../../components/notifications/ConfirmDeleteModal';
+import { getAvailableLanguages } from '../../components/notifications/NotificationsUtils';
+import useAppConfig from '../../components/services/useConfig';
 
 const NotificationManager: React.FC<{}> = ({}) => {
     const {
@@ -18,8 +20,16 @@ const NotificationManager: React.FC<{}> = ({}) => {
         handleAddNotificationClick,
         addNotificationFormState,
     } = useContext(NotificationsContext);
+
+    const { data } = useAppConfig();
+
     const [deleteModal, setDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState<number>(null);
+    const [langOptions, setLangOptions] = useState<LabelTypes[]>(getAvailableLanguages(data?.langs));
+
+    useEffect(() => {
+        setLangOptions(getAvailableLanguages(data?.langs));
+    }, [data]);
 
     let notifications = notificationsQuery?.data?.elements;
 
@@ -29,7 +39,7 @@ const NotificationManager: React.FC<{}> = ({}) => {
     }
 
     const confirmDelete = () => {
-        deleteNotificationMutation.mutate(deleteId);
+        deleteNotificationMutation.mutate({ id: deleteId });
         setDeleteModal(!deleteModal);
     };
 
@@ -41,7 +51,7 @@ const NotificationManager: React.FC<{}> = ({}) => {
         <Container>
             <Container sx={{ maxWidth: '1200px', p: '30px', marginX: 'auto' }}>
                 {addNotificationFormState ? (
-                    <EditNotification />
+                    <EditNotification langOptions={langOptions} />
                 ) : (
                     <>
                         {deleteModal && (
@@ -71,7 +81,7 @@ const NotificationManager: React.FC<{}> = ({}) => {
 
                         <Typography sx={{ m: '20px' }}>Lista Powiadomień</Typography>
 
-                        {checkLoading() ? (
+                        {checkLoading ? (
                             <Container
                                 sx={{
                                     display: 'flex',
@@ -88,7 +98,7 @@ const NotificationManager: React.FC<{}> = ({}) => {
                         ) : notifications.length > 0 ? (
                             <Box sx={{ minHeight: '300px' }}>
                                 {notifications.map((notification) => (
-                                    <BigListItem hover={true}>
+                                    <BigListItem hover={true} key={notification.id}>
                                         <NotificationsRow
                                             notification={notification}
                                             key={notification.id}

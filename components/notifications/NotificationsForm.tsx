@@ -2,8 +2,9 @@ import React, { useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Box, Input, Typography } from '@mui/material/';
 import Select from 'react-select';
-import { FormValues } from '../typings/Notifications';
+import { FormValues, SingleNotification } from '../typings/Notifications';
 import Modal from '../../assets/components/modal';
+import { Notifications } from '@mui/icons-material';
 
 interface IProps {
     langOptions: { value: string; label: string }[];
@@ -11,6 +12,7 @@ interface IProps {
     newNotificationTranslation: (data: object) => void;
     notificationTranslation: FormValues;
     changeNotificationTranslation: (data: object, id: number) => void;
+    notifications: SingleNotification[];
 }
 
 const NotificationsForm: React.FC<IProps> = ({
@@ -19,6 +21,7 @@ const NotificationsForm: React.FC<IProps> = ({
     newNotificationTranslation,
     notificationTranslation,
     changeNotificationTranslation,
+    notifications,
 }) => {
     const {
         register,
@@ -28,6 +31,8 @@ const NotificationsForm: React.FC<IProps> = ({
         reset,
     } = useForm<FormValues>({ shouldUnregister: true, defaultValues: notificationTranslation });
     const modalRef = useRef<HTMLInputElement | null>(null);
+
+    console.log(errors);
 
     const closeModal = (e: React.MouseEvent<HTMLElement>) => {
         if (modalRef.current === e.target) {
@@ -94,7 +99,12 @@ const NotificationsForm: React.FC<IProps> = ({
                         <Box sx={{ width: '250px', fontSize: '16px', fontWeight: 300 }}>
                             <Controller
                                 control={control}
-                                rules={{ required: 'Język jest wymagany.' }}
+                                rules={{
+                                    required: 'Język jest wymagany.',
+                                    validate: (v) =>
+                                        notifications.filter((e) => e.language === v.value).length < 1 ||
+                                        'Języki nie mogą się powtarzać',
+                                }}
                                 name="language"
                                 render={({ field }) => (
                                     <Select

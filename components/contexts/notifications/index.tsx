@@ -13,7 +13,7 @@ interface IProps {
     postNotificationAggregate: (notificationGroup: NotificationObjectType) => void;
     sortParams: Params;
     setSortParams: React.Dispatch<SetStateAction<Params>>;
-    checkLoading: () => boolean;
+    checkLoading: boolean;
     exitModal: () => void;
     openEditForm: (notification: Notification) => void;
     editValues: NotificationObjectType;
@@ -24,17 +24,11 @@ interface IProps {
     deleteNotificationMutation: UseMutationResult;
 }
 
-const postNotification = ({ data }) => {
-    return axios.post(endpoints.notifications, data);
-};
+const postNotification = ({ data }) => axios.post(endpoints.notifications, data);
 
-const putNotification = ({ id, data }) => {
-    return axios.put(`${endpoints.notifications}/${id}`, data);
-};
+const putNotification = ({ id, data }) => axios.put(`${endpoints.notifications}/${id}`, data);
 
-const deleteNotification = ({ id }) => {
-    return axios.delete(`${endpoints.notifications}/${id}`);
-};
+const deleteNotification = ({ id }) => axios.delete(`${endpoints.notifications}/${id}`);
 
 export const NotificationsContext = createContext<IProps>(null!);
 
@@ -62,7 +56,11 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
         orderBy,
     );
 
-    const postNotificationMutation = useMutation(postNotification);
+    const postNotificationMutation = useMutation(postNotification, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['notifications']);
+        },
+    });
 
     const putNotificationMutation = useMutation(putNotification, {
         onSuccess: () => {
@@ -75,7 +73,7 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
         },
     });
 
-    const checkLoading = () =>
+    const checkLoading =
         notificationsQuery.isLoading ||
         postNotificationMutation.isLoading ||
         putNotificationMutation.isLoading ||
