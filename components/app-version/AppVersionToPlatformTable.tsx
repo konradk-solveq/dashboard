@@ -103,7 +103,7 @@ const AppVersionToPlatformTable = ({
                                       )
                                   }
                                   deleteHandler={() => {
-                                      deleteAppVersionToPlatformAndNotify(appVersionId, appPlatformId);
+                                      deleteAppVersionToPlatformAndNotify({ appVersionId, appPlatformId });
                                   }}
                               />
                           );
@@ -137,7 +137,7 @@ const AppVersionToPlatformTable = ({
                 <Button
                     sx={{ textAlign: 'center' }}
                     variant="contained"
-                    onClick={() => createAppVersionToPlatformAndNotify(newAppVersionToPlatformState)}
+                    onClick={() => createAppVersionToPlatformAndNotify({ newAppVersionToPlatformState })}
                 >
                     Dodaj wersję
                 </Button>

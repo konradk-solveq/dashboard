@@ -1,8 +1,10 @@
 import { createContext, useCallback, useState } from 'react';
-import useSWR from 'swr';
 import qs from 'querystring';
-
-const fetcher = (url) => fetch(url).then((r) => r.json());
+import axios, { AxiosResponse } from 'axios';
+import endpoints from '../../utils/apiEndpoints';
+import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query';
+import getQueryFn from '../../utils/getQueryFn';
+import config from '../../../helpers/queryConfig';
 
 export interface AppPlatform {
     id?: number;
@@ -36,9 +38,9 @@ type LimitAndOffset = { limit: number; offset: number };
 interface AppVersionToPlatformsContextProps {
     appVersionToPlatforms: AppVersionToPlatforms;
     appVersionToPlatformsCount: number;
-    createAppVersionToPlatform: (data: CreateAppVersionToPlatform) => {};
-    updateAppVersionToPlatform: (appVersionId: number, appPlatformId: number, data: UpdateAppVersionToPlatform) => {};
-    deleteAppVersionToPlatform: (appVersionId: number, appPlatformId: number) => {};
+    createAppVersionToPlatform: UseMutationResult<AxiosResponse<CreateAppVersionToPlatform>>;
+    updateAppVersionToPlatform: UseMutationResult<AxiosResponse<UpdateAppVersionToPlatform>>;
+    deleteAppVersionToPlatform: UseMutationResult;
     setLimitsAndOffset: (limitAndOffset: LimitAndOffset) => void;
     limitAndOffset: LimitAndOffset;
     hasError: boolean;
@@ -46,52 +48,54 @@ interface AppVersionToPlatformsContextProps {
 
 export const AppVersionToPlatformsContext = createContext<AppVersionToPlatformsContextProps>(null!);
 
+const createAppVersionToPlatformHandler = ({ data }) => axios.post(endpoints.appVersion, data);
+
+const updateAppVersionToPlatformHandler = ({ appVersionId, appPlatformId, data }) =>
+    axios.put(`${endpoints.appVersion}/${appPlatformId}/${appVersionId}`, data);
+
+const deleteAppVersionToPlatformHandler = ({ appVersionId, appPlatformId }) =>
+    axios.delete(`${endpoints.appVersion}/${appPlatformId}/${appVersionId}`);
+
 const AppVersionToPlatformsContainer: React.FC<{}> = ({ children }) => {
     const [limitAndOffset, setLimitAndOffsetState] = useState<LimitAndOffset>({ limit: 10, offset: 0 });
 
     const {
         data,
-        revalidate: revalidateAppVersionToPlatforms,
         error: errorAppVersionToPlatforms,
-    } = useSWR(`/api/app-version/manage?${qs.stringify(limitAndOffset)}`, fetcher);
+        refetch: revalidateAppVersionToPlatforms,
+    } = useQuery(
+        ['appVersion', limitAndOffset],
+        () => getQueryFn(`${endpoints.appVersion}?${qs.stringify(limitAndOffset)}`),
+        {
+            ...config,
+        },
+    );
 
     const setLimitsAndOffset = useCallback(
         (limitAndOffset: LimitAndOffset) => {
             setLimitAndOffsetState(limitAndOffset);
             revalidateAppVersionToPlatforms();
         },
-        [revalidateAppVersionToPlatforms],
+        [limitAndOffset],
     );
 
-    const updateAppVersionToPlatform = useCallback(
-        (appVersionId: number, appPlatformId: number, data: UpdateAppVersionToPlatform) =>
-            updateAppVersionToPlatformHandler(appVersionId, appPlatformId, data)
-                .then(errorHandler)
-                .then(() => {
-                    revalidateAppVersionToPlatforms();
-                }),
-        [revalidateAppVersionToPlatforms],
-    );
+    const updateAppVersionToPlatform = useMutation(updateAppVersionToPlatformHandler, {
+        onSuccess: () => {
+            revalidateAppVersionToPlatforms();
+        },
+    });
 
-    const deleteAppVersionToPlatform = useCallback(
-        (appVersionId: number, appPlatformId: number) =>
-            deleteAppVersionToPlatformHandler(appVersionId, appPlatformId)
-                .then(errorHandler)
-                .then(() => {
-                    revalidateAppVersionToPlatforms();
-                }),
-        [revalidateAppVersionToPlatforms],
-    );
+    const deleteAppVersionToPlatform = useMutation(deleteAppVersionToPlatformHandler, {
+        onSuccess: () => {
+            revalidateAppVersionToPlatforms();
+        },
+    });
 
-    const createAppVersionToPlatform = useCallback(
-        (data: CreateAppVersionToPlatform) =>
-            createAppVersionToPlatformHandler(data)
-                .then(errorHandler)
-                .then(() => {
-                    revalidateAppVersionToPlatforms();
-                }),
-        [revalidateAppVersionToPlatforms],
-    );
+    const createAppVersionToPlatform = useMutation(createAppVersionToPlatformHandler, {
+        onSuccess: () => {
+            revalidateAppVersionToPlatforms();
+        },
+    });
 
     return (
         <AppVersionToPlatformsContext.Provider
@@ -115,21 +119,5 @@ export function errorHandler({ status, statusText }) {
         throw new Error(statusText);
     }
 }
-function createAppVersionToPlatformHandler(data: CreateAppVersionToPlatform) {
-    return fetch(`/api/app-version/manage/`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-    });
-}
-function updateAppVersionToPlatformHandler(appVersionId: number, appPlatformId: number, data) {
-    return fetch(`/api/app-version/manage/${appPlatformId}/${appVersionId}`, {
-        method: 'PUT',
-        body: JSON.stringify(data),
-    });
-}
-function deleteAppVersionToPlatformHandler(appVersionId: number, appPlatformId: number) {
-    return fetch(`/api/app-version/manage/${appPlatformId}/${appVersionId}`, {
-        method: 'DELETE',
-    });
-}
+
 export default AppVersionToPlatformsContainer;

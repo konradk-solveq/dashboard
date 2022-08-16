@@ -60,20 +60,25 @@ const AppVersionToPlatform: React.FC<{}> = () => {
         };
     const updateAppVersionToPlatformAndNotify = useNotification(
         ({ appVersionId, appPlatformId, published, forceUpdate }) =>
-            updateAppVersionToPlatform(appVersionId, appPlatformId, {
-                published,
-                forceUpdate,
+            updateAppVersionToPlatform.mutate({
+                appVersionId,
+                appPlatformId,
+                data: {
+                    published,
+                    forceUpdate,
+                },
             }),
         message.save,
         message.error,
     );
     const deleteAppVersionToPlatformAndNotify = useNotification(
-        deleteAppVersionToPlatform,
+        ({ appVersionId, appPlatformId }) => deleteAppVersionToPlatform.mutate({ appVersionId, appPlatformId }),
         message.delete,
         message.error,
     );
     const createAppVersionToPlatformAndNotify = useNotification(
-        createAppVersionToPlatform,
+        ({ newAppVersionToPlatformState: { appVersionNumber, appPlatformName } }) =>
+            createAppVersionToPlatform.mutate({ data: { appVersionNumber, appPlatformName } }),
         message.save,
         message.error,
     );
