@@ -21,6 +21,7 @@ const queryClient = new QueryClient();
 function KrossDashboardApp({ Component, pageProps }: AppProps) {
     if (pageProps.session === null && typeof window !== 'undefined') {
         signIn();
+        return;
     }
     return (
         <Provider
@@ -31,10 +32,10 @@ function KrossDashboardApp({ Component, pageProps }: AppProps) {
             }}
         >
             <ApiContextContainer config={pageProps.config}>
-                <QueryClientProvider client={queryClient}>     
+                <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={mdTheme}>
                         <Layout>
-                          <Component {...pageProps} />
+                            <Component {...pageProps} />
                         </Layout>
                     </ThemeProvider>
                     <ReactQueryDevtools initialIsOpen={false} />
