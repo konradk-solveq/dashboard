@@ -11,14 +11,17 @@ import { Route } from '../../typings/Route';
 export const FeaturedSectionContainer: React.FC<{ section: FeaturedSectionDTO }> = ({ section, children }) => {
     const { updateName: updateSectionName, sections, ...actions } = useContext(FeaturedSectionsContext);
 
-    const [moveUp, moveDown, toggle, remove] = [actions.moveUp, actions.moveDown, actions.toggle, actions.remove].map(
-        (action) => () => action(section),
-    );
+    const [moveUp, moveDown, toggle, remove] = [
+        actions.moveUp,
+        actions.moveDown,
+        actions.toggle,
+        actions.remove.mutate,
+    ].map((action) => () => action(section));
 
     const [editRoutesEnabled, toggleEditRoutes] = useToggle(false);
     const [name, setName] = useState<Name>(section.sectionName);
-    const addRoute = (route: Route) => actions.addRoute(section, route);
-    const removeRoute = (route: Route) => actions.removeRoute(section, route);
+    const addRoute = (route: Route) => actions.addRoute.mutate({ section, route });
+    const removeRoute = (route: Route) => actions.removeRoute.mutate({ section, route });
     const updateName = useCallback(() => updateSectionName(section, name), [section, name]);
 
     const index = sections.findIndex((s) => section.sectionId === s.sectionId);

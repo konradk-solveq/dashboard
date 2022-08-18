@@ -1,38 +1,38 @@
+import { QueryObserverResult, useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 import React, { useCallback } from 'react';
 
 import { FeaturedSectionDTO, Name } from '../../typings/FeaturedSection';
+import endpoints from '../../utils/apiEndpoints';
 
 import { FeaturedSectionsContext } from './contexts';
 
+const createFeatured = () =>
+    axios.post(endpoints.featuredSections, { name: { pl: 'Nienazwana nowa sekcja', en: 'Unnamed new section' } });
+
+const createRoute = ({ section, route: { id } }) =>
+    axios.post(`${endpoints.featuredSections}/${section.sectionId}/route`, { routeId: id });
+
+const patchFeatured = ({ order, isActive, sectionName, sectionId }: Partial<FeaturedSectionDTO>) =>
+    axios.patch(`${endpoints.featuredSections}/${sectionId}`, { order, isActive, name: sectionName });
+
+const deleteFeatured = ({ sectionId }) => axios.delete(`${endpoints.featuredSections}/${sectionId}`);
+
+const deleteRoute = ({ section, route: { id } }) =>
+    axios.delete(`${endpoints.featuredSections}/${section.sectionId}/route/${id}`);
+
 export const FeaturedSectionsContainer: React.FC<{
     sections: FeaturedSectionDTO[];
-    revalidate: () => Promise<boolean>;
-}> = ({ sections, children, revalidate }) => {
-    const update = useCallback(
-        async (data: Partial<FeaturedSectionDTO> & { sectionId: number }) => {
-            const response = await fetch(`/api/featured-sections/${data.sectionId}`, {
-                method: 'PATCH',
-                body: JSON.stringify({ order: data.order, isActive: data.isActive, name: data.sectionName }),
-                headers: { 'content-type': 'application/json' },
-            });
-            revalidate();
-        },
-        [revalidate],
-    );
+    refetch: () => Promise<QueryObserverResult<FeaturedSectionDTO[]>>;
+}> = ({ sections, children, refetch }) => {
+    const update = useMutation(patchFeatured, {
+        onSuccess: () => refetch(),
+    });
 
-    const updateName = useCallback(
-        ({ sectionId }: FeaturedSectionDTO, name: Name) => {
-            return update({ sectionName: name, sectionId });
-        },
-        [update],
-    );
+    const updateName = ({ sectionId }: FeaturedSectionDTO, name: Name) =>
+        update.mutate({ sectionName: name, sectionId });
 
-    const moveTo = useCallback(
-        ({ sectionId }: FeaturedSectionDTO, order: number) => {
-            return update({ order, sectionId });
-        },
-        [update],
-    );
+    const moveTo = ({ sectionId }: FeaturedSectionDTO, order: number) => update.mutate({ order, sectionId });
 
     const moveUp = useCallback(
         (section: FeaturedSectionDTO) => {
@@ -56,54 +56,23 @@ export const FeaturedSectionsContainer: React.FC<{
         [moveTo, sections],
     );
 
-    const toggle = useCallback(
-        ({ sectionId, isActive }: FeaturedSectionDTO) => {
-            return update({ sectionId, isActive: !isActive });
-        },
-        [moveTo, sections],
-    );
+    const toggle = ({ sectionId, isActive }: FeaturedSectionDTO) => update.mutate({ sectionId, isActive: !isActive });
 
-    const remove = useCallback(
-        async (data: Partial<FeaturedSectionDTO> & { sectionId: number }) => {
-            const response = await fetch(`/api/featured-sections/${data.sectionId}`, {
-                method: 'DELETE',
-            });
-            revalidate();
-        },
-        [revalidate],
-    );
+    const remove = useMutation(deleteFeatured, {
+        onSuccess: () => refetch(),
+    });
 
-    const create = useCallback(async () => {
-        await fetch('/api/featured-sections', {
-            method: 'POST',
-            body: JSON.stringify({ name: { pl: 'Nienazwana nowa sekcja', en: 'Unnamed new section' } }),
-            headers: { 'content-type': 'application/json' },
-        });
-        await revalidate();
-    }, [revalidate]);
+    const create = useMutation(createFeatured, {
+        onSuccess: () => refetch(),
+    });
 
-    const addRoute = useCallback(
-        async (section: FeaturedSectionDTO, route: { id: string }) => {
-            await fetch(`/api/featured-sections/${section.sectionId}/route`, {
-                method: 'POST',
-                body: JSON.stringify({ routeId: route.id }),
-                headers: { 'content-type': 'application/json' },
-            });
-            await revalidate();
-        },
-        [revalidate],
-    );
+    const addRoute = useMutation(createRoute, {
+        onSuccess: () => refetch(),
+    });
 
-    const removeRoute = useCallback(
-        async (section: FeaturedSectionDTO, route: { id: string }) => {
-            await fetch(`/api/featured-sections/${section.sectionId}/route/${route.id}`, {
-                method: 'DELETE',
-                headers: { 'content-type': 'application/json' },
-            });
-            await revalidate();
-        },
-        [revalidate],
-    );
+    const removeRoute = useMutation(deleteRoute, {
+        onSuccess: () => refetch(),
+    });
     return (
         <FeaturedSectionsContext.Provider
             value={{

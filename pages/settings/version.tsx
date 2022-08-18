@@ -29,17 +29,11 @@ const VersionEditForm: React.FC<{}> = () => {
     const [notification, setNotification] = useState<string>('');
     const [newValue, setNewValue] = useState<SettingsPostData['version']>({ android: '', ios: '' });
     const setPlatformValue = (platform: string) => (v: string) => setNewValue((d) => ({ ...d, [platform]: v }));
-    const setKeyAndNotify = useCallback<typeof setKey>(
-        async (platform, value) => {
-            try {
-                await setKey(platform, value);
-                setNotification('Dane zostały zapisane.');
-            } catch (err) {
-                setNotification('Wystąpił błąd przy zapisywaniu.');
-            }
-        },
-        [setKey, setNotification],
-    );
+
+    useEffect(() => {
+        if (setKey.isSuccess) setNotification('Dane zostały zapisane.');
+        if (setKey.isError) setNotification('Wystąpił błąd przy zapisywaniu.');
+    }, [setKey, setNotification]);
 
     useEffect(() => {
         if (notification) {
@@ -84,7 +78,7 @@ const VersionEditForm: React.FC<{}> = () => {
                     variant="contained"
                     color="success"
                     size="large"
-                    onClick={() => setKeyAndNotify('version', newValue)}
+                    onClick={() => setKey.mutate({ key: 'version', newValue })}
                 >
                     Zapisz
                 </Button>

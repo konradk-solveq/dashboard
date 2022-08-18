@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import useSWR from 'swr';
 import { Box, Container, Typography } from '@mui/material/';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
-import fetcher from '../../helpers/fetcher';
 import PagesBar from '../../components/bar/PagesBar';
 import ChartTypes3D from '../../componentsSSP/routes/statistics/ChartTypes3D';
 import ChartDate from '../../componentsSSP/routes/statistics/ChartDate';
@@ -11,6 +9,10 @@ import ChartDay from '../../componentsSSP/routes/statistics/ChartDay';
 import ChartHour from '../../componentsSSP/routes/statistics/ChartHour';
 import DateInputs from '../../componentsSSP/routes/statistics/DateInputs';
 import ChartHoursOfDay from '../../componentsSSP/routes/statistics/ChartHoursOfDay';
+import { useQuery } from '@tanstack/react-query';
+import getQueryFn from '../../components/utils/getQueryFn';
+import config from '../../helpers/queryConfig';
+import endpoints from '../../components/utils/apiEndpoints';
 
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
@@ -48,7 +50,7 @@ const Route: React.FC<{ route: any }> = ({ route }) => {
     );
 };
 
-const ColectData: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
+const CollectData: React.FC<{ route: any; setChartData: any }> = ({ route, setChartData }) => {
     useEffect(() => {
         const broken = typeof route.images.find(({ type }) => type === 'map') == 'undefined';
 
@@ -108,25 +110,31 @@ const Legend: React.FC<{ color: string; title: string }> = ({ color, title }) =>
 export default function Page({}) {
     const [name, setName] = useState('');
     const [page, setPage] = useState(0);
-    const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
-    const { data: { total, elements, links, limit } = defaultTo, error } = useSWR(url, fetcher);
-    const debouncedName = useDebounce(name, 333);
-    const debouncedTotal = useDebounce(total, 125);
-    const debouncedLimit = useDebounce(limit, 125);
+    const [routesData, setRoutesData] = useState({
+        goodRoutes: sumAll.length - sumWrong.length,
+        wrongRoutes: sumWrong.length,
+        publicRoutes: sumPublic.length,
+        allRoutes: sumAll.length,
+    });
 
-    useEffect(() => {
-        setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 500 })}`);
-    }, [debouncedName, page]);
+    const debouncedName = useDebounce(name, 333);
+
+    const { data: { total, elements, links, limit } = defaultTo, error } = useQuery(
+        ['routeStatistics', page, debouncedName],
+        () =>
+            getQueryFn(
+                `${endpoints.cyclingMap}/lookup?${page ? qs.stringify({ name: debouncedName, page, limit: 500 }) : ''}`,
+            ),
+        { ...config },
+    );
+
+    const debouncedTotal = useDebounce(total, 125);
+    const debouncedLimit = useDebounce(limit === 10 ? 500 : limit, 125);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)
         .fill(0)
         .map((v, i) => i + 1);
-
-    const goodRoutes = () => sumAll.length - sumWrong.length;
-    const wrongRoutes = () => sumWrong.length;
-    const pulicRoutes = () => sumPublic.length;
-    const allRoutes = () => sumAll.length;
 
     const [chartData, setChartData] = useState(null);
     const [filteredChartData, setFilteredChartData] = useState(null);
@@ -135,6 +143,17 @@ export default function Page({}) {
     const [endDate, setEndDate] = useState(new Date());
     const [veryStartDate, setVeryStartDate] = useState(new Date());
     const [veryEndDate, setVeryEndDate] = useState(new Date());
+
+    useEffect(() => {
+        if (!(total - sumAll.length < 0)) {
+            setRoutesData({
+                goodRoutes: sumAll.length - sumWrong.length,
+                wrongRoutes: sumWrong.length,
+                publicRoutes: sumPublic.length,
+                allRoutes: sumAll.length,
+            });
+        }
+    }, [page, elements, total, limit]);
 
     useEffect(() => {
         if (!chartData || chartData.length == 0) return;
@@ -240,9 +259,9 @@ export default function Page({}) {
                         <ChartTypes3D
                             data={[
                                 ['Trasa', 'ilość danego typu'],
-                                ['prywatne', goodRoutes()],
-                                ['upublicznione', pulicRoutes()],
-                                ['uszkodzone', wrongRoutes()],
+                                ['prywatne', routesData.goodRoutes],
+                                ['upublicznione', routesData.publicRoutes],
+                                ['uszkodzone', routesData.wrongRoutes],
                             ]}
                             title={'Zestawienie ilości tras'}
                         />
@@ -256,10 +275,10 @@ export default function Page({}) {
                             alignItems: 'center',
                         }}
                     >
-                        <h2>Ilość wszystkich tras: {allRoutes()}</h2>
-                        <h2>Ilość tras publicznych: {pulicRoutes()}</h2>
-                        <h2>Ilość poprawnych tras: {goodRoutes()}</h2>
-                        <h2>Ilość tras uszkodzonych: {wrongRoutes()}</h2>
+                        <h2>Ilość wszystkich tras: {routesData.allRoutes}</h2>
+                        <h2>Ilość tras publicznych: {routesData.publicRoutes}</h2>
+                        <h2>Ilość poprawnych tras: {routesData.goodRoutes}</h2>
+                        <h2>Ilość tras uszkodzonych: {routesData.wrongRoutes}</h2>
                     </Box>
                 </Box>
 
@@ -342,7 +361,7 @@ export default function Page({}) {
             {elements?.length === 0 ? null : (
                 <>
                     {elements?.map((el, index) => {
-                        return <ColectData key={'box' + index} route={el} setChartData={setChartData}></ColectData>;
+                        return <CollectData key={'box' + index} route={el} setChartData={setChartData}></CollectData>;
                     })}
                 </>
             )}

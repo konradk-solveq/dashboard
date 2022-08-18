@@ -1,13 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import useSWR from 'swr';
+import React, { useEffect, useState } from 'react';
 import { Box, Container, Paper, Divider, InputBase } from '@mui/material/';
 import SearchIcon from '@mui/icons-material/Search';
 import qs from 'querystring';
 import { useDebounce } from '../../components/utils/useDebounce';
-import fetcher from '../../helpers/fetcher';
 import PagesBar from '../../components/bar/PagesBar';
 import { useRouter } from 'next/dist/client/router';
 import Tile from '../../componentsSSP/routes/list/Tile';
+import { useQuery } from '@tanstack/react-query';
+import getQueryFn from '../../components/utils/getQueryFn';
+import endpoints from '../../components/utils/apiEndpoints';
+import config from '../../helpers/queryConfig';
 const defaultTo = { elements: [], total: 0, links: {}, limit: 0 };
 
 export default function Page({}) {
@@ -20,16 +22,15 @@ export default function Page({}) {
         replace(path, undefined, { scroll: false });
     };
 
-    const [url, setUrl] = useState(`/api/cycling-map/manage/lookup`);
-    const { data: { total, elements, links, limit } = defaultTo, error } = useSWR<any>(url, fetcher);
     const debouncedName = useDebounce(name, 333);
+
+    const { data: { total, elements, links, limit } = defaultTo, error } = useQuery(
+        ['routeList', page, debouncedName],
+        () => getQueryFn(`${endpoints.cyclingMap}/lookup?${qs.stringify({ name: debouncedName, page, limit: 12 })}`),
+        { ...config },
+    );
     const debouncedTotal = useDebounce(total, 125);
     const debouncedLimit = useDebounce(limit, 125);
-    // const layout = useResponsiveValue<string>(['1fr', '1fr 1fr 1fr']);
-
-    useEffect(() => {
-        setUrl(`/api/cycling-map/manage/lookup?${qs.stringify({ name: debouncedName, page, limit: 12 })}`);
-    }, [debouncedName, page]);
 
     const pagesNumber = Math.ceil(debouncedTotal / debouncedLimit);
     const pages = Array(isFinite(pagesNumber) ? pagesNumber : 1)

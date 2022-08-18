@@ -1,18 +1,16 @@
 import { useRouter } from 'next/dist/client/router';
 import NextLink from 'next/link';
 import { useContext, useEffect, useState } from 'react';
-import useSWR from 'swr';
 import { Box, Button, Container, Typography } from '@mui/material/';
 
 import { getData, getDistance, getTime } from '../../../helpers/dataFormat';
-import fetcher from '../../../helpers/fetcher';
 import ApiContext from '../../../components/contexts/api';
 import EventsContext from '../../../components/contexts/api/EventsContext';
 import ManageContext from '../../../components/contexts/api/ManageContext';
 import RouteNavigationContext from '../../../components/contexts/route/RouteNavigationContext';
 import CheckboxList from '../../../components/forms/CheckboxList';
 import InputForm from '../../../components/forms/InputForm';
-import SwitchForm from '../../../components/forms/SwithForm';
+import SwitchForm from '../../../components/forms/SwitchForm';
 import TextareaForm from '../../../components/forms/TextareaForm';
 import NavButtons from './NavButtons';
 
@@ -20,6 +18,9 @@ import type { Route } from '../../../components/typings/Route';
 import DataField from '../../../components/forms/DataField';
 import Description from './Description';
 import BigAlert from '../../../components/contexts/modals/BigAlert';
+import { useQuery } from '@tanstack/react-query';
+import getQueryFn from '../../../components/utils/getQueryFn';
+import endpoints from '../../../components/utils/apiEndpoints';
 interface Props {
     routeId: string;
 }
@@ -30,7 +31,9 @@ const Form: React.FC<Props> = (props) => {
     const { config } = useContext(ApiContext);
     const events = useContext(EventsContext);
     const manage = useContext(ManageContext);
-    const { data } = useSWR<Route, any>(id ? `/api/routes/route/${id}?${events.getRouteUpdates(id)}` : null, fetcher);
+    const { data } = useQuery<Route>(['route', id], () =>
+        getQueryFn(id ? `${endpoints.routes}/${id}?${events.getRouteUpdates(id)}` : null),
+    );
     const { backUrl } = useContext(RouteNavigationContext);
 
     const [difficulty, setDifficulty] = useState([]);

@@ -1,6 +1,8 @@
-import { createContext, useCallback } from 'react';
-import useSWR from 'swr';
-const fetcher = (url) => fetch(url).then((r) => r.json());
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios, { AxiosResponse } from 'axios';
+import { createContext } from 'react';
+import endpoints from '../../utils/apiEndpoints';
+import getQueryFn from '../../utils/getQueryFn';
 
 export interface SettingsGetData {
     version: Record<'android' | 'ios', { i18n: string; value: string }>;
@@ -11,26 +13,25 @@ export interface SettingsPostData {
 interface SettingsContextProps {
     settings: SettingsGetData;
     hasError: boolean;
-    setKey<K extends keyof SettingsGetData>(key: K, value: SettingsPostData[K]);
+    setKey: UseMutationResult<AxiosResponse<SettingsGetData>>;
 }
 
 export const SettingsContext = createContext<SettingsContextProps>(null!);
 
-const SettingsContainer: React.FC<{}> = ({ children }) => {
-    const { data, revalidate, error } = useSWR<SettingsGetData>('/api/settings', fetcher);
+const postKey = ({ key, value }) => {
+    return axios.post(`${endpoints.settings}/${key}`, JSON.stringify(value));
+};
 
-    const setKey = useCallback(
-        function <K extends keyof SettingsGetData>(key: K, value: SettingsPostData[K]) {
-            return fetch(`/api/settings/${key}`, { method: 'POST', body: JSON.stringify(value) })
-                .then(({ status, statusText }) => {
-                    if (status >= 400) {
-                        throw new Error(statusText);
-                    }
-                })
-                .then(revalidate);
+const SettingsContainer: React.FC<{}> = ({ children }) => {
+    const queryClient = useQueryClient();
+
+    const { data, error } = useQuery<SettingsGetData>(['settings'], () => getQueryFn(endpoints.settings));
+
+    const setKey = useMutation(postKey, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['notifications']);
         },
-        [revalidate],
-    );
+    });
 
     return (
         <SettingsContext.Provider

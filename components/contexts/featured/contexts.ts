@@ -1,16 +1,18 @@
-import { createContext } from 'react';
+import { UseMutationResult } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
+import { ChangeEvent, createContext } from 'react';
 import { FeaturedSectionDTO, Name } from '../../typings/FeaturedSection';
 import { Route } from '../../typings/Route';
 
 type FeaturedSectionsProps = {
-    updateName(section: FeaturedSectionDTO, name: Name): Promise<void>;
-    moveUp(section: FeaturedSectionDTO): Promise<void>;
-    moveDown(section: FeaturedSectionDTO): Promise<void>;
-    toggle(section: FeaturedSectionDTO): Promise<void>;
-    remove(section: FeaturedSectionDTO): Promise<void>;
-    addRoute(section: FeaturedSectionDTO, route: { id: string }): Promise<void>;
-    removeRoute(section: FeaturedSectionDTO, route: { id: string }): Promise<void>;
-    create(): Promise<void>;
+    updateName(section: FeaturedSectionDTO, name: Name): void;
+    moveUp(section: FeaturedSectionDTO): void;
+    moveDown(section: FeaturedSectionDTO): void;
+    toggle(section: FeaturedSectionDTO): void;
+    remove: UseMutationResult;
+    addRoute: UseMutationResult<AxiosResponse<FeaturedSectionDTO>>;
+    removeRoute: UseMutationResult;
+    create: UseMutationResult;
     sections: FeaturedSectionDTO[];
 };
 export const FeaturedSectionsContext = createContext<FeaturedSectionsProps>(null!);
@@ -23,17 +25,17 @@ type FeaturedSectionProps = {
     isFirst: boolean;
     section: FeaturedSectionDTO;
     actions: {
-        moveUp(): Promise<void>;
-        moveDown(): Promise<void>;
-        toggle(): Promise<void>;
-        remove(): Promise<void>;
-        updateName(): Promise<void>;
-        addRoute({ id: string }): Promise<void>;
-        removeRoute({ id: string }): Promise<void>;
+        moveUp: () => void;
+        moveDown: () => void
+        toggle: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void
+        remove: () => any;
+        updateName: () => void
+        addRoute: (route: Route) => void;
+        removeRoute: ({id: string}) => void
     };
     editRoutes: {
         enabled: boolean;
-        toggle: () => void;
+        toggle: () => void
     };
 };
 

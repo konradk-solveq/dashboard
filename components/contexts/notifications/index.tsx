@@ -106,7 +106,7 @@ const NotificationsContainer: React.FC<{}> = ({ children }) => {
     };
 
     const putNotificationAggregate = (notificationGroup: NotificationObjectType, id: Notification['id']) => {
-        putNotificationMutation.mutate({ data: notificationGroup, id: id });
+        putNotificationMutation.mutate({ data: notificationGroup, id });
         setAddNotificationFormState((prev) => !prev);
     };
 
