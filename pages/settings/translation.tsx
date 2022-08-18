@@ -7,6 +7,7 @@ import TranslationAddForm from '../../components/translation/TranslationAddForm'
 import TranslationTable from '../../components/translation/TranslationTable';
 import NotificationBox from '../../components/translation/NotificationBox';
 import { readFromFile } from '../../helpers/readFromFile';
+import { message } from '../../components/contexts/translation/index';
 
 type LanguageState = Array<LanguageData & { newLanguage?: boolean }>;
 
@@ -22,8 +23,8 @@ const TranslationMenage: React.FC<{}> = () => {
         setLimitsAndOffset,
         uiTranslationCount,
         limitAndOffset,
+        notification,
     } = useContext(TranslationsContext);
-    const [notification, setNotification] = useState<string>('');
     const [languageState, setLanguageState] = useState<LanguageState>([]);
     const [uiTranslationsState, setUiTranslationsState] = useState([]);
     const [newUiTranslations, setNewUiTranslations] = useState<{ version: string; code: string; file: any }>({
@@ -31,62 +32,28 @@ const TranslationMenage: React.FC<{}> = () => {
         code: '',
         file: '',
     });
-    const message = {
-        save: 'Zapisano',
-        delete: 'Usunięto',
-        error: 'Wystąpił błąd',
-        loading: 'Ładowanie',
-        loadingError: 'Wystąpił błąd ładowania danych',
-    };
+
     const setLanguagesValue = (id: number) => (field: keyof LanguageState, value: any) => {
         setLanguageState(languageState.map((lang) => (lang.id === id ? { ...lang, [field]: value } : lang)));
     };
     const setNewUiTranslationsValue = (field: string) => (value: any) => {
         setNewUiTranslations({ ...newUiTranslations, [field]: value });
     };
-    const useNotification =
-        (fn, message, errMessage) =>
-        (...args) => {
-            try {
-                fn(...args);
-                setNotification(message);
-            } catch (err) {
-                setNotification(errMessage);
-            }
-        };
-    const updateLanguagesAndNotify = useNotification(
-        ({ data }) => updateLanguages.mutate({ data }),
 
-        message.save,
-        message.error,
-    );
-    const deleteLanguageAndNotify = useNotification(
-        ({ code }) => deleteLanguage.mutate({ code }),
-        message.delete,
-        message.error,
-    );
-    const addUiTranslationAndNotify = useNotification(
-        async ({ version, code, file }) => {
-            const data = await readFromFile(file);
-            updateUiTranslation.mutate({ data: { version, code, translation: data } });
-        },
-        message.save,
-        message.error,
-    );
-    const deleteUiTranslationAndNotify = useNotification(
-        ({ id }) => deleteUiTranslation.mutate({ id }),
-        message.delete,
-        message.error,
-    );
-    useEffect(() => {
-        if (notification) {
-            const id = setTimeout(() => setNotification(''), 2000);
-            return () => clearTimeout(id);
-        }
-    }, [notification]);
+    const updateLanguagesAndNotify = ({ data }) => updateLanguages.mutate({ data });
+
+    const deleteLanguageAndNotify = ({ code }) => deleteLanguage.mutate({ code });
+
+    const addUiTranslationAndNotify = async ({ version, code, file }) => {
+        const data = await readFromFile(file);
+        updateUiTranslation.mutate({ data: { version, code, translation: data } });
+    };
+    const deleteUiTranslationAndNotify = ({ id }) => deleteUiTranslation.mutate({ id });
+
     useEffect(() => {
         if (languages) setLanguageState([...languages]);
     }, [languages]);
+
     useEffect(() => {
         if (uiTranslations) setUiTranslationsState([...uiTranslations]);
     }, [uiTranslations]);

@@ -4,6 +4,7 @@ import { Container, Typography, Box, CircularProgress } from '@mui/material/';
 import AppVersionToPlatformsContainer, { AppVersionToPlatformsContext } from '../../components/contexts/app-version';
 import NotificationBox from '../../components/translation/NotificationBox';
 import AppVersionToPlatformTable from '../../components/app-version/AppVersionToPlatformTable';
+import { message } from '../../components/contexts/translation/index';
 
 const AppVersionToPlatform: React.FC<{}> = () => {
     const {
@@ -15,9 +16,9 @@ const AppVersionToPlatform: React.FC<{}> = () => {
         setLimitsAndOffset,
         limitAndOffset,
         hasError,
+        notification,
     } = useContext(AppVersionToPlatformsContext);
 
-    const [notification, setNotification] = useState<string>('');
     const [appVersionToPlatformsState, setAppVersionToPlatformsState] = useState([]);
     const [newAppVersionToPlatformState, setNewAppVersionToPlatformState] = useState<{
         appVersionNumber: string;
@@ -26,13 +27,7 @@ const AppVersionToPlatform: React.FC<{}> = () => {
         appVersionNumber: '',
         appPlatformName: '',
     });
-    const message = {
-        save: 'Zapisano',
-        delete: 'Usunięto',
-        error: 'Wystąpił błąd',
-        loading: 'Ładowanie',
-        loadingError: 'Wystąpił błąd ładowania danych',
-    };
+
     const setAppVersionToPlatformValue =
         (appVersionId: string, appPlatformId: string) => (field: 'published' | 'forceUpdate', value: string) => {
             setAppVersionToPlatformsState(
@@ -48,46 +43,22 @@ const AppVersionToPlatform: React.FC<{}> = () => {
         setNewAppVersionToPlatformState({ ...newAppVersionToPlatformState, [field]: value });
     };
 
-    const useNotification =
-        (fn, message, errMessage) =>
-        async (...args) => {
-            try {
-                await fn(...args);
-                setNotification(message);
-            } catch (err) {
-                setNotification(errMessage);
-            }
-        };
-    const updateAppVersionToPlatformAndNotify = useNotification(
-        ({ appVersionId, appPlatformId, published, forceUpdate }) =>
-            updateAppVersionToPlatform.mutate({
-                appVersionId,
-                appPlatformId,
-                data: {
-                    published,
-                    forceUpdate,
-                },
-            }),
-        message.save,
-        message.error,
-    );
-    const deleteAppVersionToPlatformAndNotify = useNotification(
-        ({ appVersionId, appPlatformId }) => deleteAppVersionToPlatform.mutate({ appVersionId, appPlatformId }),
-        message.delete,
-        message.error,
-    );
-    const createAppVersionToPlatformAndNotify = useNotification(
-        ({ newAppVersionToPlatformState: { appVersionNumber, appPlatformName } }) =>
-            createAppVersionToPlatform.mutate({ data: { appVersionNumber, appPlatformName } }),
-        message.save,
-        message.error,
-    );
-    useEffect(() => {
-        if (notification) {
-            const id = setTimeout(() => setNotification(''), 2000);
-            return () => clearTimeout(id);
-        }
-    }, [notification]);
+    const updateAppVersionToPlatformAndNotify = ({ appVersionId, appPlatformId, published, forceUpdate }) =>
+        updateAppVersionToPlatform.mutate({
+            appVersionId,
+            appPlatformId,
+            data: {
+                published,
+                forceUpdate,
+            },
+        });
+
+    const deleteAppVersionToPlatformAndNotify = ({ appVersionId, appPlatformId }) =>
+        deleteAppVersionToPlatform.mutate({ appVersionId, appPlatformId });
+
+    const createAppVersionToPlatformAndNotify = ({
+        newAppVersionToPlatformState: { appVersionNumber, appPlatformName },
+    }) => createAppVersionToPlatform.mutate({ data: { appVersionNumber, appPlatformName } });
 
     useEffect(() => {
         if (appVersionToPlatforms && appVersionToPlatforms.length) {

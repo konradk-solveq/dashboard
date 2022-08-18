@@ -1,10 +1,11 @@
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import qs from 'querystring';
 import axios, { AxiosResponse } from 'axios';
 import endpoints from '../../utils/apiEndpoints';
 import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query';
 import getQueryFn from '../../utils/getQueryFn';
 import config from '../../../helpers/queryConfig';
+import { message } from '../translation/index';
 
 export interface AppPlatform {
     id?: number;
@@ -44,6 +45,7 @@ interface AppVersionToPlatformsContextProps {
     setLimitsAndOffset: (limitAndOffset: LimitAndOffset) => void;
     limitAndOffset: LimitAndOffset;
     hasError: boolean;
+    notification: string;
 }
 
 export const AppVersionToPlatformsContext = createContext<AppVersionToPlatformsContextProps>(null!);
@@ -58,6 +60,7 @@ const deleteAppVersionToPlatformHandler = ({ appVersionId, appPlatformId }) =>
 
 const AppVersionToPlatformsContainer: React.FC<{}> = ({ children }) => {
     const [limitAndOffset, setLimitAndOffsetState] = useState<LimitAndOffset>({ limit: 10, offset: 0 });
+    const [notification, setNotification] = useState<string>('');
 
     const {
         data,
@@ -82,20 +85,33 @@ const AppVersionToPlatformsContainer: React.FC<{}> = ({ children }) => {
     const updateAppVersionToPlatform = useMutation(updateAppVersionToPlatformHandler, {
         onSuccess: () => {
             revalidateAppVersionToPlatforms();
+            setNotification(message.save);
         },
+        onError: () => setNotification(message.error),
     });
 
     const deleteAppVersionToPlatform = useMutation(deleteAppVersionToPlatformHandler, {
         onSuccess: () => {
             revalidateAppVersionToPlatforms();
+            setNotification(message.delete);
         },
+        onError: () => setNotification(message.error),
     });
 
     const createAppVersionToPlatform = useMutation(createAppVersionToPlatformHandler, {
         onSuccess: () => {
             revalidateAppVersionToPlatforms();
+            setNotification(message.save);
         },
+        onError: () => setNotification(message.error),
     });
+
+    useEffect(() => {
+        if (notification) {
+            const id = setTimeout(() => setNotification(''), 2000);
+            return () => clearTimeout(id);
+        }
+    }, [notification]);
 
     return (
         <AppVersionToPlatformsContext.Provider
@@ -108,6 +124,7 @@ const AppVersionToPlatformsContainer: React.FC<{}> = ({ children }) => {
                 setLimitsAndOffset,
                 limitAndOffset,
                 hasError: !!errorAppVersionToPlatforms,
+                notification,
             }}
         >
             {children}

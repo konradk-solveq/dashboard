@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import qs from 'querystring';
 import axios, { AxiosResponse } from 'axios';
 import endpoints from '../../utils/apiEndpoints';
@@ -27,6 +27,7 @@ interface TranslationsContextProps {
     setLimitsAndOffset: (limitAndOffset: LimitAndOffset) => void;
     limitAndOffset: LimitAndOffset;
     hasError: boolean;
+    notification: string;
 }
 
 export const TranslationsContext = createContext<TranslationsContextProps>(null!);
@@ -40,8 +41,17 @@ const updateUiTranslationHandler = ({ data }) => axios.post(endpoints.uiTranslat
 
 const deleteUiTranslationHandler = ({ id }) => axios.delete(`${endpoints.uiTranslation}/${id}`);
 
+export enum message {
+    save = 'Zapisano',
+    delete = 'Usunięto',
+    error = 'Wystąpił błąd',
+    loading = 'Ładowanie',
+    loadingError = 'Wystąpił błąd ładowania danych',
+}
+
 const TranslationsContainer: React.FC<{}> = ({ children }) => {
     const [limitAndOffset, setLimitAndOffsetState] = useState<LimitAndOffset>({ limit: 5, offset: 0 });
+    const [notification, setNotification] = useState<string>('');
     const {
         data: languages,
         refetch: revalidateLanguages,
@@ -56,23 +66,36 @@ const TranslationsContainer: React.FC<{}> = ({ children }) => {
         ...config,
     });
 
+    const revalidateAll = () => {
+        revalidateLanguages();
+        revalidateUiTranslations();
+    };
+
     const updateLanguages = useMutation(updateLanguageHandler, {
-        onSuccess: () => revalidateLanguages(),
+        onSuccess: () => {
+            revalidateLanguages(), setNotification(message.save);
+        },
+        onError: () => setNotification(message.error),
     });
     const deleteLanguage = useMutation(deleteLanguageHandler, {
-        onSuccess: () => revalidateLanguages(),
+        onSuccess: () => {
+            revalidateLanguages(), setNotification(message.delete);
+        },
+        onError: () => setNotification(message.error),
     });
     const updateUiTranslation = useMutation(updateUiTranslationHandler, {
         onSuccess: () => {
-            revalidateLanguages();
-            revalidateUiTranslations();
+            revalidateAll();
+            setNotification(message.save);
         },
+        onError: () => setNotification(message.error),
     });
     const deleteUiTranslation = useMutation(deleteUiTranslationHandler, {
         onSuccess: () => {
-            revalidateLanguages();
-            revalidateUiTranslations();
+            setNotification(message.delete);
+            revalidateAll();
         },
+        onError: () => setNotification(message.error),
     });
 
     const setLimitsAndOffset = useCallback(
@@ -82,6 +105,13 @@ const TranslationsContainer: React.FC<{}> = ({ children }) => {
         },
         [revalidateUiTranslations],
     );
+
+    useEffect(() => {
+        if (notification) {
+            const id = setTimeout(() => setNotification(''), 2000);
+            return () => clearTimeout(id);
+        }
+    }, [notification]);
 
     return (
         <TranslationsContext.Provider
@@ -96,6 +126,7 @@ const TranslationsContainer: React.FC<{}> = ({ children }) => {
                 deleteUiTranslation,
                 setLimitsAndOffset,
                 limitAndOffset,
+                notification,
             }}
         >
             {children}
