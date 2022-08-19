@@ -17,7 +17,7 @@ interface IProps {
 
 const UploadFormFields: React.FC<IProps> = ({ fields, register, remove, getValues, control }) => {
     const { appConfig } = useContext(DocumentUploadContext);
-    const [activeFile, setActiveFile] = useState(null);
+    const [activeFiles, setActiveFiles] = useState<Array<string>>([]);
     const [sortedLanguages, setSortedLanguages] = useState<AvailableLanguages[]>([
         {
             name: 'pl',
@@ -70,7 +70,9 @@ const UploadFormFields: React.FC<IProps> = ({ fields, register, remove, getValue
                         required
                         hidden
                         id={`documents.${index}.file`}
-                        onInput={(e) => setActiveFile((e.target as any).files[0].name)}
+                        onInput={(e) =>
+                            setActiveFiles((prev) => [...prev, (e.target as HTMLInputElement).files[0].name])
+                        }
                     />
                     <label htmlFor={`documents.${index}.file`}>
                         <Button component="span" sx={{ width: '100%' }} variant="contained">
@@ -87,7 +89,7 @@ const UploadFormFields: React.FC<IProps> = ({ fields, register, remove, getValue
                             border: '1px solid #cccccc',
                         }}
                     >
-                        {activeFile}
+                        {activeFiles[index]}
                     </Box>
 
                     {index >= 1 && (
