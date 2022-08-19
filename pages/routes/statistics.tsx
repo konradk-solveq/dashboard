@@ -334,7 +334,7 @@ export default function Page({}) {
                 }}
             >
                 {DAYS_HOURS.map((e) => (
-                    <Box sx={{ width: '300px' }}>
+                    <Box key={e.day} sx={{ width: '300px' }}>
                         <ChartHoursOfDay
                             data={filteredChartData}
                             day={e.day}

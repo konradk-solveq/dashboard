@@ -1,17 +1,7 @@
 import { parseJSON } from 'date-fns';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {
-    Button,
-    Checkbox,
-    Container,
-    Box,
-    MenuItem,
-    Alert,
-    Select,
-    CircularProgress,
-    FormControl,
-} from '@mui/material';
+import { Button, Checkbox, Box, MenuItem, Alert, Select, CircularProgress } from '@mui/material';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -41,19 +31,18 @@ const mapLanguageOptions = (publication: Publication) => {
         ));
 };
 
-const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
-    const { publicationMutation, files } = useContext(ManagePublicationsContext);
+const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) => {
+    const { publicationMutation } = useContext(ManagePublicationsContext);
 
     const [showDate, setShowDate] = useState<Date>(parseJSON(item.showDate));
     const [publicationDate, setPublicationDate] = useState<Date>(parseJSON(item.publicationDate));
-
-    const { terms, policy } = files;
+    const [oldDocumentValue, setOldDocumentValue] = useState(item.pair.oldDocument.id);
+    const [newDocumentValue, setNewDocumentValue] = useState(item.pair.newDocument.id);
+    const [publicationType, setPublicationType] = useState(item.type);
 
     const {
         handleSubmit,
         control,
-        setValue,
-        watch,
         getValues,
         formState: { errors },
     } = useForm<EditFormValues>({
@@ -68,7 +57,18 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
         },
     });
 
-    const publicationType = watch('type');
+    const checkTypeAndSetValue = () => {
+        if (publicationType === item.type) {
+            setOldDocumentValue(item.pair.oldDocument.id);
+            setNewDocumentValue(item.pair.newDocument.id);
+        } else if (publicationType === 'terms') {
+            setOldDocumentValue(terms[terms.length - 2]?.id);
+            setNewDocumentValue(terms[terms.length - 1]?.id);
+        } else {
+            setOldDocumentValue(policy[policy.length - 2]?.id);
+            setNewDocumentValue(policy[policy.length - 1]?.id);
+        }
+    };
 
     const onSubmit = async (data: EditFormValues) => {
         const hookToUpload = {
@@ -85,6 +85,10 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
         publicationMutation.mutate({ id: item.id, data: hookToUpload });
         setEditMode((prev: boolean) => !prev);
     };
+
+    useEffect(() => {
+        checkTypeAndSetValue();
+    }, [publicationType]);
 
     if (publicationMutation.isLoading) {
         return (
@@ -110,7 +114,15 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     name="type"
                     control={control}
                     render={({ field }) => (
-                        <Select className="document-select-form" onChange={field.onChange} defaultValue={item.type}>
+                        <Select
+                            sx={{ maxWidth: '150px' }}
+                            className="document-select-form"
+                            onChange={(e) => {
+                                setPublicationType(e.target.value);
+                                field.onChange;
+                            }}
+                            defaultValue={item.type}
+                        >
                             <MenuItem sx={{ fontSize: '14px' }} value="terms">
                                 Regulamin
                             </MenuItem>
@@ -127,12 +139,16 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('newDocument') } }}
                     render={({ field }) => (
                         <Select
-                            defaultValue={item.pair.oldDocument.id}
+                            sx={{ maxWidth: '150px' }}
+                            value={oldDocumentValue}
                             className="document-select-form"
-                            onChange={field.onChange}
+                            onChange={(e) => {
+                                field.onChange;
+                                setOldDocumentValue(e.target.value as number);
+                            }}
                         >
-                            {publicationType === 'terms' && mapOptions(terms.data)}
-                            {publicationType === 'policy' && mapOptions(policy.data)}
+                            {publicationType === 'terms' && mapOptions(terms)}
+                            {publicationType === 'policy' && mapOptions(policy)}
                         </Select>
                     )}
                 />
@@ -142,12 +158,17 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode }) => {
                     rules={{ required: true, validate: { sameFile: (v) => v != getValues('oldDocument') } }}
                     render={({ field }) => (
                         <Select
-                            defaultValue={item.pair.newDocument.id}
+                            sx={{ maxWidth: '150px' }}
+                            value={newDocumentValue}
                             className="document-select-form"
-                            onChange={field.onChange}
+                            onChange={(e) => {
+                                console.log(e.target.value);
+                                field.onChange;
+                                setNewDocumentValue(e.target.value as number);
+                            }}
                         >
-                            {publicationType === 'terms' && mapOptions(terms.data)}
-                            {publicationType === 'policy' && mapOptions(policy.data)}
+                            {publicationType === 'terms' && mapOptions(terms)}
+                            {publicationType === 'policy' && mapOptions(policy)}
                         </Select>
                     )}
                 />

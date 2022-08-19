@@ -45,7 +45,7 @@ export default function Page({}) {
                         <ol>
                             {reports && reports.length
                                 ? reports.map((report) => (
-                                      <li key={report.key}>
+                                      <li key={report.id}>
                                           {names[report.type]}: <strong>{report.value}</strong>
                                       </li>
                                   ))

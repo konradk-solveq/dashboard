@@ -48,6 +48,8 @@ export interface ManagePublicationsRowProps {
 export interface EditRowProps {
     item: Publication,
     setEditMode: React.Dispatch<SetStateAction<boolean>>,
+    terms: Files['terms'],
+    policy: Files['policy']
 }
 
 export type Files = {

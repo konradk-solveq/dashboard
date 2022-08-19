@@ -38,7 +38,15 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
         if (modalRef.current === e.target) {
             setDeleteModalState((prev) => !prev);
         }
+        publicationDeletion.reset();
     };
+
+    const manageCloseClick = () => {
+        setDeleteModalState((prev) => !prev);
+        publicationDeletion.reset();
+    };
+
+    const manageDeleteClick = (id) => publicationDeletion.mutate({ id });
 
     if (publicationDeletion.isLoading) {
         return (
@@ -55,11 +63,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
             <Backdrop>
                 <Container>
                     <Typography variant="h5">Pomyślnie usunięto zaplanowaną publikację</Typography>
-                    <Button
-                        variant="contained"
-                        sx={{ margin: '30px 0 10px' }}
-                        onClick={() => setDeleteModalState((prev) => !prev)}
-                    >
+                    <Button variant="contained" sx={{ margin: '30px 0 10px' }} onClick={() => manageCloseClick()}>
                         Wróć
                     </Button>
                 </Container>
@@ -74,11 +78,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
                     <Typography variant="h5">
                         Nie udało się usunąć publikacji {<br />} {publicationDeletion.error.message}
                     </Typography>
-                    <Button
-                        variant="contained"
-                        sx={{ margin: '30px 0 10px' }}
-                        onClick={() => setDeleteModalState((prev) => !prev)}
-                    >
+                    <Button variant="contained" sx={{ margin: '30px 0 10px' }} onClick={() => manageCloseClick()}>
                         Wróć
                     </Button>
                 </Container>
@@ -95,15 +95,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ item, setDeleteModalState }) 
                     {format(parseJSON(item.showDate), 'dd-MM-yyyy HH:mm')}?
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: '15px', m: 1 }}>
-                    <Button
-                        variant="contained"
-                        color="success"
-                        type="button"
-                        onClick={() => setDeleteModalState((prev) => !prev)}
-                    >
+                    <Button variant="contained" color="success" type="button" onClick={() => manageCloseClick()}>
                         Nie
                     </Button>
-                    <Button variant="contained" color="error" onClick={() => publicationDeletion.mutate(item.id)}>
+                    <Button variant="contained" color="error" onClick={() => manageDeleteClick(item.id)}>
                         Tak
                     </Button>
                 </Box>

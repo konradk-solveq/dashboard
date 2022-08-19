@@ -32,8 +32,6 @@ const NotificationsForm: React.FC<IProps> = ({
     } = useForm<FormValues>({ shouldUnregister: true, defaultValues: notificationTranslation });
     const modalRef = useRef<HTMLInputElement | null>(null);
 
-    console.log(errors);
-
     const closeModal = (e: React.MouseEvent<HTMLElement>) => {
         if (modalRef.current === e.target) {
             handleOpen();

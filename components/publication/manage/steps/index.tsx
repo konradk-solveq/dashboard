@@ -159,9 +159,6 @@ export const Step2: React.FC = () => {
         setValue('publicationDate', publicationDate);
     }, []);
 
-    console.log(getValues('showDate'));
-    console.log(getValues('publicationDate'));
-
     return (
         <>
             <Box mb="80px">
@@ -227,7 +224,7 @@ export const Step2: React.FC = () => {
 
 export const Step3: React.FC<Step3Props> = ({ activeFiles }) => {
     const {
-        publishFormMethods: { getValues, register, setValue },
+        publishFormMethods: { getValues, setValue, control },
     } = useContext(PostPublicationContext);
 
     const [fallbackLanguages, setFallbackLanguages] = useState<String[]>([]);
@@ -241,7 +238,7 @@ export const Step3: React.FC<Step3Props> = ({ activeFiles }) => {
     }, []);
 
     useEffect(() => {
-        setValue('fallbackLanguage', fallbackLanguages[0]);
+        if (fallbackLanguages.length) setValue('fallbackLanguage', fallbackLanguages[0]);
     }, [fallbackLanguages]);
 
     return (
@@ -252,18 +249,25 @@ export const Step3: React.FC<Step3Props> = ({ activeFiles }) => {
             <Row>
                 <ItemColumn>
                     <Label>Kod Językowy</Label>
-                    <Select
-                        className="document-select-form"
-                        {...register('fallbackLanguage', { required: 'true' })}
-                        sx={{ width: '200px', textAlign: 'center' }}
-                        defaultValue={fallbackLanguages[0] as string}
-                    >
-                        {fallbackLanguages.map((language: string) => (
-                            <MenuItem style={{ fontSize: '14px' }} key={language} value={language}>
-                                {language.toUpperCase()}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="fallbackLanguage"
+                        render={({ field }) => (
+                            <Select
+                                className="document-select-form"
+                                sx={{ width: '200px', textAlign: 'center' }}
+                                onChange={field.onChange}
+                                {...field}
+                            >
+                                {fallbackLanguages.map((language: string) => (
+                                    <MenuItem style={{ fontSize: '14px' }} key={language} value={language}>
+                                        {language.toUpperCase()}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        )}
+                    />
                 </ItemColumn>
             </Row>
         </>

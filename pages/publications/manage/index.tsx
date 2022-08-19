@@ -22,8 +22,7 @@ const Manage: React.FC = () => {
             <Container
                 maxWidth={false}
                 sx={{
-                    minWidth: '1100px',
-                    maxWidth: '1400px',
+                    width: '1300px',
                     p: '30px',
                     textAlign: 'center',
                 }}

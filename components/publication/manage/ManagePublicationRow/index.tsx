@@ -1,16 +1,28 @@
 import { format, parseJSON } from 'date-fns';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Checkbox, Box, CircularProgress, Typography } from '@mui/material';
 import { ManagePublicationsRowProps } from '../../../typings/ManagePublications';
 import DeleteModal from './DeleteModal';
 import EditRow from './EditRow';
+import { ManagePublicationsContext } from '../../../contexts/publication/ManagePublication';
 
 const ManagePublicationsRow: React.FC<ManagePublicationsRowProps> = ({ item }) => {
+    const {
+        files: { policy, terms },
+    } = useContext(ManagePublicationsContext);
+
     const [editMode, setEditMode] = useState<boolean>(false);
     const [deleteModalState, setDeleteModalState] = useState<boolean>(false);
 
     if (editMode) {
-        return <EditRow item={item} setEditMode={setEditMode} />;
+        return (
+            <EditRow
+                item={item}
+                setEditMode={setEditMode}
+                terms={[...terms.data].reverse()}
+                policy={[...policy.data].reverse()}
+            />
+        );
     }
 
     return (

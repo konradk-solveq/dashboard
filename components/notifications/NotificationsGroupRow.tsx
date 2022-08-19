@@ -17,18 +17,41 @@ const NotificationsGroupRow: React.FC<{
 }) => {
     return (
         <Box display="grid" gridTemplateColumns="1fr 2fr 3fr 1fr" gap={2} width="100%" ml="24px" mb={2}>
-            <Box className="notifications-item" sx={{ maxHeight: '35px', maxWidth: '40px' }}>
-                {language}
+            <Box
+                className="notifications-item"
+                sx={{
+                    maxHeight: '35px',
+                    maxWidth: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                {language.toUpperCase()}
             </Box>
             <Box
                 className="notifications-item"
-                sx={{ maxWidth: '200px', maxHeight: '100px', overflowY: 'auto', wordBreak: 'break-all' }}
+                sx={{
+                    maxWidth: '200px',
+                    maxHeight: '100px',
+                    overflowY: 'auto',
+                    wordBreak: 'break-all',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
             >
                 {title}
             </Box>
             <Box
                 className="notifications-item"
-                sx={{ maxWidth: '300px', maxHeight: '100px', overflowY: 'auto', wordBreak: 'break-all' }}
+                sx={{
+                    maxWidth: '300px',
+                    maxHeight: '100px',
+                    overflowY: 'auto',
+                    wordBreak: 'break-all',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
             >
                 {text}
             </Box>
