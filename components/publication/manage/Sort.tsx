@@ -1,52 +1,72 @@
-import styled from '@emotion/styled';
 import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Button, Box, Select, MenuItem } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { Button, Divider, Box } from '@mui/material/';
+import Select from 'react-select';
 import { ManagePublicationsContext } from '../../contexts/publication/ManagePublication';
-import { SortFormValues } from '../../typings/ManagePublications';
 
-const Container = styled.form`
-    width: 300px;
-    height: 320px;
-    position: absolute;
-    top: 100%;
-    background: white;
-    border: 1px solid black;
-    right: -120px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 5px;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    text-align: center;
-    z-index: 999;
-`;
+type SelectOptions = {
+    value: string;
+    label: string;
+};
+interface FormValues {
+    type: SelectOptions;
+    order: SelectOptions;
+    orderBy: SelectOptions;
+    limit: { value: number; label: string };
+}
 
-const orderOptions = ['ASC', 'DESC'];
-const orderByOptions = ['showDate', 'publicationDate', 'id'];
+const typeOptions = [
+    { value: '', label: 'Wszystkie' },
+    { value: 'terms', label: 'Regulamin' },
+    { value: 'policy', label: 'Polityka Prywatności' },
+];
+
+const orderOptions = [
+    { value: 'DESC', label: 'Malejąco' },
+    { value: 'ASC', label: 'Rosnąco' },
+];
+
+const orderByOptions = [
+    { value: 'showDate', label: 'Data Pokazania' },
+    { value: 'publicationDate', label: 'Data Publikacji' },
+    { value: 'id', label: 'ID' },
+    { value: 'type', label: 'Typ' },
+];
+
+const limitOptions = [
+    { value: 10, label: '10' },
+    { value: 20, label: '20' },
+    { value: 50, label: '50' },
+    { value: 100, label: '100' },
+];
 
 const Sort: React.FC = () => {
-    const [openModal, setOpenModal] = useState(false);
-
     const { setParams } = useContext(ManagePublicationsContext);
 
-    const { handleSubmit, register } = useForm<SortFormValues>({
+    const { handleSubmit, control } = useForm<FormValues>({
+        shouldUnregister: true,
         defaultValues: {
-            type: '',
-            limit: 10,
-            orderBy: `${orderOptions[1]}_${orderByOptions[0]}`,
+            type: typeOptions[0],
+            order: orderOptions[0],
+            orderBy: orderByOptions[0],
+            limit: limitOptions[0],
         },
     });
 
-    const onSubmit = (data: SortFormValues) => {
-        const order = data.orderBy.split('_');
-        setParams((prev) => ({ ...prev, limit: data.limit, type: data.type, order: order[0], orderBy: order[1] }));
-        setOpenModal((prev) => !prev);
+    const onSubmit = (data: FormValues) => {
+        console.log(data);
+        setParams((prev) => ({
+            ...prev,
+            order: data.order.value,
+            orderBy: data.orderBy.value,
+            type: data.type.value,
+            limit: data.limit.value,
+        }));
     };
 
     return (
         <Box
+            component="form"
             onSubmit={handleSubmit(onSubmit)}
             sx={{
                 display: 'flex',
@@ -56,78 +76,70 @@ const Sort: React.FC = () => {
                 position: 'relative',
             }}
         >
-            <Button variant="contained" onClick={() => setOpenModal((prev) => !prev)}>
-                Sortuj
-            </Button>
-
-            {openModal && (
-                <Container>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px', mt: '2' }}>
-                        <label htmlFor="type">Typ publikacji</label>
-                        <Select {...register('type')} sx={{ width: '210px' }} className="document-select-form">
-                            <MenuItem style={{ fontSize: '14px' }} value="policy">
-                                Polityka Prywatności
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value="terms">
-                                Regulamin
-                            </MenuItem>
-                        </Select>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center', mt: '2' }}>
-                        <label htmlFor="limit">Limit publikacji na stronie</label>
-                        <Select
-                            {...register('limit')}
-                            sx={{ width: '210px' }}
-                            defaultValue={10}
-                            className="document-select-form"
-                        >
-                            <MenuItem style={{ fontSize: '14px' }} value="10">
-                                10
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value="20">
-                                20
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value="50">
-                                50
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value="100">
-                                100
-                            </MenuItem>
-                        </Select>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center', mt: '2' }}>
-                        <label htmlFor="order">Sortowanie</label>
-                        <Select
-                            {...register('orderBy')}
-                            sx={{ width: '210px' }}
-                            defaultValue={`${orderOptions[1]}_${orderByOptions[0]}`}
-                            className="document-select-form"
-                        >
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[1]}_${orderByOptions[0]}`}>
-                                Data pokazania malejąco
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[0]}`}>
-                                Data pokazania rosnąco
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[1]}_${orderByOptions[1]}`}>
-                                Data publikacji malejąco
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[1]}`}>
-                                Data publikacji rosnąco
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[1]}_${orderByOptions[2]}`}>
-                                ID malejąco
-                            </MenuItem>
-                            <MenuItem style={{ fontSize: '14px' }} value={`${orderOptions[0]}_${orderByOptions[2]}`}>
-                                ID rosnąco
-                            </MenuItem>
-                        </Select>
-                    </Box>
-                    <Button type="submit" variant="contained">
-                        Zapisz
+            <Divider />
+            <Box
+                sx={{
+                    m: '20px',
+                    mb: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '20px',
+                }}
+            >
+                <Box
+                    sx={{
+                        textAlign: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '1em',
+                        gap: '20px',
+                    }}
+                >
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="type"
+                        render={({ field }) => (
+                            <Select options={typeOptions} placeholder="Wybierz..." instanceId="type" {...field} />
+                        )}
+                    />
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="order"
+                        render={({ field }) => (
+                            <Select options={orderOptions} placeholder="Wybierz..." instanceId="order" {...field} />
+                        )}
+                    />
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="orderBy"
+                        render={({ field }) => (
+                            <Select options={orderByOptions} placeholder="Wybierz..." instanceId="orderBy" {...field} />
+                        )}
+                    />
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="limit"
+                        render={({ field }) => (
+                            <Select options={limitOptions} placeholder="Wybierz..." instanceId="limit" {...field} />
+                        )}
+                    />
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ textAlign: 'center', fontSize: '1em', cursor: 'pointer', ml: 'auto' }}
+                    >
+                        Sortuj
                     </Button>
-                </Container>
-            )}
+                </Box>
+            </Box>
+            <Divider />
         </Box>
     );
 };

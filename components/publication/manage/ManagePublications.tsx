@@ -14,6 +14,8 @@ const PostPublication = () => {
     } = useContext(ManagePublicationsContext);
     return (
         <>
+            <Sort />
+
             <Box
                 sx={{
                     alignItems: 'center',
@@ -33,7 +35,6 @@ const PostPublication = () => {
                 <Typography variant="h5">Data wygaśniecia starego dokumentu</Typography>
                 <Typography variant="h5">Domyślny Język</Typography>
                 <Typography variant="h5">Draft</Typography>
-                <Sort />
             </Box>
             {elements?.map((item) => (
                 <BigListItem key={item.id}>

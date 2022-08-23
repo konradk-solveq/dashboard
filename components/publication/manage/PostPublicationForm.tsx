@@ -125,72 +125,70 @@ const PostPublicationForm: React.FC = () => {
     }
 
     return (
-        <>
-            <Container
-                component="form"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '80%',
-                }}
-                onSubmit={handleSubmit(onSubmit)}
-            >
-                {isLoading() ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
-                {errors.current && (
-                    <Typography sx={{ marginBottom: '20px', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
-                        Dokumenty nie mogą być takie same!
-                    </Typography>
-                )}
-                {(errors.publicationDate || errors.showDate) && (
-                    <Typography sx={{ marginBottom: '20px', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
-                        {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
-                            'Data nie może być w przeszłości.'}
-                        {(errors?.publicationDate?.type === 'afterShowDate' ||
-                            errors?.showDate?.type === 'beforePublicationDate') &&
-                            'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
-                    </Typography>
-                )}
-                {!isLoading() && activeStep > 0 && activeStep < steps.length - 1 && (
-                    <ButtonContainer>
+        <Container
+            component="form"
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '80%',
+            }}
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            {isLoading() ? <CircularProgress sx={{ mb: '80px' }} /> : renderStep()}
+            {errors.current && (
+                <Typography sx={{ marginBottom: '20px', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                    Dokumenty nie mogą być takie same!
+                </Typography>
+            )}
+            {(errors.publicationDate || errors.showDate) && (
+                <Typography sx={{ marginBottom: '20px', textAlign: 'center', width: '100%', fontSize: '1.2rem' }}>
+                    {(errors?.publicationDate?.type || errors?.showDate?.type) === 'afterNow' &&
+                        'Data nie może być w przeszłości.'}
+                    {(errors?.publicationDate?.type === 'afterShowDate' ||
+                        errors?.showDate?.type === 'beforePublicationDate') &&
+                        'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
+                </Typography>
+            )}
+            {!isLoading() && activeStep > 0 && activeStep < steps.length - 1 && (
+                <ButtonContainer>
+                    <Button
+                        variant="contained"
+                        sx={{ fontSize: '1rem', bg: 'darkgrey' }}
+                        type="button"
+                        onClick={handleBack}
+                    >
+                        Cofnij
+                    </Button>
+                    {activeStep === steps.length - 2 ? (
                         <Button
                             variant="contained"
-                            sx={{ fontSize: '1rem', bg: 'darkgrey' }}
+                            color="success"
+                            sx={{ fontSize: '1rem' }}
                             type="button"
-                            onClick={handleBack}
+                            onClick={handleSubmit(onSubmit)}
                         >
-                            Cofnij
+                            Wyślij
                         </Button>
-                        {activeStep === steps.length - 2 ? (
-                            <Button
-                                variant="contained"
-                                color="success"
-                                sx={{ fontSize: '1rem' }}
-                                type="button"
-                                onClick={handleSubmit(onSubmit)}
-                            >
-                                Wyślij
-                            </Button>
-                        ) : (
-                            <Button
-                                variant="contained"
-                                color="success"
-                                sx={{ fontSize: '1rem' }}
-                                type="button"
-                                onClick={handleNext}
-                            >
-                                Dalej
-                            </Button>
-                        )}
-                    </ButtonContainer>
-                )}
-                {!isLoading() && activeStep === steps.length - 1 && (
-                    <Button variant="contained" type="button" onClick={handleBack}>
-                        Wróć na start
-                    </Button>
-                )}
-            </Container>
+                    ) : (
+                        <Button
+                            variant="contained"
+                            color="success"
+                            sx={{ fontSize: '1rem' }}
+                            type="button"
+                            onClick={handleNext}
+                        >
+                            Dalej
+                        </Button>
+                    )}
+                </ButtonContainer>
+            )}
+            {!isLoading() && activeStep === steps.length - 1 && (
+                <Button variant="contained" type="button" onClick={handleBack}>
+                    Wróć na start
+                </Button>
+            )}
             {errors.current && (
                 <Typography
                     variant="body1"
@@ -211,7 +209,7 @@ const PostPublicationForm: React.FC = () => {
                         'Data publikacji obu dokumetów musi być przed datą obowiązywania nowego dokumentu'}
                 </Typography>
             )}
-        </>
+        </Container>
     );
 };
 
