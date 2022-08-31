@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Button, Box, Select, Input, Container, Typography, MenuItem, CircularProgress } from '@mui/material/';
+import { Button, Box, Select, Input, Container, Typography, MenuItem, CircularProgress, Tooltip } from '@mui/material/';
 import styled from '@emotion/styled';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { readFromFile } from '../../../helpers/readFromFile';
 import { FileResult, UploadFormValues } from '../../typings/PublicationSection';
@@ -138,8 +139,15 @@ const UploadDocumentForm: React.FC = () => {
                         Polityka Prywatności
                     </MenuItem>
                 </Select>
-                <Label>Nazwa Dokumentu</Label>
-
+                <Box>
+                    <Label>Nazwa Dokumentu</Label>
+                    <Tooltip
+                        sx={{ position: 'absolute', paddingLeft: '5px' }}
+                        title="Nazwa dokumentu jest wymagana aby ułatwić rozróżnienie wgranych plików w przypadku operowania na nich w innych miejscach aplikacji."
+                    >
+                        <InfoIcon color="primary" fontSize="small" />
+                    </Tooltip>
+                </Box>
                 <Input
                     className="document-input-form document-select-form"
                     disableUnderline={true}

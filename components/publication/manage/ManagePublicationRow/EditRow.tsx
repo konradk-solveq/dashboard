@@ -1,18 +1,28 @@
 import { parseJSON } from 'date-fns';
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Box, MenuItem, Alert, Select, CircularProgress } from '@mui/material';
+import { Button, Checkbox, Box, MenuItem, Alert, Select, CircularProgress, Typography, MenuList } from '@mui/material';
 import DatePicker from 'react-datepicker';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { ManagePublicationsContext } from '../../../contexts/publication/ManagePublication';
 import { EditFormValues, EditRowProps, Files, Publication } from '../../../typings/ManagePublications';
 
-const mapOptions = (optionsArray: Files['terms'] | Files['policy']) => {
+const encodeFile = (file: object) => `data:text/json;charset=utf-8, ${encodeURIComponent(JSON.stringify(file))}`;
+
+const mapOptionsWithDownload = (optionsArray: Files['terms'] | Files['policy']) => {
     return optionsArray.map((item) => (
-        <MenuItem sx={{ fontSize: '14px' }} key={item.id} value={item.id}>
-            {item.name}
+        <MenuItem
+            key={item.id}
+            value={item.id}
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
+            <Typography sx={{ fontSize: '14px' }}>{item.name}</Typography>
+            <Button href={encodeFile(item)} download={`${item.name}.json`}>
+                <DownloadIcon fontSize="small" />
+            </Button>
         </MenuItem>
     ));
 };
@@ -62,11 +72,11 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
             setOldDocumentValue(item.pair.oldDocument.id);
             setNewDocumentValue(item.pair.newDocument.id);
         } else if (publicationType === 'terms') {
-            setOldDocumentValue(terms[terms.length - 2]?.id);
-            setNewDocumentValue(terms[terms.length - 1]?.id);
+            setOldDocumentValue(terms[1]?.id);
+            setNewDocumentValue(terms[0]?.id);
         } else {
-            setOldDocumentValue(policy[policy.length - 2]?.id);
-            setNewDocumentValue(policy[policy.length - 1]?.id);
+            setOldDocumentValue(policy[1]?.id);
+            setNewDocumentValue(policy[0]?.id);
         }
     };
 
@@ -146,9 +156,27 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
                                 field.onChange;
                                 setOldDocumentValue(e.target.value as number);
                             }}
+                            renderValue={(e) => (
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        width: '110px',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    {publicationType === 'terms'
+                                        ? terms.find((document) => document.id === e)?.name
+                                        : policy.find((document) => document.id === e)?.name}
+                                </Typography>
+                            )}
                         >
-                            {publicationType === 'terms' && mapOptions(terms)}
-                            {publicationType === 'policy' && mapOptions(policy)}
+                            <MenuList sx={{ maxHeight: '500px' }}>
+                                {publicationType === 'terms'
+                                    ? mapOptionsWithDownload(terms)
+                                    : mapOptionsWithDownload(policy)}
+                            </MenuList>
                         </Select>
                     )}
                 />
@@ -162,13 +190,30 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
                             value={newDocumentValue}
                             className="document-select-form"
                             onChange={(e) => {
-                                console.log(e.target.value);
                                 field.onChange;
                                 setNewDocumentValue(e.target.value as number);
                             }}
+                            renderValue={(e) => (
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        width: '110px',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    {publicationType === 'terms'
+                                        ? terms.find((document) => document.id === e)?.name
+                                        : policy.find((document) => document.id === e)?.name}
+                                </Typography>
+                            )}
                         >
-                            {publicationType === 'terms' && mapOptions(terms)}
-                            {publicationType === 'policy' && mapOptions(policy)}
+                            <MenuList sx={{ maxHeight: '500px' }}>
+                                {publicationType === 'terms'
+                                    ? mapOptionsWithDownload(terms)
+                                    : mapOptionsWithDownload(policy)}
+                            </MenuList>
                         </Select>
                     )}
                 />

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Input, Select, Typography, Button, Box, MenuItem } from '@mui/material';
+import { Input, Select, Typography, Button, Box, MenuItem, Tooltip } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+
 import AppVersionToPlatformRow from './AppVersionToPlatformRow';
 
 const AppVersionToPlatformTable = ({
@@ -70,8 +72,24 @@ const AppVersionToPlatformTable = ({
             >
                 <Typography variant="h5">Wersja</Typography>
                 <Typography variant="h5">Platforma</Typography>
-                <Typography variant="h5">Data publikacji</Typography>
-                <Typography variant="h5">Opublikowana</Typography>
+                <Box sx={{ display: 'flex' }}>
+                    <Typography variant="h5">Data publikacji</Typography>
+                    <Tooltip
+                        sx={{ padding: '3px 0 0 7px' }}
+                        title="Dokładna data, kiedy wersja aplikacji na daną platformę została opublikowana"
+                    >
+                        <InfoIcon color="primary" fontSize="small" />
+                    </Tooltip>
+                </Box>
+                <Box sx={{ display: 'flex' }}>
+                    <Typography variant="h5">Opublikowana</Typography>
+                    <Tooltip
+                        sx={{ padding: '3px 0 0 7px' }}
+                        title="Po zaznaczeniu oraz zapisaniu publikuje wersję aplikacji"
+                    >
+                        <InfoIcon color="primary" fontSize="small" />
+                    </Tooltip>
+                </Box>
                 <Typography variant="h5">Wymuszenie aktualizacji</Typography>
             </Box>
             {appVersionToPlatformsState.length
@@ -124,13 +142,19 @@ const AppVersionToPlatformTable = ({
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Typography variant="h5">Platforma</Typography>
-                    <Input
-                        className="document-input-form document-select-form"
-                        disableUnderline={true}
-                        sx={{ textAlign: 'center', fontSize: '14px', width: '300px', mt: '12px' }}
+                    <Select
+                        className="document-select-form"
+                        sx={{ fontSize: '14px', width: '300px', mt: '12px' }}
                         value={newAppVersionToPlatformState.appPlatformName}
                         onChange={(e) => setNewAppVersionToPlatformValue('appPlatformName', e.target.value)}
-                    ></Input>
+                    >
+                        <MenuItem sx={{ fontSize: 14 }} value="ios">
+                            IOS
+                        </MenuItem>
+                        <MenuItem sx={{ fontSize: 14 }} value="android">
+                            Android
+                        </MenuItem>
+                    </Select>
                 </Box>
             </Box>
             <Box>

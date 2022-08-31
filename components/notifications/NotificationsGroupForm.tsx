@@ -57,7 +57,6 @@ const NotificationsGroupForm: React.FC<IProps> = ({
             mainNotification.data.title,
             notifications,
         );
-        console.log(object);
 
         notificationAggregate
             ? putNotificationAggregate(object, notificationAggregate.id)

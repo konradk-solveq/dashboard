@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, Button, Select, Checkbox, MenuItem } from '@mui/material/';
+import { Box, Typography, Button, Select, Checkbox, MenuItem, Tooltip, MenuList } from '@mui/material/';
+import InfoIcon from '@mui/icons-material/Info';
 import { Controller } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -51,9 +52,18 @@ const Label = styled.label`
 export const Step0: React.FC<Step0Props> = ({ handlePublicationTypeSelect }) => {
     return (
         <>
-            <Box mb="80px">
-                <Typography variant="h3">Typ Publikacji</Typography>
+            <Box mb="80px" sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="h3" sx={{ display: 'inline-block', position: 'relative' }}>
+                    Typ Publikacji
+                </Typography>
+                <Tooltip
+                    sx={{ position: 'absolute', paddingLeft: '175px' }}
+                    title="Publikacja jest jedynie moliwa gdy został wgrany poprzedni dokument"
+                >
+                    <InfoIcon color="primary" />
+                </Tooltip>
             </Box>
+
             <Row>
                 <Button
                     type="button"
@@ -93,11 +103,11 @@ export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
     return (
         <>
             <Box mb="80px">
-                <Typography variant="h3">Dokument Aktualny i Nowy</Typography>
+                <Typography variant="h3">Wybór Dokumentów Publikacji</Typography>
             </Box>
             <Row>
                 <ItemColumn>
-                    <Label>Aktualnie obowiązujący</Label>
+                    <Label>Aktualny</Label>
                     <Controller
                         name="current"
                         control={control}
@@ -119,7 +129,7 @@ export const Step1: React.FC<Step1Props> = ({ activeFiles }) => {
                     />
                 </ItemColumn>
                 <ItemColumn>
-                    <Label>Obowiązujący po dacie publikacji</Label>
+                    <Label>Nowy</Label>
                     <Controller
                         name="next"
                         control={control}
@@ -162,11 +172,19 @@ export const Step2: React.FC = () => {
     return (
         <>
             <Box mb="80px">
-                <Typography>Daty Wyświetlania Dokumentów</Typography>
+                <Typography>Daty Obowiązywania </Typography>
             </Box>
             <Row>
                 <ItemColumn>
-                    <Label>Data wyświetlenia obu dokumentów</Label>
+                    <Box mb="5px">
+                        <Label>Data wyświetlenia</Label>
+                        <Tooltip
+                            sx={{ position: 'absolute', paddingLeft: '5px' }}
+                            title="Data po której aktualny i nowy dokument będą pokazywane"
+                        >
+                            <InfoIcon color="primary" fontSize="small" />
+                        </Tooltip>
+                    </Box>
                     <Box>
                         <Controller
                             name="showDate"
@@ -192,7 +210,16 @@ export const Step2: React.FC = () => {
                     </Box>
                 </ItemColumn>
                 <ItemColumn>
-                    <Label>Data obowiązywania nowego dokumentu</Label>
+                    <Box mb="5px">
+                        <Label>Data wygaśnięcia</Label>
+                        <Tooltip
+                            sx={{ position: 'absolute', paddingLeft: '5px' }}
+                            title="Data po której aktualny dokument przestanie obowiązywać"
+                        >
+                            <InfoIcon color="primary" fontSize="small" />
+                        </Tooltip>
+                    </Box>
+
                     <Box>
                         <Controller
                             name="publicationDate"
@@ -284,7 +311,15 @@ export const Step4 = () => {
             <Row>
                 <ItemColumn>
                     <NestedLabel>
-                        <Typography mb="30px">Zapisać jako draft?</Typography>
+                        <Box sx={{ display: 'flex' }}>
+                            <Typography m="0 0 30px 50px">Zapisać jako draft?</Typography>
+                            <Tooltip
+                                sx={{ paddingLeft: '15px', mt: '15px' }}
+                                title="Draft jest wersją roboczą która nie będzie opublikowana bez wcześniejszego odznaczenia pola draft. Można to zrobić po publikacji w sekcji zarządzaj publikacjami"
+                            >
+                                <InfoIcon color="primary" fontSize="small" />
+                            </Tooltip>
+                        </Box>
                         <Checkbox {...register('draft')} />
                     </NestedLabel>
                 </ItemColumn>

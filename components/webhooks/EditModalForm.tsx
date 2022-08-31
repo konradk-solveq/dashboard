@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Select, Alert, Box, MenuItem } from '@mui/material/';
+import { Button, Input, Select, Alert, Box, MenuItem, Tooltip } from '@mui/material/';
+import InfoIcon from '@mui/icons-material/Info';
+
 import { ManageWebhookContext } from '../contexts/settings/ManageWebhook';
 import { DefaultWebhookFormValues } from '../typings/Webhooks';
 
@@ -14,7 +16,7 @@ const Form = styled.form`
 `;
 
 const EditModalForm = () => {
-    const { register, handleSubmit, watch } = useForm<DefaultWebhookFormValues>();
+    const { register, handleSubmit, watch, getValues } = useForm<DefaultWebhookFormValues>();
     const { hookToEdit, manageModalState, newWebhook, editWebhook, webhooksData } = useContext(ManageWebhookContext);
 
     const onSubmit = async (data: DefaultWebhookFormValues) => {
@@ -66,35 +68,59 @@ const EditModalForm = () => {
                 defaultValue={hookToEdit?.metadata?.description}
                 required
             />
-            <Select
-                placeholder="Title"
-                className="document-select-form"
-                size="small"
-                {...register('event')}
-                defaultValue={hookToEdit?.event}
-                required
-            >
-                {events.data?.events.map((event: 'updateSettings' | 'createAppVersionToPlatform') => (
-                    <MenuItem style={{ fontSize: '14px' }} key={event} value={event}>
-                        {event}
-                    </MenuItem>
-                ))}
-            </Select>
-            <Select
-                placeholder="Title"
-                className="document-select-form"
-                {...register('authType')}
-                defaultValue={hookToEdit?.verificationType}
-                required
-            >
-                {auth.data?.verificationMethods.map((method) =>
-                    method ? (
-                        <MenuItem style={{ fontSize: '14px', fontWeight: 200 }} key={method} value={method}>
-                            {method}
+            <Box>
+                <Select
+                    placeholder="Title"
+                    className="document-select-form"
+                    size="small"
+                    {...register('event')}
+                    defaultValue={hookToEdit?.event}
+                    required
+                >
+                    {events.data?.events.map((event: 'updateSettings' | 'createAppVersionToPlatform') => (
+                        <MenuItem style={{ fontSize: '14px' }} key={event} value={event}>
+                            {event}
                         </MenuItem>
-                    ) : null,
-                )}
-            </Select>
+                    ))}
+                </Select>
+                <Tooltip
+                    sx={{ padding: '7px 0 0 10px', position: 'absolute' }}
+                    title="updateSettings: Wgraj nowe ustawienia,
+                    createAppVersionToPlatform: Dodawaj nowe obsługiwane wersje aplikacji, nasłuchując na info ze sklepu że została wydana.
+                    "
+                >
+                    <InfoIcon color="primary" fontSize="small" />
+                </Tooltip>
+            </Box>
+            <Box>
+                <Select
+                    placeholder="Title"
+                    className="document-select-form"
+                    {...register('authType')}
+                    defaultValue={hookToEdit?.verificationType}
+                    required
+                >
+                    {auth.data?.verificationMethods.map((method) =>
+                        method ? (
+                            <MenuItem style={{ fontSize: '14px', fontWeight: 200 }} key={method} value={method}>
+                                {method}
+                            </MenuItem>
+                        ) : null,
+                    )}
+                </Select>
+                <Tooltip
+                    sx={{ padding: '7px 0 0 10px', position: 'absolute' }}
+                    title={
+                        watchAuthType === 'jwt'
+                            ? 'Użyj tokena JWT podpisanego przez klucz RSA256 albo sekret'
+                            : watchAuthType === 'session-token'
+                            ? 'Użyj tokena dostarczonego przez api po autoryzacji. Musisz mieć uprawnienia admina.'
+                            : watchAuthType === 'none' && 'Jest to niebezpieczna metoda. Używanie jej jest niezalecane.'
+                    }
+                >
+                    <InfoIcon color="primary" fontSize="small" />
+                </Tooltip>
+            </Box>
             {watchAuthType === 'jwt' && (
                 <>
                     <Input

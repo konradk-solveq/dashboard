@@ -27,7 +27,7 @@ const WebhooksListItem = ({ item }) => {
                         </Typography>
 
                         <Typography variant="h6" sx={{ mt: '8px' }}>
-                            <strong>Method:</strong> {item.verificationType}{' '}
+                            <strong>Metoda:</strong> {item.verificationType}{' '}
                         </Typography>
                         <Typography variant="h6" sx={{ mb: '16px' }}>
                             {' '}

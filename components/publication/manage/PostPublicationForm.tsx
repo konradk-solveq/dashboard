@@ -34,7 +34,7 @@ const PostPublicationForm: React.FC = () => {
     const handlePublicationTypeSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
         reset();
         const type = (e.target as HTMLButtonElement).value;
-        setActiveFiles(files[type].data);
+        setActiveFiles([...files[type].data].reverse());
         setValue('publicationType', type);
         setActiveStep((prevStep: ActiveSteps) => prevStep + 1);
     };
