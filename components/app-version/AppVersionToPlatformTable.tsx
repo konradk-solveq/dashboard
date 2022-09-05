@@ -157,7 +157,7 @@ const AppVersionToPlatformTable = ({
             <Box mt={5}>
                 <PagesBar
                     pages={calcPages(limitAndOffset.limit, appVersionToPlatformsCount)}
-                    page={calcPages(limitAndOffset.limit, appVersionToPlatformsCount)[page - 1].offset / 10 + 1}
+                    page={page}
                     setPage={setPage}
                 />
             </Box>
