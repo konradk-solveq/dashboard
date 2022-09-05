@@ -19,7 +19,7 @@ export const typeOptions: LabelTypes[] = [
     { value: 'promo', label: 'Promocja' },
 ];
 
-export const sortingTypesDisplay: LabelWithUndefined[] = [
+export const sortingTypesDisplay: LabelTypes[] = [
     { value: 'documents', label: 'Dokument' },
     { value: 'info', label: 'Info' },
     { value: 'promo', label: 'Promocja' },
@@ -37,6 +37,22 @@ export const orderByOptions: LabelTypes[] = [
     { value: 'expirationDate', label: 'Data Wygaśnięcia' },
     { value: 'type', label: 'Typ' },
 ];
+
+export const sortOptions = {
+    type: {
+        description: 'Filtr:',
+        options: sortingTypesDisplay,
+    },
+
+    orderBy: {
+        description: 'Sortowanie:',
+        options: orderByOptions,
+    },
+
+    order: {
+        options: orderOptions,
+    },
+};
 
 export const langOffline: LabelTypes[] = [
     { value: 'pl', label: 'Polski' },

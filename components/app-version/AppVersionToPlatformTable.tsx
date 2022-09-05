@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Select, Typography, Button, Box, MenuItem, Tooltip } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 
 import AppVersionToPlatformRow from './AppVersionToPlatformRow';
+import SortBar from '../bar/SortBar';
+import PagesBar from '../bar/PagesBar';
+
+const options = {
+    limit: {
+        description: 'Limit',
+        options: [
+            { value: 5, label: 5 },
+            { value: 10, label: 10 },
+            { value: 20, label: 20 },
+            { value: 50, label: 50 },
+        ],
+    },
+};
 
 const AppVersionToPlatformTable = ({
     appVersionToPlatformsState,
@@ -16,52 +30,25 @@ const AppVersionToPlatformTable = ({
     setLimitsAndOffset,
     appVersionToPlatformsCount,
 }) => {
-    return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', marginBottom: '20px', ml: 'auto', gap: '16px' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
-                    <Typography variant="h5">Limit:</Typography>
-                    <Select
-                        className="document-select-form"
-                        value={limitAndOffset.limit}
-                        onChange={(e) => {
-                            setLimitsAndOffset({ limit: parseInt(e.target.value), offset: 0 });
-                        }}
-                    >
-                        <MenuItem style={{ fontSize: '14px' }} value={5}>
-                            5
-                        </MenuItem>
-                        <MenuItem style={{ fontSize: '14px' }} value={10}>
-                            10
-                        </MenuItem>
-                        <MenuItem style={{ fontSize: '14px' }} value={20}>
-                            20
-                        </MenuItem>
-                        <MenuItem style={{ fontSize: '14px' }} value={40}>
-                            40
-                        </MenuItem>
-                    </Select>
-                </Box>
+    const [page, setPage] = useState(1);
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
-                    <Typography variant="h5">Strona:</Typography>
-                    <Select
-                        className="document-select-form"
-                        value={limitAndOffset.offset}
-                        onChange={(e) => {
-                            setLimitsAndOffset({ ...limitAndOffset, offset: parseInt(e.target.value) });
-                        }}
-                    >
-                        {calcPages(limitAndOffset.limit, appVersionToPlatformsCount).map(({ offset, label }, index) => {
-                            return (
-                                <MenuItem style={{ fontSize: '14px' }} key={index} value={offset}>
-                                    {label}
-                                </MenuItem>
-                            );
-                        })}
-                    </Select>
-                </Box>
+    useEffect(() => {
+        setLimitsAndOffset((prev) => ({ ...prev, offset: (page - 1) * limitAndOffset.limit }));
+    }, [page]);
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <Box sx={{ alignSelf: 'flex-end' }}>
+                <SortBar params={limitAndOffset} setParams={setLimitsAndOffset} options={options} />
             </Box>
+
             <Box
                 sx={{
                     display: 'grid',
@@ -140,6 +127,7 @@ const AppVersionToPlatformTable = ({
                         onChange={(e) => setNewAppVersionToPlatformValue('appVersionNumber', e.target.value)}
                     ></Input>
                 </Box>
+
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Typography variant="h5">Platforma</Typography>
                     <Select
@@ -165,6 +153,13 @@ const AppVersionToPlatformTable = ({
                 >
                     Dodaj wersję
                 </Button>
+            </Box>
+            <Box mt={5}>
+                <PagesBar
+                    pages={calcPages(limitAndOffset.limit, appVersionToPlatformsCount)}
+                    page={calcPages(limitAndOffset.limit, appVersionToPlatformsCount)[page - 1].offset / 10 + 1}
+                    setPage={setPage}
+                />
             </Box>
         </Box>
     );

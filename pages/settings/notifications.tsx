@@ -9,8 +9,9 @@ import BigListItem from '../../assets/BigListItem';
 import { LabelTypes, Notification } from '../../components/typings/Notifications';
 import NotificationsContainer, { NotificationsContext } from '../../components/contexts/notifications';
 import ConfirmDeleteModal from '../../components/notifications/ConfirmDeleteModal';
-import { getAvailableLanguages } from '../../components/notifications/NotificationsUtils';
+import { getAvailableLanguages, sortOptions } from '../../components/notifications/NotificationsUtils';
 import useAppConfig from '../../components/services/useConfig';
+import SortBar from '../../components/bar/SortBar';
 
 const NotificationManager: React.FC<{}> = ({}) => {
     const {
@@ -19,6 +20,8 @@ const NotificationManager: React.FC<{}> = ({}) => {
         deleteNotificationMutation,
         handleAddNotificationClick,
         addNotificationFormState,
+        sortParams,
+        setSortParams,
     } = useContext(NotificationsContext);
 
     const { data } = useAppConfig();
@@ -77,7 +80,7 @@ const NotificationManager: React.FC<{}> = ({}) => {
                             </Button>
                         </Typography>
 
-                        <NotificationsSortBar />
+                        <SortBar params={sortParams} setParams={setSortParams} options={sortOptions} />
 
                         <Typography sx={{ m: '20px' }}>Lista Powiadomień</Typography>
 
