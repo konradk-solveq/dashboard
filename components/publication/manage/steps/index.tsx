@@ -23,7 +23,6 @@ const NestedLabel = styled.label`
     align-items: center;
     text-align: center;
     width: auto;
-    flex: 1 1;
     padding: 10px;
     gap: 10px;
 `;
@@ -271,7 +270,7 @@ export const Step3: React.FC<Step3Props> = ({ activeFiles }) => {
     return (
         <>
             <Box mb="80px">
-                <Typography>Domyślny język kiedy brakuje zapytanego</Typography>
+                <Typography variant="h3">Domyślny język kiedy brakuje zapytanego</Typography>
             </Box>
             <Row>
                 <ItemColumn>
