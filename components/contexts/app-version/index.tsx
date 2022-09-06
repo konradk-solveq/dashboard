@@ -70,7 +70,7 @@ const AppVersionToPlatformsContainer: React.FC<{}> = ({ children }) => {
         ['appVersion', limitAndOffset],
         () => getQueryFn(`${endpoints.appVersion}?${qs.stringify(limitAndOffset)}`),
         {
-            cacheTime: 60 * 1000,
+            ...config,
         },
     );
 

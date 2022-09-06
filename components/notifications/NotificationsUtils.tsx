@@ -40,12 +40,12 @@ export const orderByOptions: LabelTypes[] = [
 
 export const sortOptions = {
     type: {
-        description: 'Filtr:',
+        description: 'Filtr',
         options: sortingTypesDisplay,
     },
 
     orderBy: {
-        description: 'Sortowanie:',
+        description: 'Sortowanie',
         options: orderByOptions,
     },
 

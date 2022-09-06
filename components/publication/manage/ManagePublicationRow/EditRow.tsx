@@ -1,5 +1,5 @@
 import { parseJSON } from 'date-fns';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button, Checkbox, Box, MenuItem, Alert, Select, CircularProgress, Typography, MenuList } from '@mui/material';
 import DatePicker from 'react-datepicker';
@@ -17,9 +17,9 @@ const mapOptionsWithDownload = (optionsArray: Files['terms'] | Files['policy']) 
         <MenuItem
             key={item.id}
             value={item.id}
-            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            sx={{ fontSize: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
         >
-            <Typography sx={{ fontSize: '14px' }}>{item.name}</Typography>
+            {item.name}
             <Button href={encodeFile(item)} download={`${item.name}.json`}>
                 <DownloadIcon fontSize="small" />
             </Button>
@@ -153,8 +153,8 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
                             value={oldDocumentValue}
                             className="document-select-form"
                             onChange={(e) => {
-                                field.onChange;
-                                setOldDocumentValue(e.target.value as number);
+                                setOldDocumentValue((e.target as HTMLInputElement).value as unknown as number);
+                                field.onChange(e);
                             }}
                             renderValue={(e) => (
                                 <Typography
@@ -172,11 +172,9 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
                                 </Typography>
                             )}
                         >
-                            <MenuList sx={{ maxHeight: '500px' }}>
-                                {publicationType === 'terms'
-                                    ? mapOptionsWithDownload(terms)
-                                    : mapOptionsWithDownload(policy)}
-                            </MenuList>
+                            {publicationType === 'terms'
+                                ? mapOptionsWithDownload(terms)
+                                : mapOptionsWithDownload(policy)}
                         </Select>
                     )}
                 />
@@ -190,8 +188,8 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
                             value={newDocumentValue}
                             className="document-select-form"
                             onChange={(e) => {
-                                field.onChange;
-                                setNewDocumentValue(e.target.value as number);
+                                setNewDocumentValue((e.target as HTMLInputElement).value as unknown as number);
+                                field.onChange(e);
                             }}
                             renderValue={(e) => (
                                 <Typography
@@ -209,11 +207,9 @@ const EditRow: React.FC<EditRowProps> = ({ item, setEditMode, policy, terms }) =
                                 </Typography>
                             )}
                         >
-                            <MenuList sx={{ maxHeight: '500px' }}>
-                                {publicationType === 'terms'
-                                    ? mapOptionsWithDownload(terms)
-                                    : mapOptionsWithDownload(policy)}
-                            </MenuList>
+                            {publicationType === 'terms'
+                                ? mapOptionsWithDownload(terms)
+                                : mapOptionsWithDownload(policy)}
                         </Select>
                     )}
                 />

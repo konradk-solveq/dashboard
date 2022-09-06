@@ -78,7 +78,7 @@ const SortBar: React.FC<IProps> = ({ params, setParams, options }) => {
                     }}
                 >
                     {Object.keys(options).map((key) => (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Box key={key} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             {options[key].description && (
                                 <Typography variant="h5">{options[key].description}: &nbsp;</Typography>
                             )}

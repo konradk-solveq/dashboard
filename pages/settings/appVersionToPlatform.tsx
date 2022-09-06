@@ -94,7 +94,7 @@ const AppVersionToPlatform: React.FC<{}> = () => {
                         setLimitsAndOffset,
                         appVersionToPlatformsCount,
                     }}
-                ></AppVersionToPlatformTable>
+                />
             </Container>
         </Container>
     );

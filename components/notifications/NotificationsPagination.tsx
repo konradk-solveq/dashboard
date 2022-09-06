@@ -9,7 +9,11 @@ const NotificationsPagination: React.FC = () => {
         <Container sx={{ display: 'flex', width: '100%', justifyContent: 'center', margin: '20px' }}>
             <Pagination
                 onChange={(e, value) => setSortParams((prev) => ({ ...prev, page: value }))}
-                count={Math.ceil(notificationsQuery.data?.total / notificationsQuery.data?.limit)}
+                count={
+                    isNaN(Math.ceil(notificationsQuery.data?.total / notificationsQuery.data?.limit))
+                        ? 1
+                        : Math.ceil(notificationsQuery.data?.total / notificationsQuery.data?.limit)
+                }
                 showFirstButton
                 showLastButton
             />

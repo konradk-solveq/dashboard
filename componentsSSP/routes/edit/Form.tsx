@@ -287,7 +287,8 @@ const Form: React.FC<Props> = (props) => {
                 <NavButtons />
             </Box>
 
-            {showAlert && <BigAlert text={'Z A P I S A N O'} show={showAlert} />}
+            {/* {showAlert && <BigAlert text={'Z A P I S A N O'} show={showAlert} />} */}
+            {/* Alert needs to be fixed */}
         </Container>
     );
 };
