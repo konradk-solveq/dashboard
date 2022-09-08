@@ -78,7 +78,7 @@ const VersionEditForm: React.FC<{}> = () => {
                     variant="contained"
                     color="success"
                     size="large"
-                    onClick={() => setKey.mutate({ key: 'version', newValue })}
+                    onClick={() => setKey.mutate({ key: 'version', value: newValue })}
                 >
                     Zapisz
                 </Button>

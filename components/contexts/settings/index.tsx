@@ -29,7 +29,7 @@ const SettingsContainer: React.FC<{}> = ({ children }) => {
 
     const setKey = useMutation(postKey, {
         onSuccess: () => {
-            queryClient.invalidateQueries(['notifications']);
+            queryClient.invalidateQueries(['settings']);
         },
     });
 
